@@ -8,13 +8,13 @@
         <version>2.7.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.bubba</groupId>
-    <artifactId>bubbaAPI</artifactId>
+    <groupId>com.bubbaTech</groupId>
+    <artifactId>api</artifactId>
     <version>0.1.0.5</version>
-    <name>bubbaAPI</name>
-    <description>API for bubba app</description>
+    <name>api</name>
+    <description>API for Bubba Technologies Inc.</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
     </properties>
     <dependencies>
         <dependency>
