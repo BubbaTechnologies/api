@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
 @RestController
 @AllArgsConstructor
 public class GenericController {
@@ -52,7 +50,7 @@ public class GenericController {
         try {
             auth.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password", e);
+            return ResponseEntity.badRequest().build();
         }
         final User userDetails = userDetailsService.loadUserByUsername(request.getUsername());
         return ResponseEntity.ok(new AuthenticationResponse(jwt.generateToken(userDetails), userDetails.getName(), userDetails.getUsername()));
@@ -68,14 +66,18 @@ public class GenericController {
 
     @PostMapping(value = "/create", produces = "application/json")
     public ResponseEntity<?> create(@RequestBody UserDTO newUser) throws Exception {
-        UserDTO user = modelMapper.map(userService.create(modelMapper.map(newUser, User.class)), UserDTO.class);
-
+        UserDTO user;
+        try {
+            user = modelMapper.map(userService.create(modelMapper.map(newUser, User.class)), UserDTO.class);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
         AuthenticationRequest request = new AuthenticationRequest(user.getUsername(), newUser.getPassword());
         return this.login(request);
     }
 
     @PutMapping(value = "/update", produces = "application/json")
-    public EntityModel<UserDTO> update(@RequestParam UserDTO userRequest, Principal principal) {
+    public EntityModel<UserDTO> update(@RequestBody UserDTO userRequest, Principal principal) {
         User loggedUser = userDetailsService.loadUserByUsername(principal.getName());
         User update = modelMapper.map(userRequest, User.class);
         update.setId(loggedUser.getId());
@@ -84,8 +86,7 @@ public class GenericController {
         update.setCredentialExpiration(loggedUser.getCredentialExpiration());
         update.setGrantedAuthorities(loggedUser.getGrantedAuthorities());
         userRequest = modelMapper.map(userService.update(update), UserDTO.class);
-        return EntityModel.of(userRequest,
-                linkTo("/").withRel("home"));
+        return EntityModel.of(userRequest);
     }
 
 

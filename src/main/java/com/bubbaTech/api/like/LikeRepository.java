@@ -19,7 +19,7 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     @Modifying
     void delete(long clothingId, long userId);
 
-    @Query("SELECT l FROM Like l WHERE l.user = ?1 AND l.rating >= ?2")
+    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2")
     List<Like> findAllByUserId(long userId, int rating);
 
 //    @Query("SELECT l FROM Like l WHERE l.clothing.id = ?1")

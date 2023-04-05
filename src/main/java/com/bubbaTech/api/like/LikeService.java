@@ -35,6 +35,7 @@ public class LikeService {
     }
 
     public Like create(Like like) {
+        //TODO: Handle likes that are out of bounds
         Optional<Like> foundLike = findByClothingAndUser(like.getClothing().getId(), like.getUser().getId());
         if (foundLike.isPresent()) {
             like.setId(foundLike.get().getId());

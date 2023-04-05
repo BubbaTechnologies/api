@@ -38,7 +38,7 @@ public class ScraperController {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        if (!store.isPresent())
+        if (store.isEmpty())
             return ResponseEntity.ok().headers(headers).body("{}");
         return ResponseEntity.ok().headers(headers).body(modelMapper.map(store, StoreDTO.class));
     }
@@ -50,7 +50,7 @@ public class ScraperController {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        if (!item.isPresent())
+        if (item.isEmpty())
             return ResponseEntity.ok().headers(headers).body("{}");
         return ResponseEntity.ok().headers(headers).body(modelMapper.map(item, ClothingDTO.class));
     }

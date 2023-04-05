@@ -74,7 +74,7 @@ public class UserService {
         User user = repository.findById(userRequest.getId()).orElseThrow(() -> new UserNotFoundException(userRequest.getId()));
 
         user.setId(userRequest.getId());
-        user.setPassword(String.valueOf(userRequest.getPassword()));
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         user.setUsername(userRequest.getUsername());
         user.setGender(userRequest.getGender());
         user.setEnabled(userRequest.getEnabled());
