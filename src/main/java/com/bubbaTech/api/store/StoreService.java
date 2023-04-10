@@ -14,6 +14,10 @@ public class StoreService {
     private final StoreRepository repository;
 
     public Store create(Store store) {
+        Optional<Store> returnObj = this.findByUrl(store.getURL());
+        if (returnObj.isPresent())
+            return returnObj.get();
+
         return repository.save(store);
     }
 

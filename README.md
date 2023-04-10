@@ -289,6 +289,7 @@ Response:
 ## Scraper Controller
 
 ### /scraper/checkStore
+(DEPRECIATED: Use /scraper/store)
 
 Mapping: GET
 
@@ -349,7 +350,7 @@ Mapping: POST
 
 Required Header: ```Authorization: Bearer (JWT)```
 
-Description: Create new store.
+Description: If store exists, returns store info. Creates a new store otherwise.
 
 Request Body:
 ```
