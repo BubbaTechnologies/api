@@ -1,55 +1,49 @@
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/security/authentication/model/AuthenticationRequest.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/user/UserExistsException.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/generic/GenericController.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/clothing/ClothType.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/clothing/ClothingNotFoundException.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/medianGroup/MedianGroup.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/medianGroup/MedianGroupService.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/application/ApplicationConfig.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/user/UserService.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/security/authentication/UPAuthenticationProvider.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/admin/AdminController.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/user/UserDeserializer.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/store/StoreNotFoundException.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/security/authentication/JwtRequestFilter.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/clothing/Clothing.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/application/LoadDatabase.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/scraper/ScraperAssembler.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/like/LikeNotFoundException.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/security/authentication/model/AuthenticationRequestDeserializer.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/medianGroup/MedianGroupDeserializer.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/security/authorities/Authorities.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/user/UserRepository.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/like/LikeDTO.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/medianGroup/MedianGroupNotFoundException.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/store/StoreService.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/store/StoreDeserializer.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/user/User.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/clothing/ClothingDeserializer.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/medianGroup/MedianGroupRepository.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/store/StoreDTO.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/clothing/ClothingRepository.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/like/LikeService.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/user/UserNotFoundException.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/user/Gender.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/security/authentication/CustomUserDetailsService.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/clothing/ClothingDTO.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/BubbaApiApplication.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/store/StoreRepository.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/like/Like.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/app/ClothingModelAssembler.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/ai/IntelAssembler.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/security/securityConfig.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/security/authentication/JwtUtil.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/scraper/ScraperController.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/app/AppAssembler.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/user/UserDTO.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/clothing/ClothingService.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/generic/DTO.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/store/Store.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/like/LikeRepository.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/medianGroup/MedianGroupDTO.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/ai/IntelligenceController.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/app/AppController.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/like/LikeDeserializer.java
-/Users/mattgroholski/Desktop/bubbaDev/bubbaAPI/src/main/java/com/bubba/bubbaAPI/security/authentication/model/AuthenticationResponse.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/clothing/ClothingDeserializer.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/admin/AdminController.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/user/Gender.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/like/LikeDTO.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/ai/IntelAssembler.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/ai/IntelligenceController.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/ApiApplication.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/clothing/ClothingService.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/like/LikeNotFoundException.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/store/StoreService.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/security/securityConfig.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/security/authorities/Authorities.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/application/LoadDatabase.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/clothing/ClothingNotFoundException.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/security/authentication/model/AuthenticationRequestDeserializer.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/generic/GenericController.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/generic/DTO.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/security/authentication/JwtUtil.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/user/UserExistsException.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/app/AppController.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/like/LikeRepository.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/user/User.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/user/UserService.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/security/authentication/UPAuthenticationProvider.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/user/UserDTO.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/application/ApplicationConfig.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/user/UserNotFoundException.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/scraper/ScraperAssembler.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/store/StoreNotFoundException.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/clothing/Clothing.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/store/Store.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/like/Like.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/security/authentication/JwtRequestFilter.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/store/StoreRepository.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/clothing/ClothingDTO.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/app/ClothingModelAssembler.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/security/authentication/model/AuthenticationResponse.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/like/LikeService.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/security/authentication/CustomUserDetailsService.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/store/StoreDeserializer.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/like/LikeDeserializer.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/user/UserRepository.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/store/StoreDTO.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/user/UserDeserializer.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/app/AppAssembler.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/clothing/ClothingRepository.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/scraper/ScraperController.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/security/authentication/model/AuthenticationRequest.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/clothing/ClothType.java

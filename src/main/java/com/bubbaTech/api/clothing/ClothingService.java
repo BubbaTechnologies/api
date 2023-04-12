@@ -100,7 +100,17 @@ public class ClothingService {
     }
 
     public Clothing create(Clothing item) {
-        return repository.save(item);
+        Optional<Clothing> optionalClothingItem = this.findByUrl(item.getProductURL());
+        if (optionalClothingItem.isPresent()) {
+            Clothing clothingItem = optionalClothingItem.get();
+            clothingItem.setGender(item.getGender());
+            clothingItem.setName(item.getName());
+            clothingItem.setImageURL(item.getImageURL());
+            return repository.save(clothingItem);
+
+        } else {
+            return repository.save(item);
+        }
     }
 
     public Optional<Clothing> findByUrl(String url) {
