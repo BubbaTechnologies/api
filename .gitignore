@@ -24,5 +24,4 @@
 hs_err_pid*
 replay_pid*
 
-src/main/java/com/bubbaTech/api/application/LoadDatabase.java
-
+!/src/main/java/com/bubbaTech/api/application/LoadDatabase.java
