@@ -17,7 +17,7 @@ public class StoreService {
         Optional<Store> returnObj = this.findByUrl(store.getURL());
         if (returnObj.isPresent())
             return returnObj.get();
-
+        store.setEnabled(true);
         return repository.save(store);
     }
 

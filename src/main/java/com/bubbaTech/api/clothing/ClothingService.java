@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class ClothingService {
-    private final static int MAX_RANDS = 500;
+    private final static int MAX_RANDS = 100;
 
     private final static double randomClothingChance = 1;
     private final ClothingRepository repository;
@@ -49,7 +49,7 @@ public class ClothingService {
 
             int loops = 0;
             long randLong = randomLong(1L, count);
-            while (loops < MAX_RANDS) {
+            while (loops < MAX_RANDS){
                 loops++;
                 Optional<Clothing> optionalItem = repository.getById(randLong);
                 Clothing item;
@@ -71,11 +71,12 @@ public class ClothingService {
 
                 boolean likeCheck = likeService.findByClothingAndUser(randLong, userId).isEmpty();
 
-                boolean typeCheck;
+                boolean typeCheck = false;
                 if (type == null && item.getType() != ClothType.OTHER)
                     typeCheck = true;
-                else
+                else if (type != null) {
                     typeCheck = type.getIntValue() == item.getType().getIntValue();
+                }
 
                 if (!(genderCheck && typeCheck && likeCheck)) {
                     randLong = randomLong(1L, count);
@@ -118,106 +119,29 @@ public class ClothingService {
     }
 
     private Gender toGender(String gender) {
-        switch (gender) {
-            case "male":
-                return Gender.MALE;
-            case "female":
-                return Gender.FEMALE;
-            case "boy":
-                return Gender.BOY;
-            case "girl":
-                return Gender.GIRL;
-            case "kids":
-                return Gender.KID;
-            default:
-                return Gender.UNISEX;
-        }
+        return switch (gender) {
+            case "male" -> Gender.MALE;
+            case "female" -> Gender.FEMALE;
+            case "boy" -> Gender.BOY;
+            case "girl" -> Gender.GIRL;
+            case "kids" -> Gender.KID;
+            default -> Gender.UNISEX;
+        };
     }
 
     private ClothType toClothType(String type) {
-        switch (type) {
-            case "top":
-                return ClothType.TOP;
-            case "bottom":
-                return ClothType.BOTTOM;
-            case "shoes":
-                return ClothType.SHOES;
-            case "underclothing":
-                return ClothType.UNDERCLOTHING;
-            case "jacket":
-                return ClothType.JACKET;
-            case "skirt":
-                return ClothType.SKIRT;
-            case "one piece":
-                return ClothType.ONE_PIECE;
-            case "accessory":
-                return ClothType.ACCESSORY;
-            default:
-                return ClothType.OTHER;
-        }
+        return switch (type) {
+            case "top" -> ClothType.TOP;
+            case "bottom" -> ClothType.BOTTOM;
+            case "shoes" -> ClothType.SHOES;
+            case "underclothing" -> ClothType.UNDERCLOTHING;
+            case "jacket" -> ClothType.JACKET;
+            case "skirt" -> ClothType.SKIRT;
+            case "one piece" -> ClothType.ONE_PIECE;
+            case "accessory" -> ClothType.ACCESSORY;
+            default -> ClothType.OTHER;
+        };
     }
-
-
-//
-//    public Clothing update(long itemId, long sessionId, Clothing clothingRequest) {
-//
-//        return updateItem(itemId, clothingRequest);
-//
-//    }
-//
-//    public void delete(long itemId, long sessionId) {
-//
-//        Clothing item = repository.findById(itemId).orElseThrow(() -> new ClothingNotFoundException(itemId));
-//
-//        repository.delete(item);
-//        groupService.removeItem(item.getId());
-//        likeService.deleteByItem(itemId);
-//    }
-//
-//    public Clothing getById(long itemId, long sessionId) {
-//
-//        return this.getItem(itemId);
-//    }
-//
-//
-//    public List<Clothing> getRecommended(long sessionId) {
-//        //TODO
-//        throw new NotImplementedException("getRecommended");
-//    }
-//
-//
-//
-//    public void deleteByStore(Store store) {
-//        repository.deleteByStore(store.getId());
-//    }
-//
-//    public Store getStoreById(long storeId) {
-//        return storeService.getStore(storeId);
-//    }
-//
-//    Clothing getItem(long id) {
-//        Optional<Clothing> result = repository.findById(id);
-//
-//        if (result.isPresent()) {
-//            return result.get();
-//        } else {
-//            throw new ClothingNotFoundException(id);
-//        }
-//    }
-//
-//
-//    private Clothing updateItem(long itemId, Clothing clothingRequest) {
-//        Clothing item = repository.findById(itemId).orElseThrow(() -> new ClothingNotFoundException(itemId));
-//
-//        item.setType(clothingRequest.getType());
-//        item.setProductURL(clothingRequest.getProductURL());
-//        item.setImageURL(clothingRequest.getImageURL());
-//        item.setId(clothingRequest.getId());
-//        item.setGender(clothingRequest.getGender());
-//        item.setName(clothingRequest.getName());
-//        item.setStore(clothingRequest.getStore());
-//
-//        return repository.save(item);
-//    }
 }
+
 

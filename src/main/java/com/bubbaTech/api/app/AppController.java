@@ -48,6 +48,11 @@ public class AppController {
                 linkTo(methodOn(AppController.class).createLike(new LikeDTO(response, 10), principal)).withRel("createLove"));
     }
 
+    @RequestMapping(value = "/app/card", method = RequestMethod.OPTIONS)
+    public ResponseEntity<?> optionsRequest() {
+        return ResponseEntity.ok().build();
+    }
+
     //Liked list for user based on sessionId
     @GetMapping(value = "/app/likes", produces = "application/json")
     public CollectionModel<EntityModel<ClothingDTO>> likes(Principal principal) {

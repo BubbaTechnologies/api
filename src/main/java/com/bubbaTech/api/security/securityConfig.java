@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -61,7 +62,8 @@ public class securityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests((auth) -> {
                     try {
-                        auth.antMatchers("/ai/**").hasAuthority("AI")
+                        auth.antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                                .antMatchers("/ai/**").hasAuthority("AI")
                                 .antMatchers("/app/**").hasAuthority("USER")
                                 .antMatchers("/scraper/**").hasAuthority("SCRAPER")
                                 .antMatchers("/admin/**").hasAuthority("ADMIN")
