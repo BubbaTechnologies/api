@@ -27,24 +27,13 @@ public class UserDeserializer extends StdDeserializer<UserDTO> {
         String password = node.get("password").textValue();
         String gender = node.get("gender").textValue();
         String name = node.get("name").textValue();
-        Gender g;
-        switch (gender) {
-            case "male":
-                g = Gender.MALE;
-                break;
-            case "female":
-                g = Gender.FEMALE;
-                break;
-            case "boy":
-                g = Gender.BOY;
-                break;
-            case "girl":
-                g = Gender.GIRL;
-                break;
-            default:
-                g = Gender.UNISEX;
-                break;
-        }
+        Gender g = switch (gender.toLowerCase()) {
+            case "male" -> Gender.MALE;
+            case "female" -> Gender.FEMALE;
+            case "boy" -> Gender.BOY;
+            case "girl" -> Gender.GIRL;
+            default -> Gender.UNISEX;
+        };
         return new UserDTO(username, password, g, name);
     }
 

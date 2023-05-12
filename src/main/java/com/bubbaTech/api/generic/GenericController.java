@@ -17,7 +17,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,7 +48,7 @@ public class GenericController {
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) throws Exception {
         try {
             auth.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        } catch (BadCredentialsException e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
         final User userDetails = userDetailsService.loadUserByUsername(request.getUsername());

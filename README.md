@@ -1,5 +1,5 @@
 # Bubba Technologies Inc. API
-Updated 05/11/2023
+Updated 05/12/2023
 
 ## Generic Controller
 ### /
@@ -240,8 +240,8 @@ Request:
 
 ```
 {
-    "clothingId":int,
-    "rating":int
+    "clothingId":str,
+    "rating":str
 }
 ```
 
