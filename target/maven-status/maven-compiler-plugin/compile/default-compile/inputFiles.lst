@@ -39,6 +39,7 @@
 /Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/security/authentication/CustomUserDetailsService.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/store/StoreDeserializer.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/like/LikeDeserializer.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/application/WebConfig.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/user/UserRepository.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/store/StoreDTO.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/user/UserDeserializer.java

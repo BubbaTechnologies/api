@@ -5,7 +5,7 @@
 package com.bubbaTech.api.clothing;
 
 public enum ClothType {
-    TOP(0), BOTTOM(1), SHOES(3), UNDERCLOTHING(4), JACKET(6), SKIRT(7), ONE_PIECE(8), ACCESSORY(9), SWIMWEAR(10), SLEEPWEAR(11), OTHER(12);
+    TOP(0), BOTTOM(1), SHOES(2), UNDERCLOTHING(3), JACKET(4), SKIRT(5), ONE_PIECE(6), ACCESSORY(7), SWIMWEAR(8), SLEEPWEAR(9), OTHER(10), DRESS(11);
 
     private final int value;
 

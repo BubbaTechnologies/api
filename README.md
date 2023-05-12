@@ -1,5 +1,5 @@
 # Bubba Technologies Inc. API
-Updated 04/04/2023
+Updated 05/11/2023
 
 ## Generic Controller
 ### /
@@ -47,7 +47,7 @@ Response:
 
 Mapping: POST
 
-Description: Create user.
+Description: Create user. If user exists, response code will be 400.
 
 Request Body:
 ```

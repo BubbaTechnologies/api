@@ -78,6 +78,9 @@ public class ClothingDeserializer extends StdDeserializer<ClothingDTO> {
             case "sleepwear":
                 clothType = ClothType.SLEEPWEAR;
                 break;
+            case "dress":
+                clothType = ClothType.DRESS;
+                break;
             default:
                 clothType = ClothType.OTHER;
         }

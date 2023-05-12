@@ -28,8 +28,8 @@ public class ClothingService {
         return repository.findById(clothingId);
     }
 
-    //TODO: Optimize
     public Clothing getCard(long userId, String typeFilter, String genderFilter) {
+        //TODO
         Gender gender;
         ClothType type = null;
 
@@ -137,7 +137,8 @@ public class ClothingService {
             case "underclothing" -> ClothType.UNDERCLOTHING;
             case "jacket" -> ClothType.JACKET;
             case "skirt" -> ClothType.SKIRT;
-            case "one piece" -> ClothType.ONE_PIECE;
+            case "one_piece" -> ClothType.ONE_PIECE;
+            case "dress" -> ClothType.DRESS;
             case "accessory" -> ClothType.ACCESSORY;
             default -> ClothType.OTHER;
         };

@@ -23,6 +23,7 @@ com/bubbaTech/api/like/LikeDTO.class
 com/bubbaTech/api/scraper/ScraperController.class
 com/bubbaTech/api/application/LoadDatabase.class
 com/bubbaTech/api/security/authorities/Authorities$authoritiesType.class
+com/bubbaTech/api/application/WebConfig.class
 com/bubbaTech/api/store/StoreService.class
 com/bubbaTech/api/store/StoreDeserializer.class
 com/bubbaTech/api/user/UserExistsException.class

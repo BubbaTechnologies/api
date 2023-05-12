@@ -35,6 +35,7 @@ public class AppController {
     LikeService likeService;
 
     //Clothing card for user based on sessionId
+
     @GetMapping(value = "/app/card", produces = "application/json")
     public EntityModel<ClothingDTO> card(
             Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
