@@ -31,7 +31,6 @@ public class GenericController {
     private CustomUserDetailsService userDetailsService;
     private ModelMapper modelMapper;
 
-
     private UserService userService;
 
     @GetMapping(value = "/error")
@@ -48,7 +47,7 @@ public class GenericController {
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) throws Exception {
         try {
             auth.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        } catch (Exception e) {
+        } catch (Exception e){
             return ResponseEntity.badRequest().build();
         }
         final User userDetails = userDetailsService.loadUserByUsername(request.getUsername());

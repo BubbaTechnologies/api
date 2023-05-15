@@ -60,7 +60,6 @@ public class UserService {
     public User create(User user) {
         if (this.checkUsername(user.getUsername()).isPresent())
             throw new UserExistsException(user.getUsername());
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Collection<Authorities> auth = new ArrayList<>();
         auth.add(new Authorities("USER"));
@@ -74,7 +73,11 @@ public class UserService {
         User user = repository.findById(userRequest.getId()).orElseThrow(() -> new UserNotFoundException(userRequest.getId()));
 
         user.setId(userRequest.getId());
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        if (userRequest.getPassword().equals(user.getPassword())) {
+            user.setPassword(user.getPassword());
+        } else {
+            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        }
         user.setUsername(userRequest.getUsername());
         user.setGender(userRequest.getGender());
         user.setEnabled(userRequest.getEnabled());

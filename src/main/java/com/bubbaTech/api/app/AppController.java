@@ -57,19 +57,13 @@ public class AppController {
     //Liked list for user based on sessionId
     @GetMapping(value = "/app/likes", produces = "application/json")
     public CollectionModel<EntityModel<ClothingDTO>> likes(Principal principal) {
-        return getClothingList(this.getUserId(principal), 5).add(
-                linkTo(methodOn(AppController.class).likes(principal)).withSelfRel(),
-                linkTo(methodOn(AppController.class).card(principal, null, null)).withRel("card")
-        );
+        return getClothingList(this.getUserId(principal), 5);
     }
 
     //Collection for user based on sessionId
     @GetMapping(value = "/app/collection", produces = "application/json")
     public CollectionModel<EntityModel<ClothingDTO>> collection(Principal principal) {
-        return getClothingList(this.getUserId(principal), 10).add(
-                linkTo(methodOn(AppController.class).collection(principal)).withSelfRel(),
-                linkTo(methodOn(AppController.class).card(principal, null, null)).withRel("card")
-        );
+        return getClothingList(this.getUserId(principal), 10);
     }
 
 
