@@ -273,8 +273,8 @@ Request:
 
 ```
 {
-    "clothingId":int,
-    "rating":int
+    "clothingId":str,
+    "rating":str
 }
 ```
 
