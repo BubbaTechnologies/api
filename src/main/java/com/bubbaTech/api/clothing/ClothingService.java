@@ -51,13 +51,17 @@ public class ClothingService {
             while (loops < MAX_RANDS){
                 loops++;
 
-                long amount = repository.count();
-                int index = (int)(Math.random() * amount);
                 Page<Clothing> clothingPage;
-                if (typeFilter == null)
+                if (typeFilter == null) {
+                    long amount = repository.countByGender(gender);
+                    int index = (int)(Math.random() * amount);
                     clothingPage = repository.findAllWithGender(gender, PageRequest.of(index, 1));
-                else
-                    clothingPage = repository.findAllWithGenderAndType(gender,type, PageRequest.of(index, 1));
+                }
+                else{
+                    long amount = repository.countByGenderAndType(gender, type);
+                    int index = (int)(Math.random() * amount);
+                    clothingPage = repository.findAllWithGenderAndType(gender, type, PageRequest.of(index, 1));
+                }
 
                 Clothing item;
                 if (clothingPage.hasContent())
