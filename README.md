@@ -289,7 +289,7 @@ Response:
 ## Scraper Controller
 ```
 {
-    "gender":[str],
+    "genders":[str],
     "types":[[str]]
 }
 ```
