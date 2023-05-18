@@ -48,7 +48,15 @@ public class LikeService {
         return repository.save(like);
     }
 
-    public List<Like> getAllByUserId(long userId, int rating) {
+    public List<Like> getAllByUserId(long userId, int rating, String typeFilter, String genderFilter) {
+        if (genderFilter != null && typeFilter != null) {
+
+        } else if (genderFilter != null) {
+
+        } else if (typeFilter != null) {
+
+        }
+
         return repository.findAllByUserId(userId, rating);
     }
 

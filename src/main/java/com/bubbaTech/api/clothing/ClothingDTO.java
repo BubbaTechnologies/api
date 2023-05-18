@@ -23,7 +23,7 @@ public class ClothingDTO implements DTO<ClothingDTO> {
     @JsonManagedReference
     private StoreDTO store;
     private ClothType type;
-    private Collection<Gender> gender;
+    private Gender gender;
 
     public ClothingDTO() {
     }
@@ -32,7 +32,7 @@ public class ClothingDTO implements DTO<ClothingDTO> {
         this.id = id;
     }
 
-    public ClothingDTO(String name, Collection<String> imageURL, String productURL, StoreDTO store, ClothType type, Collection<Gender> gender) {
+    public ClothingDTO(String name, Collection<String> imageURL, String productURL, StoreDTO store, ClothType type, Gender gender) {
         this.name = name;
         this.imageURL = imageURL;
         this.productURL = productURL;

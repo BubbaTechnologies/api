@@ -57,14 +57,14 @@ public class AppController {
 
     //Liked list for user based on sessionId
     @GetMapping(value = "/app/likes", produces = "application/json")
-    public CollectionModel<EntityModel<ClothingDTO>> likes(Principal principal) {
-        return getClothingList(this.getUserId(principal), 5);
+    public CollectionModel<EntityModel<ClothingDTO>> likes(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
+        return getClothingList(this.getUserId(principal), 5, typeFilter, genderFilter);
     }
 
     //Collection for user based on sessionId
     @GetMapping(value = "/app/collection", produces = "application/json")
-    public CollectionModel<EntityModel<ClothingDTO>> collection(Principal principal) {
-        return getClothingList(this.getUserId(principal), 10);
+    public CollectionModel<EntityModel<ClothingDTO>> collection(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
+        return getClothingList(this.getUserId(principal), 10, typeFilter, genderFilter);
     }
 
 
@@ -98,8 +98,9 @@ public class AppController {
         return ResponseEntity.ok().body(EntityModel.of(new FilterOptionsDTO()));
     }
 
-    private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, int rating) {
-        List<Like> likes = likeService.getAllByUserId(userId, rating);
+    private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, int rating, String typeFilter, String genderFilter) {
+        List<Like> likes = likeService.getAllByUserId(userId, rating, typeFilter, genderFilter);
+
         List<EntityModel<ClothingDTO>> items = new ArrayList<>();
 
         for (Like like : likes)

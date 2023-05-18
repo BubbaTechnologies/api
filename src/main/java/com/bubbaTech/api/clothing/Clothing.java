@@ -1,4 +1,4 @@
-//Matthew Grohoslki
+//Matthew Groholski
 //Bubba Technologies Inc.
 //10/01/2022
 
@@ -36,24 +36,23 @@ public class Clothing {
     private Store store;
 
     @OneToMany()
-    @JoinColumn(name = "like_id")
+    @JoinColumn(name = "id")
     @JsonManagedReference
     private List<Like> likes;
 
-    private ClothType type;
+    private ClothType clothingType;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    private Collection<Gender> gender;
+    private Gender gender;
 
     protected Clothing() {
     }
 
-    public Clothing(String name, Collection<String> imageURL, String productURL, Store store, ClothType type, Collection<Gender> gender) {
+    public Clothing(String name, Collection<String> imageURL, String productURL, Store store, ClothType type, Gender gender) {
         this.name = name;
         this.imageURL = imageURL;
         this.productURL = productURL;
         this.store = store;
-        this.type = type;
+        this.clothingType = type;
         this.gender = gender;
     }
 
@@ -67,22 +66,22 @@ public class Clothing {
             return false;
         Clothing clothing = (Clothing) o;
         return Objects.equals(this.id, clothing.id) && Objects.equals(this.name, clothing.name) && Objects.equals(this.imageURL, clothing.imageURL)
-                && Objects.equals(this.productURL, clothing.productURL) && Objects.equals(this.store, clothing.store) && this.type == clothing.type;
+                && Objects.equals(this.productURL, clothing.productURL) && Objects.equals(this.store, clothing.store) && this.clothingType == clothing.clothingType;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.name, this.imageURL, this.productURL, this.store, this.type);
+        return Objects.hash(this.id, this.name, this.imageURL, this.productURL, this.store, this.clothingType);
     }
 
     @Override
     public String toString() {
-        StringBuilder returnString = new StringBuilder("Clothing{" + "id=" + this.id + ", name='" + this.name + '\'' + ", productURL='" + this.productURL + '\'' + ", store=" + this.store + ", type=" + this.type);
+        StringBuilder returnString = new StringBuilder("Clothing{" + "id=" + this.id + ", name='" + this.name + '\'' + ", productURL='" + this.productURL + '\'' + ", store=" + this.store + ", type=" + this.clothingType);
         returnString.append('}');
         return returnString.toString();
     }
 
     public String toStringBasic() {
-        return "Clothing{" + "id=" + this.id + ", name='" + this.name + '\'' +  ", productURL='" + this.productURL + '\'' + ", store=" + this.store + ", type=" + this.type + '}';
+        return "Clothing{" + "id=" + this.id + ", name='" + this.name + '\'' +  ", productURL='" + this.productURL + '\'' + ", store=" + this.store + ", type=" + this.clothingType + '}';
     }
 }

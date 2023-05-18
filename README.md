@@ -133,7 +133,7 @@ Response:
         "url":str
     },
     "type":str,
-    "gender": [str],
+    "gender": str,
     "_links": {
         "self": {
             "href": "http://localhost:8080/app/card{?type,gender}",
@@ -173,7 +173,7 @@ Response:
                     "url": str
                 },
                 "type": str,
-                "gender": [str]
+                "gender": str
             }
         ]
     },
@@ -213,7 +213,7 @@ Response:
                     "url": str
                 },
                 "type": str,
-                "gender": [str]
+                "gender": str
             }
         ]
     },

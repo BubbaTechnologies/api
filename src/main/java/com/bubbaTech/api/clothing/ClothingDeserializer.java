@@ -34,7 +34,7 @@ public class ClothingDeserializer extends StdDeserializer<ClothingDTO> {
         String productURL = node.get("productUrl").textValue();
         long storeID = Long.parseLong(node.get("storeId").textValue());
         String type = node.get("type").textValue();
-        JsonNode gender = node.get("gender");
+        String gender = node.get("gender").textValue();
 
         //Deal with imageUrl
         Collection<String> imageUrlCollection = new ArrayList<>();
@@ -46,74 +46,30 @@ public class ClothingDeserializer extends StdDeserializer<ClothingDTO> {
         }
 
         //Change type into clothType
-        ClothType clothType;
-        switch (type) {
-            case "top":
-                clothType = ClothType.TOP;
-                break;
-            case "bottom":
-                clothType = ClothType.BOTTOM;
-                break;
-            case "shoes":
-                clothType = ClothType.SHOES;
-                break;
-            case "underclothing":
-                clothType = ClothType.UNDERCLOTHING;
-                break;
-            case "jacket":
-                clothType = ClothType.JACKET;
-                break;
-            case "skirt":
-                clothType = ClothType.SKIRT;
-                break;
-            case "one piece":
-                clothType = ClothType.ONE_PIECE;
-                break;
-            case "accessory":
-                clothType = ClothType.ACCESSORY;
-                break;
-            case "swimwear":
-                clothType = ClothType.SWIMWEAR;
-                break;
-            case "sleepwear":
-                clothType = ClothType.SLEEPWEAR;
-                break;
-            case "dress":
-                clothType = ClothType.DRESS;
-                break;
-            default:
-                clothType = ClothType.OTHER;
-        }
+        ClothType clothType = switch (type) {
+            case "top" -> ClothType.TOP;
+            case "bottom" -> ClothType.BOTTOM;
+            case "shoes" -> ClothType.SHOES;
+            case "underclothing" -> ClothType.UNDERCLOTHING;
+            case "jacket" -> ClothType.JACKET;
+            case "skirt" -> ClothType.SKIRT;
+            case "one piece" -> ClothType.ONE_PIECE;
+            case "accessory" -> ClothType.ACCESSORY;
+            case "swimwear" -> ClothType.SWIMWEAR;
+            case "sleepwear" -> ClothType.SLEEPWEAR;
+            case "dress" -> ClothType.DRESS;
+            default -> ClothType.OTHER;
+        };
 
         //Change gender into Gender
-        Collection<Gender> g = new ArrayList<>();
-        if (gender.isArray()) {
-            for (JsonNode gen : gender) {
-                String ge = gen.textValue();
-                switch (ge) {
-                    case "male":
-                        g.add(Gender.MALE);
-                        break;
-                    case "female":
-                        g.add(Gender.FEMALE);
-                        break;
-                    case "boy":
-                        g.add(Gender.BOY);
-                        break;
-                    case "girl":
-                        g.add(Gender.GIRL);
-                        break;
-                    case "kids":
-                        g.add(Gender.KID);
-                        break;
-                    default:
-                        g.add(Gender.UNISEX);
-                        break;
-                }
-            }
-        } else {
-            throw new RuntimeException();
-        }
+        Gender g = switch (gender) {
+            case "male" -> Gender.MALE;
+            case "female" -> Gender.FEMALE;
+            case "boy" -> Gender.BOY;
+            case "girl" -> Gender.GIRL;
+            case "kids" -> Gender.KID;
+            default -> Gender.UNISEX;
+        };
 
         return new ClothingDTO(name, imageUrlCollection, productURL, new StoreDTO(storeID), clothType, g);
     }

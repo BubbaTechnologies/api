@@ -8,9 +8,10 @@ import com.bubbaTech.api.like.LikeService;
 import com.bubbaTech.api.user.Gender;
 import com.bubbaTech.api.user.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -29,7 +30,6 @@ public class ClothingService {
     }
 
     public Clothing getCard(long userId, String typeFilter, String genderFilter) {
-        //TODO
         Gender gender;
         ClothType type = null;
 
@@ -48,47 +48,30 @@ public class ClothingService {
                 throw new RuntimeException("Empty Repository");
 
             int loops = 0;
-            long randLong = randomLong(1L, count);
             while (loops < MAX_RANDS){
                 loops++;
-                Optional<Clothing> optionalItem = repository.getById(randLong);
+
+                long amount = repository.count();
+                int index = (int)(Math.random() * amount);
+                Page<Clothing> clothingPage;
+                if (typeFilter == null)
+                    clothingPage = repository.findAllWithGender(gender, PageRequest.of(index, 1));
+                else
+                    clothingPage = repository.findAllWithGenderAndType(gender,type, PageRequest.of(index, 1));
+
                 Clothing item;
-                if (optionalItem.isPresent())
-                    item = optionalItem.get();
-                else {
-                    randLong = randomLong(1L, count);
+                if (clothingPage.hasContent())
+                    item = clothingPage.getContent().get(0);
+                else
                     continue;
-                }
 
-                Collection<Gender> genders = item.getGender();
-                boolean genderCheck = false;
-                for (Gender g : genders) {
-                    if (g.getIntValue() == gender.getIntValue()) {
-                        genderCheck = true;
-                        break;
-                    }
-                }
-
-                boolean likeCheck = likeService.findByClothingAndUser(randLong, userId).isEmpty();
-
-                boolean typeCheck = false;
-                if (type == null && item.getType() != ClothType.OTHER)
-                    typeCheck = true;
-                else if (type != null) {
-                    typeCheck = type.getIntValue() == item.getType().getIntValue();
-                }
-
-                if (!(genderCheck && typeCheck && likeCheck)) {
-                    randLong = randomLong(1L, count);
+                if (likeService.findByClothingAndUser(item.getId(), userId).isPresent())
                     continue;
-                }
 
                 return item;
             }
 
-        } //TODO: Create return by group
-
-
+        }
         return null;
     }
 
