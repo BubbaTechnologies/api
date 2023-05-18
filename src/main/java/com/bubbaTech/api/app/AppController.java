@@ -89,7 +89,7 @@ public class AppController {
     }
 
     //Update like
-    @PutMapping(value = "/app/like", params = "userId", produces = "application/json")
+    @PutMapping(value = "/app/like", produces = "application/json")
     public ResponseEntity<?> updateLike(@RequestBody LikeDTO likeRequest, Principal principal) {
         likeRequest.setClothing(modelMapper.map(clothingService.getById(likeRequest.getClothing().getId()), ClothingDTO.class));
         long userId = getUserId(principal);

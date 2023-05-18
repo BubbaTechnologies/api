@@ -4,6 +4,7 @@
 
 package com.bubbaTech.api.like;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,18 +18,20 @@ public class LikeService {
         this.repository = repository;
     }
 
+    @Transactional
     public void delete(long clothingId, long userId) {
         if (repository.findByClothingAndUser(clothingId, userId) == null)
             return;
         repository.delete(clothingId,userId);
     }
 
+    @Transactional
     public Like update(Like likeRequest) {
-        Like like = repository.findById(likeRequest.getId()).orElseThrow(() -> new LikeNotFoundException(likeRequest.getId()));
+        Like like = repository.findByClothingAndUser(likeRequest.getClothing().getId(), likeRequest.getUser().getId()).orElseThrow(() -> new LikeNotFoundException(likeRequest.getId()));
 
-        like.setId(likeRequest.getId());
-        like.setClothing(likeRequest.getClothing());
-        like.setUser(likeRequest.getUser());
+        like.setId(like.getId());
+        like.setClothing(like.getClothing());
+        like.setUser(like.getUser());
         like.setRating(likeRequest.getRating());
 
         return repository.save(like);
