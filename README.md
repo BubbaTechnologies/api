@@ -252,14 +252,6 @@ Response:
     "rating":int
 }
 ```
-### /app/like (DELETE)
-Mapping: DELETE
-
-Request Parameters: clothingId
-
-Description: Deletes like.
-
-Required Headers: ```Authorization: Bearer (JWT)```
 
 
 ### /app/like (PUT)
@@ -285,8 +277,22 @@ Response:
     "rating":int
 }
 ```
+### /app/filterOptions
+Mapping: GET
+
+Required Headers: ```Authorization: Bearer (JWT)```
+
+Description: Returns genders and types per gender.
+
+Response:
 
 ## Scraper Controller
+```
+{
+    "gender":[str],
+    "types":[[str]]
+}
+```
 
 ### /scraper/checkStore
 (DEPRECIATED: Use /scraper/store)

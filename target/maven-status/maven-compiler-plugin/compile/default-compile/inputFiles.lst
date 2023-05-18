@@ -35,6 +35,7 @@
 /Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/clothing/ClothingDTO.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/app/ClothingModelAssembler.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/security/authentication/model/AuthenticationResponse.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/info/FilterOptionsDTO.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/like/LikeService.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/security/authentication/CustomUserDetailsService.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech/api/src/main/java/com/bubbaTech/api/store/StoreDeserializer.java

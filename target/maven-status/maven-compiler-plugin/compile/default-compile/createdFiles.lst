@@ -45,6 +45,7 @@ com/bubbaTech/api/clothing/ClothingService.class
 com/bubbaTech/api/clothing/Clothing.class
 com/bubbaTech/api/clothing/ClothingDTO.class
 com/bubbaTech/api/security/authentication/UPAuthenticationProvider.class
+com/bubbaTech/api/info/FilterOptionsDTO.class
 com/bubbaTech/api/security/authentication/model/AuthenticationRequest.class
 com/bubbaTech/api/ai/IntelAssembler.class
 com/bubbaTech/api/user/UserRepository.class
