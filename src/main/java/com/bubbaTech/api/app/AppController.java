@@ -80,14 +80,6 @@ public class AppController {
         return ResponseEntity.ok().body(like);
     }
 
-    //Delete like
-    @DeleteMapping(value = "/app/like", params = {"clothingId"}, produces = "application/json")
-    public ResponseEntity<?> deleteLike(@RequestParam(name = "clothingId") long clothingId, Principal principal) {
-        long userId = getUserId(principal);
-        likeService.delete(clothingId, userId);
-        return ResponseEntity.noContent().build();
-    }
-
     //Update like
     @PutMapping(value = "/app/like", produces = "application/json")
     public ResponseEntity<?> updateLike(@RequestBody LikeDTO likeRequest, Principal principal) {
