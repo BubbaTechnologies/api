@@ -20,12 +20,12 @@ public interface ClothingRepository extends JpaRepository<Clothing, Long> {
 
     @Query("SELECT c FROM Clothing c WHERE c.id = ?1 AND c.store.enabled = true")
     Optional<Clothing> getById(long id);
-    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.gender=?1")
+    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.gender=?1 AND NOT c.clothingType = 10")
     long countByGender(Gender gender);
 
     @Query("SELECT COUNT(c) FROM Clothing c WHERE c.gender = ?1 AND c.clothingType IN ?2")
     long countByGenderAndTypes(Gender gender, List<ClothType> type);
-    @Query("SELECT c FROM Clothing c WHERE c.gender = ?1")
+    @Query("SELECT c FROM Clothing c WHERE c.gender = ?1 AND NOT c.clothingType = 10 ")
     Page<Clothing> findAllWithGender(Gender gender, Pageable pageable);
 
     @Query("SELECT c FROM Clothing c WHERE c.gender = ?1 AND c.clothingType IN ?2")

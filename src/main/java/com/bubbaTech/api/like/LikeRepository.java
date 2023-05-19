@@ -27,10 +27,10 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2 AND l.clothing.clothingType IN ?3")
     List<Like> findAllByUserIdWithTypes(long userId, int rating, List<ClothType> type);
 
-    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2 AND ?3 IN l.clothing.gender")
+    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2 AND l.clothing.gender = ?3")
     List<Like> findAllByUserIdWithGender(long userId, int rating, Gender gender);
 
-    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2 AND ?3 IN l.clothing.gender AND l.clothing.clothingType" +
+    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2 AND  l.clothing.gender = ?3 AND l.clothing.clothingType" +
             " IN ?4")
     List<Like> findAllByUserIdWithGenderAndTypes(long userId, int rating, Gender gender, List<ClothType> type);
 
