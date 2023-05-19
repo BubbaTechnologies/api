@@ -41,7 +41,6 @@ public class AppController {
     public EntityModel<ClothingDTO> card(
             Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
         ClothingDTO response;
-        //TODO: Get any type but other
         response = modelMapper.map(clothingService.getCard(this.getUserId(principal), typeFilter, genderFilter), ClothingDTO.class);
 
         return EntityModel.of(response,

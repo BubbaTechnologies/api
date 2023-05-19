@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,15 +33,18 @@ public class ClothingService {
 
     public Clothing getCard(long userId, String typeFilter, String genderFilter) {
         Gender gender;
-        ClothType type = null;
-
+        List<ClothType> typeFilters = null;
         if (genderFilter == null)
             gender = userService.getGenderById(userId);
         else
             gender = toGender(genderFilter);
 
-        if (typeFilter != null)
-            type = toClothType(typeFilter);
+        if (typeFilter != null) {
+            typeFilters = new ArrayList<>();
+            String[] typeFiltersString = typeFilter.split(",");
+            for (String str : typeFiltersString)
+                typeFilters.add(toClothType(str));
+        }
 
         double choice = this.randomDouble(0, 1);
         if (choice <= randomClothingChance) {
@@ -52,15 +57,15 @@ public class ClothingService {
                 loops++;
 
                 Page<Clothing> clothingPage;
-                if (typeFilter == null) {
+                if (typeFilters == null) {
                     long amount = repository.countByGender(gender);
                     int index = (int)(Math.random() * amount);
                     clothingPage = repository.findAllWithGender(gender, PageRequest.of(index, 1));
                 }
                 else{
-                    long amount = repository.countByGenderAndType(gender, type);
+                    long amount = repository.countByGenderAndTypes(gender, typeFilters);
                     int index = (int)(Math.random() * amount);
-                    clothingPage = repository.findAllWithGenderAndType(gender, type, PageRequest.of(index, 1));
+                    clothingPage = repository.findAllWithGenderAndTypes(gender, typeFilters, PageRequest.of(index, 1));
                 }
 
                 Clothing item;
@@ -105,7 +110,7 @@ public class ClothingService {
         return repository.findByProductUrl(url);
     }
 
-    private Gender toGender(String gender) {
+    static public Gender toGender(String gender) {
         return switch (gender) {
             case "male" -> Gender.MALE;
             case "female" -> Gender.FEMALE;
@@ -116,7 +121,7 @@ public class ClothingService {
         };
     }
 
-    private ClothType toClothType(String type) {
+    static public ClothType toClothType(String type) {
         return switch (type) {
             case "top" -> ClothType.TOP;
             case "bottom" -> ClothType.BOTTOM;

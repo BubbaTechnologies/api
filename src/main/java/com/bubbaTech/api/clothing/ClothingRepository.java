@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ClothingRepository extends JpaRepository<Clothing, Long> {
@@ -22,11 +23,11 @@ public interface ClothingRepository extends JpaRepository<Clothing, Long> {
     @Query("SELECT COUNT(c) FROM Clothing c WHERE c.gender=?1")
     long countByGender(Gender gender);
 
-    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.gender = ?1 AND c.clothingType = ?2")
-    long countByGenderAndType(Gender gender, ClothType type);
+    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.gender = ?1 AND c.clothingType IN ?2")
+    long countByGenderAndTypes(Gender gender, List<ClothType> type);
     @Query("SELECT c FROM Clothing c WHERE c.gender = ?1")
     Page<Clothing> findAllWithGender(Gender gender, Pageable pageable);
 
-    @Query("SELECT c FROM Clothing c WHERE c.gender = ?1 AND c.clothingType = ?2")
-    Page<Clothing> findAllWithGenderAndType(Gender gender, ClothType type, Pageable pageable);
+    @Query("SELECT c FROM Clothing c WHERE c.gender = ?1 AND c.clothingType IN ?2")
+    Page<Clothing> findAllWithGenderAndTypes(Gender gender, List<ClothType> type, Pageable pageable);
 }

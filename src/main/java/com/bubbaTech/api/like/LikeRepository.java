@@ -24,15 +24,15 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2")
     List<Like> findAllByUserId(long userId, int rating);
 
-    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2 AND l.clothing.clothingType = ?3")
-    List<Like> findAllByUserIdWithType(long userId, int rating, ClothType type);
+    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2 AND l.clothing.clothingType IN ?3")
+    List<Like> findAllByUserIdWithTypes(long userId, int rating, List<ClothType> type);
 
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2 AND ?3 IN l.clothing.gender")
     List<Like> findAllByUserIdWithGender(long userId, int rating, Gender gender);
 
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2 AND ?3 IN l.clothing.gender AND l.clothing.clothingType" +
-            " = ?4")
-    List<Like> findAllByUserIdWithGenderAndType(long userId, int rating, Gender gender, ClothType type);
+            " IN ?4")
+    List<Like> findAllByUserIdWithGenderAndTypes(long userId, int rating, Gender gender, List<ClothType> type);
 
 //    @Query("SELECT l FROM Like l WHERE l.clothing.id = ?1")
 //    List<Like> findByItem(long clothingID);

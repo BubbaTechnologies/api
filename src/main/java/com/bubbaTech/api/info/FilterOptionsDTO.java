@@ -22,7 +22,9 @@ public class FilterOptionsDTO implements DTO<FilterOptionsDTO> {
                         ClothType.TOP.name(), ClothType.BOTTOM.name(), ClothType.SHOES.name(), ClothType.UNDERCLOTHING.name(), ClothType.JACKET.name(), ClothType.SKIRT.name(), ClothType.ONE_PIECE.name(), ClothType.ACCESSORY.name(), ClothType.SWIMWEAR.name(), ClothType.DRESS.name()
                 },new String[]{
                         ClothType.TOP.name(), ClothType.BOTTOM.name(), ClothType.SHOES.name(), ClothType.UNDERCLOTHING.name(), ClothType.JACKET.name(), ClothType.SKIRT.name(), ClothType.ONE_PIECE.name(), ClothType.ACCESSORY.name(), ClothType.SWIMWEAR.name(), ClothType.DRESS.name()
-                },
+                },new String[]{
+                        ClothType.TOP.name(), ClothType.BOTTOM.name(), ClothType.SHOES.name(), ClothType.UNDERCLOTHING.name(), ClothType.JACKET.name(), ClothType.SKIRT.name(), ClothType.ONE_PIECE.name(), ClothType.ACCESSORY.name(), ClothType.SWIMWEAR.name(), ClothType.DRESS.name()
+                }
         };
     }
 

@@ -4,9 +4,16 @@
 
 package com.bubbaTech.api.like;
 
+import com.bubbaTech.api.clothing.ClothType;
+import com.bubbaTech.api.user.Gender;
+
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.bubbaTech.api.clothing.ClothingService.toClothType;
+import static com.bubbaTech.api.clothing.ClothingService.toGender;
 
 @org.springframework.stereotype.Service
 public class LikeService {
@@ -49,12 +56,28 @@ public class LikeService {
     }
 
     public List<Like> getAllByUserId(long userId, int rating, String typeFilter, String genderFilter) {
+        //Convert genderFilter to gender
+        Gender gender = null;
+        if (genderFilter != null) {
+            gender = toGender(genderFilter);
+        }
+
+        //Convert typeFilter to list of types
+        List<ClothType> typeFilters = null;
+        if (typeFilter != null) {
+            typeFilters = new ArrayList<>();
+            String[] filters = typeFilter.split(",");
+            for (String str : filters) {
+                typeFilters.add(toClothType(str));
+            }
+        }
+
         if (genderFilter != null && typeFilter != null) {
-
+            return repository.findAllByUserIdWithGenderAndTypes(userId, rating, gender, typeFilters);
         } else if (genderFilter != null) {
-
+            return repository.findAllByUserIdWithGender(userId, rating, gender);
         } else if (typeFilter != null) {
-
+            return repository.findAllByUserIdWithTypes(userId, rating, typeFilters);
         }
 
         return repository.findAllByUserId(userId, rating);
