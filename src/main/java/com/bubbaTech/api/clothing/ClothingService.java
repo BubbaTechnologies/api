@@ -63,7 +63,9 @@ public class ClothingService {
                     clothingPage = repository.findAllWithGender(gender, PageRequest.of(index, 1));
                 }
                 else{
+                    System.out.println(typeFilters);
                     long amount = repository.countByGenderAndTypes(gender, typeFilters);
+                    System.out.println(amount);
                     int index = (int)(Math.random() * amount);
                     clothingPage = repository.findAllWithGenderAndTypes(gender, typeFilters, PageRequest.of(index, 1));
                 }
@@ -130,8 +132,10 @@ public class ClothingService {
             case "jacket" -> ClothType.JACKET;
             case "skirt" -> ClothType.SKIRT;
             case "one_piece" -> ClothType.ONE_PIECE;
+            case "sleepwear" -> ClothType.SLEEPWEAR;
             case "dress" -> ClothType.DRESS;
             case "accessory" -> ClothType.ACCESSORY;
+            case "set" -> ClothType.SET;
             default -> ClothType.OTHER;
         };
     }

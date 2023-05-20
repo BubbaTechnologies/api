@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.bubbaTech</groupId>
     <artifactId>api</artifactId>
-    <version>0.1.1.6</version>
+    <version>0.1.1.7</version>
     <name>api</name>
     <description>API for Bubba Technologies Inc.</description>
     <properties>

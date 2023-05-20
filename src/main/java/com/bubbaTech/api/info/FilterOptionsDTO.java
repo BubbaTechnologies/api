@@ -1,3 +1,7 @@
+//Matthew Groholski
+//May 19th, 2023
+//OUTDATED
+
 package com.bubbaTech.api.info;
 
 import com.bubbaTech.api.clothing.ClothType;

@@ -6,7 +6,6 @@ package com.bubbaTech.api.app;
 
 import com.bubbaTech.api.clothing.ClothingDTO;
 import com.bubbaTech.api.clothing.ClothingService;
-import com.bubbaTech.api.info.FilterOptionsDTO;
 import com.bubbaTech.api.like.Like;
 import com.bubbaTech.api.like.LikeDTO;
 import com.bubbaTech.api.like.LikeService;
@@ -90,11 +89,6 @@ public class AppController {
         EntityModel<LikeDTO> entityModel = EntityModel.of(likeRequest);
 
         return ResponseEntity.ok().body(entityModel);
-    }
-
-    @GetMapping(value = "/app/filterOptions", produces = "application/json")
-    public ResponseEntity<?> filterOptions() {
-        return ResponseEntity.ok().body(EntityModel.of(new FilterOptionsDTO()));
     }
 
     private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, int rating, String typeFilter, String genderFilter) {

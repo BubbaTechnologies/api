@@ -285,14 +285,14 @@ Required Headers: ```Authorization: Bearer (JWT)```
 Description: Returns genders and types per gender.
 
 Response:
-
-## Scraper Controller
 ```
 {
     "genders":[str],
     "types":[[str]]
 }
 ```
+
+## Scraper Controller
 
 ### /scraper/checkStore
 (DEPRECIATED: Use /scraper/store)
