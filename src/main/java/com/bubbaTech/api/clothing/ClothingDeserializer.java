@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import static com.bubbaTech.api.clothing.ClothingService.toClothType;
+import static com.bubbaTech.api.clothing.ClothingService.toGender;
+
 public class ClothingDeserializer extends StdDeserializer<ClothingDTO> {
 
 
@@ -46,30 +49,8 @@ public class ClothingDeserializer extends StdDeserializer<ClothingDTO> {
         }
 
         //Change type into clothType
-        ClothType clothType = switch (type) {
-            case "top" -> ClothType.TOP;
-            case "bottom" -> ClothType.BOTTOM;
-            case "shoes" -> ClothType.SHOES;
-            case "underclothing" -> ClothType.UNDERCLOTHING;
-            case "jacket" -> ClothType.JACKET;
-            case "skirt" -> ClothType.SKIRT;
-            case "one piece" -> ClothType.ONE_PIECE;
-            case "accessory" -> ClothType.ACCESSORY;
-            case "swimwear" -> ClothType.SWIMWEAR;
-            case "sleepwear" -> ClothType.SLEEPWEAR;
-            case "dress" -> ClothType.DRESS;
-            default -> ClothType.OTHER;
-        };
-
-        //Change gender into Gender
-        Gender g = switch (gender) {
-            case "male" -> Gender.MALE;
-            case "female" -> Gender.FEMALE;
-            case "boy" -> Gender.BOY;
-            case "girl" -> Gender.GIRL;
-            case "kids" -> Gender.KID;
-            default -> Gender.UNISEX;
-        };
+        ClothType clothType = toClothType(type);
+        Gender g = toGender(gender);
 
         return new ClothingDTO(name, imageUrlCollection, productURL, new StoreDTO(storeID), clothType, g);
     }
