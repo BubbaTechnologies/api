@@ -6,11 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingDeserializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/app/AppController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/app/AppController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingDeserializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingDeserializer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.bubbaTech.api.ApiApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.bubbaTech.api.ApiApplicationTests.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.bubbaTech.api.ApiApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.bubbaTech.api.ApiApplicationTests.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -200,7 +199,8 @@
       <workItem from="1684545020984" duration="3156000" />
       <workItem from="1684554219321" duration="27000" />
       <workItem from="1684554868173" duration="1124000" />
-      <workItem from="1684610774066" duration="335000" />
+      <workItem from="1684610774066" duration="386000" />
+      <workItem from="1684628826110" duration="1181000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -363,7 +363,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684555900071</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Consalited toGender and toType.">
+      <created>1684613990192</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1684613990192</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -405,7 +412,8 @@
     <MESSAGE value="Updated filter options." />
     <MESSAGE value="Updated like queries." />
     <MESSAGE value="Removed filter options route." />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed filter options route." />
+    <MESSAGE value="Consalited toGender and toType." />
+    <option name="LAST_COMMIT_MESSAGE" value="Consalited toGender and toType." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

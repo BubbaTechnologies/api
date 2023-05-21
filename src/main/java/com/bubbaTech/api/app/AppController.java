@@ -39,8 +39,8 @@ public class AppController {
     @GetMapping(value = "/app/card", produces = "application/json")
     public EntityModel<ClothingDTO> card(
             Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
-        ClothingDTO response;
-        response = modelMapper.map(clothingService.getCard(this.getUserId(principal), typeFilter, genderFilter), ClothingDTO.class);
+        ClothingDTO response = modelMapper.map(clothingService.getCard(this.getUserId(principal), typeFilter, genderFilter), ClothingDTO.class);
+        response.reverseImageList();
 
         return EntityModel.of(response,
                 linkTo(methodOn(AppController.class).card(principal, null, null)).withSelfRel(),
@@ -96,8 +96,11 @@ public class AppController {
 
         List<EntityModel<ClothingDTO>> items = new ArrayList<>();
 
-        for (Like like : likes)
-            items.add(EntityModel.of(modelMapper.map(clothingService.getById(like.getClothing().getId()),ClothingDTO.class)));
+        for (Like like : likes) {
+            ClothingDTO item = modelMapper.map(clothingService.getById(like.getClothing().getId()),ClothingDTO.class);
+            item.reverseImageList();
+            items.add(EntityModel.of(item));
+        }
 
         return CollectionModel.of(items);
     }

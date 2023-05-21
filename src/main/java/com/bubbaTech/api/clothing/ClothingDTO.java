@@ -11,14 +11,15 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 @Data
 @JsonDeserialize(using = ClothingDeserializer.class)
 public class ClothingDTO implements DTO<ClothingDTO> {
     private Long id;
     private String name;
-    private Collection<String> imageURL;
+    private List<String> imageURL;
     private String productURL;
     @JsonManagedReference
     private StoreDTO store;
@@ -32,13 +33,17 @@ public class ClothingDTO implements DTO<ClothingDTO> {
         this.id = id;
     }
 
-    public ClothingDTO(String name, Collection<String> imageURL, String productURL, StoreDTO store, ClothType type, Gender gender) {
+    public ClothingDTO(String name, List<String> imageURL, String productURL, StoreDTO store, ClothType type, Gender gender) {
         this.name = name;
         this.imageURL = imageURL;
         this.productURL = productURL;
         this.store = store;
         this.type = type;
         this.gender = gender;
+    }
+
+    public void reverseImageList() {
+        Collections.reverse(imageURL);
     }
 
     @Override

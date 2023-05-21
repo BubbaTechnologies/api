@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import static com.bubbaTech.api.clothing.ClothingService.toClothType;
 import static com.bubbaTech.api.clothing.ClothingService.toGender;
@@ -40,7 +40,7 @@ public class ClothingDeserializer extends StdDeserializer<ClothingDTO> {
         String gender = node.get("gender").textValue();
 
         //Deal with imageUrl
-        Collection<String> imageUrlCollection = new ArrayList<>();
+        List<String> imageUrlCollection = new ArrayList<>();
         if (imageURL.isArray()){
             for (JsonNode url : imageURL)
                 imageUrlCollection.add(url.textValue());
