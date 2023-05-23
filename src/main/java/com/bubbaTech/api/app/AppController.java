@@ -10,6 +10,7 @@ import com.bubbaTech.api.clothing.ClothingService;
 import com.bubbaTech.api.like.Like;
 import com.bubbaTech.api.like.LikeDTO;
 import com.bubbaTech.api.like.LikeService;
+import com.bubbaTech.api.like.Ratings;
 import com.bubbaTech.api.user.User;
 import com.bubbaTech.api.user.UserDTO;
 import com.bubbaTech.api.user.UserService;
@@ -23,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static java.lang.Math.min;
 
 @RestController
 @AllArgsConstructor
@@ -60,17 +64,100 @@ public class AppController {
         return getClothingList(this.getUserId(principal), ClothingListType.BOUGHT, typeFilter, genderFilter);
     }
 
-    //Deals with app interactions (like, image taps, dislike, remove likes)
+    //Deals with app like
     @PostMapping(value = "/app/like", produces = "application/json")
-    public ResponseEntity<?> interaction(@RequestBody LikeDTO newLike, Principal principal){
+    public ResponseEntity<?> like(@RequestBody LikeDTO newLike, Principal principal){
         long userId = getUserId(principal);
         newLike.setClothing(modelMapper.map(clothingService.getById(newLike.getClothing().getId()), ClothingDTO.class));
         newLike.setUser(modelMapper.map(userService.getById(userId), UserDTO.class));
+        //Sets like to like rating + imageTapRatio
+        newLike.setRating(Ratings.LIKE_RATING + min(newLike.getImageTapsRatio() * Ratings.TOTAL_IMAGE_TAP_RATING, Ratings.TOTAL_IMAGE_TAP_RATING));
+        newLike.setLiked(true);
 
         EntityModel<LikeDTO> like = EntityModel.of(modelMapper.map(likeService.create(modelMapper.map(newLike, Like.class)),LikeDTO.class));
 
         return ResponseEntity.ok().body(like);
     }
+
+    @PostMapping(value = "/app/dislike", produces = "application/json")
+    public ResponseEntity<?> dislike(@RequestBody LikeDTO newLike, Principal principal) {
+        long userId = getUserId(principal);
+        newLike.setClothing(modelMapper.map(clothingService.getById(newLike.getClothing().getId()), ClothingDTO.class));
+        newLike.setUser(modelMapper.map(userService.getById(userId), UserDTO.class));
+
+        //Sets like to dislike rating
+        newLike.setRating(Ratings.DISLIKE_RATING);
+        newLike.setLiked(false);
+
+        EntityModel<LikeDTO> like = EntityModel.of(modelMapper.map(likeService.create(modelMapper.map(newLike, Like.class)),LikeDTO.class));
+
+        return ResponseEntity.ok().body(like);
+    }
+
+    @PostMapping(value = "/app/removeLike", produces = "application/json")
+    public ResponseEntity<?> removeLike(@RequestBody LikeDTO newLike, Principal principal) {
+        long userId = getUserId(principal);
+        newLike.setClothing(modelMapper.map(clothingService.getById(newLike.getClothing().getId()), ClothingDTO.class));
+        newLike.setUser(modelMapper.map(userService.getById(userId), UserDTO.class));
+
+        //Sets like to remove like rating
+        newLike.setRating(Ratings.REMOVE_LIKE_RATING);
+        newLike.setLiked(false);
+        Optional<Like> findLike = likeService.findByClothingAndUser(newLike.getClothing().getId(),newLike.getUser().getId());
+        if (findLike.isPresent()) {
+            newLike.setBought(findLike.get().isBought());
+        } else {
+            newLike.setBought(false);
+        }
+
+        EntityModel<LikeDTO> like = EntityModel.of(modelMapper.map(likeService.create(modelMapper.map(newLike, Like.class)),LikeDTO.class));
+
+        return ResponseEntity.ok().body(like);
+    }
+
+    @PostMapping(value = "/app/bought", produces = "application/json")
+    public ResponseEntity<?> bought(@RequestBody LikeDTO newLike, Principal principal) {
+        long userId = getUserId(principal);
+        newLike.setClothing(modelMapper.map(clothingService.getById(newLike.getClothing().getId()), ClothingDTO.class));
+        newLike.setUser(modelMapper.map(userService.getById(userId), UserDTO.class));
+
+        //Sets like to like rating + imageTapRatio
+        newLike.setRating(Ratings.BUY_RATING);
+        Optional<Like> findLike = likeService.findByClothingAndUser(newLike.getClothing().getId(),newLike.getUser().getId());
+        if (findLike.isPresent()) {
+            newLike.setLiked(findLike.get().isLiked());
+        } else {
+            newLike.setLiked(false);
+        }
+        newLike.setBought(true);
+
+        EntityModel<LikeDTO> like = EntityModel.of(modelMapper.map(likeService.create(modelMapper.map(newLike, Like.class)),LikeDTO.class));
+
+        return ResponseEntity.ok().body(like);
+    }
+
+    @PostMapping(value = "/app/pageClick", produces = "application/json")
+    public ResponseEntity<?> pageClick(@RequestBody LikeDTO newLike, Principal principal) {
+        long userId = getUserId(principal);
+        newLike.setClothing(modelMapper.map(clothingService.getById(newLike.getClothing().getId()), ClothingDTO.class));
+        newLike.setUser(modelMapper.map(userService.getById(userId), UserDTO.class));
+
+        newLike.setRating(Ratings.PAGE_CLICK_RATING);
+        Optional<Like> findLike = likeService.findByClothingAndUser(newLike.getClothing().getId(),newLike.getUser().getId());
+        if (findLike.isPresent()) {
+            newLike.setLiked(findLike.get().isLiked());
+            newLike.setBought(findLike.get().isBought());
+        } else {
+            newLike.setLiked(false);
+            newLike.setBought(false);
+        }
+
+        EntityModel<LikeDTO> like = EntityModel.of(modelMapper.map(likeService.create(modelMapper.map(newLike, Like.class)),LikeDTO.class));
+
+        return ResponseEntity.ok().body(like);
+    }
+
+
 
     private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, ClothingListType listType, String typeFilter, String genderFilter) {
         List<Like> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter);

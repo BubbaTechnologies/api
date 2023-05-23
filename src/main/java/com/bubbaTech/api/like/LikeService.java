@@ -29,15 +29,9 @@ public class LikeService {
     public Like update(Like likeRequest) {
         Like like = repository.findByClothingAndUser(likeRequest.getClothing().getId(), likeRequest.getUser().getId()).orElseThrow(() -> new LikeNotFoundException(likeRequest.getId()));
 
-        if (likeRequest.getRating() <= 0) {
-            like.setLiked(false);
-        } else if (likeRequest.isLiked()){
-            like.setLiked(true);
-        }
-
-        if (likeRequest.isBought()) {
-            like.setBought(true);
-        }
+        like.setBought(likeRequest.isBought());
+        like.setLiked(likeRequest.isLiked());
+        like.setRating(likeRequest.getRating() + like.getRating());
 
         return repository.save(like);
     }

@@ -213,12 +213,111 @@ Request:
 
 ```
 {
-    "like":bool,
     "imageTapRatio":double,
-    "dislike":bool,
-    "removeLike":bool,
-    "pageClick":bool,
-    "bought":bool,
+    "clothingId":int
+}
+```
+
+Response:
+```
+{
+    "id": int,
+    "date": string,
+    "liked": bool,
+    "bought": bool
+}
+```
+
+### /app/dislike (POST)
+Mapping: POST
+
+Required Headers: ```Authorization: Bearer (JWT)```
+
+Description: Creates dislike.
+
+Request:
+
+```
+{
+    "imageTapRatio":double,
+    "clothingId":int
+}
+```
+
+Response:
+```
+{
+    "id": int,
+    "date": string,
+    "liked": bool,
+    "bought": bool
+}
+```
+
+### /app/removeLike (POST)
+Mapping: POST
+
+Required Headers: ```Authorization: Bearer (JWT)```
+
+Description: Removes like.
+
+Request:
+
+```
+{
+    "imageTapRatio":double,
+    "clothingId":int
+}
+```
+
+Response:
+```
+{
+    "id": int,
+    "date": string,
+    "liked": bool,
+    "bought": bool
+}
+```
+
+### /app/bought (POST)
+Mapping: POST
+
+Required Headers: ```Authorization: Bearer (JWT)```
+
+Description: Updates like to bought.
+
+Request:
+
+```
+{
+    "imageTapRatio":double,
+    "clothingId":int
+}
+```
+
+Response:
+```
+{
+    "id": int,
+    "date": string,
+    "liked": bool,
+    "bought": bool
+}
+```
+
+### /app/pageClick (POST)
+Mapping: POST
+
+Required Headers: ```Authorization: Bearer (JWT)```
+
+Description: Updates like to page click.
+
+Request:
+
+```
+{
+    "imageTapRatio":double,
     "clothingId":int
 }
 ```
