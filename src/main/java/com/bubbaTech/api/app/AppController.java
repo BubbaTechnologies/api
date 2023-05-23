@@ -5,6 +5,7 @@
 package com.bubbaTech.api.app;
 
 import com.bubbaTech.api.clothing.ClothingDTO;
+import com.bubbaTech.api.clothing.ClothingListType;
 import com.bubbaTech.api.clothing.ClothingService;
 import com.bubbaTech.api.like.Like;
 import com.bubbaTech.api.like.LikeDTO;
@@ -23,9 +24,6 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 @RestController
 @AllArgsConstructor
 public class AppController {
@@ -42,10 +40,7 @@ public class AppController {
         ClothingDTO response = modelMapper.map(clothingService.getCard(this.getUserId(principal), typeFilter, genderFilter), ClothingDTO.class);
         response.reverseImageList();
 
-        return EntityModel.of(response,
-                linkTo(methodOn(AppController.class).card(principal, null, null)).withSelfRel(),
-                linkTo(methodOn(AppController.class).createLike(new LikeDTO(response, 5), principal)).withRel("createLike"),
-                linkTo(methodOn(AppController.class).createLike(new LikeDTO(response, 10), principal)).withRel("createLove"));
+        return EntityModel.of(response);
     }
 
     @RequestMapping(value = "/app/card", method = RequestMethod.OPTIONS)
@@ -56,22 +51,20 @@ public class AppController {
     //Liked list for user based on sessionId
     @GetMapping(value = "/app/likes", produces = "application/json")
     public CollectionModel<EntityModel<ClothingDTO>> likes(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
-        return getClothingList(this.getUserId(principal), 5, typeFilter, genderFilter);
+        return getClothingList(this.getUserId(principal), ClothingListType.LIKE, typeFilter, genderFilter);
     }
 
     //Collection for user based on sessionId
     @GetMapping(value = "/app/collection", produces = "application/json")
     public CollectionModel<EntityModel<ClothingDTO>> collection(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
-        return getClothingList(this.getUserId(principal), 10, typeFilter, genderFilter);
+        return getClothingList(this.getUserId(principal), ClothingListType.BOUGHT, typeFilter, genderFilter);
     }
 
-
-    //Create like
+    //Deals with app interactions (like, image taps, dislike, remove likes)
     @PostMapping(value = "/app/like", produces = "application/json")
-    public ResponseEntity<?> createLike(@RequestBody LikeDTO newLike, Principal principal) {
+    public ResponseEntity<?> interaction(@RequestBody LikeDTO newLike, Principal principal){
         long userId = getUserId(principal);
-
-        newLike.setClothing(modelMapper.map(clothingService.getById(newLike.getClothing().getId()),ClothingDTO.class));
+        newLike.setClothing(modelMapper.map(clothingService.getById(newLike.getClothing().getId()), ClothingDTO.class));
         newLike.setUser(modelMapper.map(userService.getById(userId), UserDTO.class));
 
         EntityModel<LikeDTO> like = EntityModel.of(modelMapper.map(likeService.create(modelMapper.map(newLike, Like.class)),LikeDTO.class));
@@ -79,20 +72,8 @@ public class AppController {
         return ResponseEntity.ok().body(like);
     }
 
-    //Update like
-    @PutMapping(value = "/app/like", produces = "application/json")
-    public ResponseEntity<?> updateLike(@RequestBody LikeDTO likeRequest, Principal principal) {
-        likeRequest.setClothing(modelMapper.map(clothingService.getById(likeRequest.getClothing().getId()), ClothingDTO.class));
-        long userId = getUserId(principal);
-        likeRequest.setUser(modelMapper.map(userService.getById(userId), UserDTO.class));
-        likeRequest = modelMapper.map(likeService.update(modelMapper.map(likeRequest, Like.class)),LikeDTO.class);
-        EntityModel<LikeDTO> entityModel = EntityModel.of(likeRequest);
-
-        return ResponseEntity.ok().body(entityModel);
-    }
-
-    private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, int rating, String typeFilter, String genderFilter) {
-        List<Like> likes = likeService.getAllByUserId(userId, rating, typeFilter, genderFilter);
+    private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, ClothingListType listType, String typeFilter, String genderFilter) {
+        List<Like> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter);
 
         List<EntityModel<ClothingDTO>> items = new ArrayList<>();
 

@@ -4,6 +4,7 @@
 
 package com.bubbaTech.api.clothing;
 
+import com.bubbaTech.api.store.Store;
 import com.bubbaTech.api.user.Gender;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,4 +31,10 @@ public interface ClothingRepository extends JpaRepository<Clothing, Long> {
 
     @Query("SELECT c FROM Clothing c WHERE c.gender = ?1 AND c.clothingType IN ?2")
     Page<Clothing> findAllWithGenderAndTypes(Gender gender, List<ClothType> type, Pageable pageable);
+
+    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.store = ?1 AND c.gender = ?2")
+    long countByStoreAndGender(Store store, Gender gender);
+
+    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.store = ?1 AND c.clothingType = ?2")
+    long countByStoreAndType(Store store, ClothType type);
 }

@@ -4,7 +4,10 @@
 
 package com.bubbaTech.api.clothing;
 
+import com.bubbaTech.api.data.storeStatDTO;
 import com.bubbaTech.api.like.LikeService;
+import com.bubbaTech.api.store.Store;
+import com.bubbaTech.api.store.StoreService;
 import com.bubbaTech.api.user.Gender;
 import com.bubbaTech.api.user.UserService;
 import lombok.AllArgsConstructor;
@@ -25,6 +28,7 @@ public class ClothingService {
     private final ClothingRepository repository;
     private final LikeService likeService;
     private final UserService userService;
+    private final StoreService storeService;
 
 
     public Optional<Clothing> getById(long clothingId) {
@@ -110,6 +114,22 @@ public class ClothingService {
 
     public Optional<Clothing> findByUrl(String url) {
         return repository.findByProductUrl(url);
+    }
+
+    public List<storeStatDTO> getClothingPerStoreData() {
+        List<Store> stores = storeService.getAll();
+        List<storeStatDTO> storeStats = new ArrayList<>();
+        for (Store store: stores) {
+            Long maleCount = repository.countByStoreAndGender(store, Gender.MALE);
+            Long femaleCount = repository.countByStoreAndGender(store, Gender.FEMALE);
+            Long boyCount = repository.countByStoreAndGender(store, Gender.BOY);
+            Long girlCount = repository.countByStoreAndGender(store, Gender.GIRL);
+            Long kidCount = repository.countByStoreAndGender(store, Gender.KID);
+            Long unisexCount = repository.countByStoreAndGender(store, Gender.UNISEX);
+            Long otherCount = repository.countByStoreAndType(store, ClothType.OTHER);
+            storeStats.add(new storeStatDTO(store.getName(),maleCount, femaleCount, boyCount, girlCount, kidCount, unisexCount, otherCount));
+        }
+        return storeStats;
     }
 
     static public Gender toGender(String gender) {

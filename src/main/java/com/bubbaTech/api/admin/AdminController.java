@@ -5,6 +5,7 @@
 package com.bubbaTech.api.admin;
 
 
+import com.bubbaTech.api.clothing.ClothingService;
 import com.bubbaTech.api.security.authorities.Authorities;
 import com.bubbaTech.api.store.Store;
 import com.bubbaTech.api.store.StoreDTO;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class AdminController {
     UserService userService;
     ModelMapper modelMapper;
+    ClothingService clothingService;
 
     StoreService storeService;
 
@@ -45,6 +47,11 @@ public class AdminController {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         return ResponseEntity.ok().headers(headers).body(modelMapper.map(user, UserDTO.class));
+    }
+
+    @GetMapping(value = "/admin/storeStats")
+    public ResponseEntity<?> getClothingData() {
+        return ResponseEntity.ok().body(clothingService.getClothingPerStoreData());
     }
 
 

@@ -6,6 +6,7 @@ package com.bubbaTech.api.user;
 
 import com.bubbaTech.api.generic.DTO;
 import com.bubbaTech.api.like.LikeDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
@@ -17,6 +18,7 @@ import java.util.List;
 public class UserDTO implements DTO<UserDTO> {
     private Long id;
     private String username;
+    @JsonIgnore
     private String password;
     @JsonManagedReference
     private List<LikeDTO> likes;

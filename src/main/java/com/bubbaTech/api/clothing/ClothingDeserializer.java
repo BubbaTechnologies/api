@@ -8,8 +8,8 @@ import com.bubbaTech.api.store.StoreDTO;
 import com.bubbaTech.api.user.Gender;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,19 +18,14 @@ import java.util.List;
 import static com.bubbaTech.api.clothing.ClothingService.toClothType;
 import static com.bubbaTech.api.clothing.ClothingService.toGender;
 
-public class ClothingDeserializer extends StdDeserializer<ClothingDTO> {
-
+public class ClothingDeserializer extends JsonDeserializer<ClothingDTO> {
 
     public ClothingDeserializer() {
-        this(null);
-    }
-
-    public ClothingDeserializer(Class<?> vc) {
-        super(vc);
+        super();
     }
 
     @Override
-    public ClothingDTO deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+    public ClothingDTO deserialize(JsonParser jp, DeserializationContext context) throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
         String name = node.get("name").textValue();
         JsonNode imageURL = node.get("imageUrl");

@@ -125,7 +125,7 @@ Response:
 {
     "id":int,
     "name":str,
-    "imageURL": [str],
+    "imageURL":[str],
     "productURL":str,
     "store": {
         "id":int,
@@ -133,19 +133,8 @@ Response:
         "url":str
     },
     "type":str,
-    "gender": str,
-    "_links": {
-        "self": {
-            "href": "http://localhost:8080/app/card{?type,gender}",
-            "templated": true
-        },
-        "createLike": {
-            "href": "http://localhost:8080/app/like"
-        },
-        "createLove": {
-            "href": "http://localhost:8080/app/like"
-        }
-    }
+    "gender":str,
+    "date":str
 }
 ```
 
@@ -165,26 +154,18 @@ Response:
             {
                 "id":int,
                 "name":str,
-                "imageURL": [str],
-                "productURL": str,
+                "imageURL":[str],
+                "productURL":str,
                 "store": {
-                    "id": int,
-                    "name": str,
-                    "url": str
+                    "id":int,
+                    "name":str,
+                    "url":str
                 },
-                "type": str,
-                "gender": str
+                "type":str,
+                "gender":str,
+                "date":str
             }
         ]
-    },
-    "_links": {
-        "self": {
-            "href": "http://localhost:8080/app/likes"
-        },
-        "card": {
-            "href": "http://localhost:8080/app/card{?type,gender}",
-            "templated": true
-        }
     }
 }
 ```
@@ -213,18 +194,10 @@ Response:
                     "url": str
                 },
                 "type": str,
-                "gender": str
+                "gender": str,
+                "date":str
             }
         ]
-    },
-    "_links": {
-        "self": {
-            "href": "http://localhost:8080/app/likes"
-        },
-        "card": {
-            "href": "http://localhost:8080/app/card{?type,gender}",
-            "templated": true
-        }
     }
 }
 ```
@@ -240,8 +213,13 @@ Request:
 
 ```
 {
-    "clothingId":str,
-    "rating":str
+    "like":bool,
+    "imagesTapRatio":double,
+    "dislike":bool,
+    "removeLike":bool,
+    "pageClick":bool,
+    "bought":bool,
+    "clothingId":int
 }
 ```
 
@@ -249,34 +227,11 @@ Response:
 ```
 {
     "id":int,
-    "rating":int
+    "rating":int,
+    "date":str
 }
 ```
 
-
-### /app/like (PUT)
-Mapping: PUT
-
-Required Headers: ```Authorization: Bearer (JWT)```
-
-Description: Updates like.
-
-Request:
-
-```
-{
-    "clothingId":str,
-    "rating":str
-}
-```
-
-Response:
-```
-{
-    "id":int,
-    "rating":int
-}
-```
 ### /app/filterOptions
 Mapping: GET
 
@@ -338,15 +293,16 @@ else,
 {
     "id":int,
     "name":str,
-    "imageURL": [str],
+    "imageURL":[str],
     "productURL":str,
     "store": {
         "id":int,
         "name":str,
         "url":str
     },
-    "type":str,
-    "gender": [str]
+    "type": str,
+    "gender":[str],
+    "date":str
 }
 ```
 

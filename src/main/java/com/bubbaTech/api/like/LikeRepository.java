@@ -21,18 +21,18 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     @Modifying
     void delete(long clothingId, long userId);
 
-    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2")
-    List<Like> findAllByUserId(long userId, int rating);
+    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3")
+    List<Like> findAllByUserId(long userId, boolean liked, boolean bought);
 
-    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2 AND l.clothing.clothingType IN ?3")
-    List<Like> findAllByUserIdWithTypes(long userId, int rating, List<ClothType> type);
+    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.clothingType IN ?4")
+    List<Like> findAllByUserIdWithTypes(long userId, boolean liked, boolean bought, List<ClothType> type);
 
-    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2 AND l.clothing.gender = ?3")
-    List<Like> findAllByUserIdWithGender(long userId, int rating, Gender gender);
+    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4")
+    List<Like> findAllByUserIdWithGender(long userId, boolean liked, boolean bought, Gender gender);
 
-    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.rating >= ?2 AND  l.clothing.gender = ?3 AND l.clothing.clothingType" +
-            " IN ?4")
-    List<Like> findAllByUserIdWithGenderAndTypes(long userId, int rating, Gender gender, List<ClothType> type);
+    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4 AND l.clothing.clothingType" +
+            " IN ?5")
+    List<Like> findAllByUserIdWithGenderAndTypes(long userId, boolean liked, boolean bought, Gender gender, List<ClothType> type);
 
 //    @Query("SELECT l FROM Like l WHERE l.clothing.id = ?1")
 //    List<Like> findByItem(long clothingID);

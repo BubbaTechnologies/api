@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -44,6 +45,9 @@ public class Clothing {
 
     private Gender gender;
 
+    @Column(name = "date_created")
+    private LocalDate date;
+
     protected Clothing() {
     }
 
@@ -56,6 +60,16 @@ public class Clothing {
         this.gender = gender;
     }
 
+    //Sets date before saving
+    @PrePersist
+    public void prePersist() {
+        this.date = LocalDate.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.date = LocalDate.now();
+    }
 
     //Overrides
     @Override

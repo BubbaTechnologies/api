@@ -8,8 +8,11 @@ import com.bubbaTech.api.clothing.ClothingDTO;
 import com.bubbaTech.api.generic.DTO;
 import com.bubbaTech.api.user.UserDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+
+import java.time.LocalDate;
 
 
 @Data
@@ -21,25 +24,18 @@ public class LikeDTO implements DTO<LikeDTO> {
     private UserDTO user;
     @JsonBackReference
     private ClothingDTO clothing;
-    private int rating;
+    @JsonIgnore
+    private double rating;
 
-    public LikeDTO() {
-    }
+    private LocalDate date;
 
-    public LikeDTO(ClothingDTO clothing, int rating) {
+    private boolean liked;
+
+    private boolean bought;
+
+
+    public LikeDTO(ClothingDTO clothing, double rating) {
         this.clothing = clothing;
         this.rating = rating;
     }
-
-    public LikeDTO(UserDTO user, ClothingDTO clothing, int rating) {
-        this.user = user;
-        this.clothing = clothing;
-        this.rating = rating;
-    }
-
-    @Override
-    public String toString() {
-        return "Like{" + "id=" + this.id + '}';
-    }
-
 }
