@@ -28,6 +28,7 @@ public class ClothingDTO implements DTO<ClothingDTO> {
     private Gender gender;
     private LocalDate date;
 
+    public ClothingDTO() {}
     public ClothingDTO(Long id) {
         this.id = id;
     }

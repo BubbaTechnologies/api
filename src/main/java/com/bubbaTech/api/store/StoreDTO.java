@@ -15,8 +15,7 @@ public class StoreDTO implements DTO<StoreDTO> {
     private String name;
     private String URL;
 
-    public StoreDTO() {
-    }
+    public StoreDTO() {}
 
     public StoreDTO(long id) {
         this.id = id;

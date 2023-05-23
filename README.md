@@ -214,7 +214,7 @@ Request:
 ```
 {
     "like":bool,
-    "imagesTapRatio":double,
+    "imageTapRatio":double,
     "dislike":bool,
     "removeLike":bool,
     "pageClick":bool,
@@ -226,9 +226,10 @@ Request:
 Response:
 ```
 {
-    "id":int,
-    "rating":int,
-    "date":str
+    "id": int,
+    "date": string,
+    "liked": bool,
+    "bought": bool
 }
 ```
 

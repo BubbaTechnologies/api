@@ -28,8 +28,7 @@ public class UserDTO implements DTO<UserDTO> {
 
     private String name;
 
-    public UserDTO() {
-    }
+    public UserDTO() {}
 
     public UserDTO(Long id) {
         this.id = id;

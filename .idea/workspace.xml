@@ -5,42 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingListType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/data/storeStatDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/Ratings.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/admin/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/admin/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/Clothing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/Clothing.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingDeserializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/Like.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/Like.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeDeserializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/store/StoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/store/StoreService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/store/StoreDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/store/StoreDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDTO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/admin/AdminController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/admin/AdminController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/app/AppController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/app/AppController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/Clothing.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/Clothing.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingDeserializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingDeserializer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/Like.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/Like.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeDTO.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeDeserializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeDeserializer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/store/StoreService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/store/StoreService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeRepository.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/user/UserDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/user/UserDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.bubbaTech.api.ApiApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.bubbaTech.api.ApiApplicationTests.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.bubbaTech.api.ApiApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.bubbaTech.api.ApiApplicationTests.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -233,7 +214,7 @@
       <workItem from="1684554868173" duration="1124000" />
       <workItem from="1684610774066" duration="386000" />
       <workItem from="1684628826110" duration="1207000" />
-      <workItem from="1684649540098" duration="15178000" />
+      <workItem from="1684649540098" duration="17553000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -410,7 +391,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684631896781</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Added support for dates and rating system.">
+      <created>1684817002861</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1684817002861</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -454,7 +442,8 @@
     <MESSAGE value="Removed filter options route." />
     <MESSAGE value="Consalited toGender and toType." />
     <MESSAGE value="Reverse image list." />
-    <option name="LAST_COMMIT_MESSAGE" value="Reverse image list." />
+    <MESSAGE value="Added support for dates and rating system." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added support for dates and rating system." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

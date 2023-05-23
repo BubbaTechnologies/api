@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Data
@@ -27,12 +27,13 @@ public class LikeDTO implements DTO<LikeDTO> {
     @JsonIgnore
     private double rating;
 
-    private LocalDate date;
+    private LocalDateTime date;
 
     private boolean liked;
 
     private boolean bought;
 
+    public LikeDTO() {}
 
     public LikeDTO(ClothingDTO clothing, double rating) {
         this.clothing = clothing;

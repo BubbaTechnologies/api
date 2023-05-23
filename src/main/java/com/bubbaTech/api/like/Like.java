@@ -10,7 +10,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 @Entity
@@ -32,7 +33,7 @@ public class Like {
     private int rating;
 
     @Column(name="date_updated")
-    private LocalDate date;
+    private LocalDateTime date;
 
     private boolean liked;
 
@@ -48,13 +49,14 @@ public class Like {
 
     @PrePersist
     public void prePersist() {
-        this.date = LocalDate.now();
+        this.date = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
     @PreUpdate
     public void preUpdate() {
-        this.date = LocalDate.now();
+        this.date = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
+
     //Overrides
     @Override
     public boolean equals(Object o) {

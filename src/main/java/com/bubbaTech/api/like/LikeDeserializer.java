@@ -22,13 +22,13 @@ public class LikeDeserializer extends JsonDeserializer<LikeDTO> {
     @Override
     public LikeDTO deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
-        boolean like = node.get("like").booleanValue();
-        double imageTapsRatio = node.get("imageTaps").doubleValue();
-        boolean dislike = node.get("dislike").booleanValue();
-        boolean removeLike = node.get("removeLike").booleanValue();
-        boolean pageClick = node.get("pageClick").booleanValue();
-        boolean bought = node.get("bought").booleanValue();
-        long clothingId = node.get("clothingId").intValue();
+        boolean like = node.get("like").asBoolean();
+        double imageTapsRatio = node.get("imageTapRatio").asDouble();
+        boolean dislike = node.get("dislike").asBoolean();
+        boolean removeLike = node.get("removeLike").asBoolean();
+        boolean pageClick = node.get("pageClick").asBoolean();
+        boolean bought = node.get("bought").asBoolean();
+        long clothingId = node.get("clothingId").asInt();
 
         double rating = 0;
         LikeDTO newLikeDTO = new LikeDTO(new ClothingDTO(clothingId), 0);
