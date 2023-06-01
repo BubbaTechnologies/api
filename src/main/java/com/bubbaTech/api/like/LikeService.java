@@ -7,8 +7,12 @@ package com.bubbaTech.api.like;
 import com.bubbaTech.api.clothing.ClothType;
 import com.bubbaTech.api.clothing.ClothingListType;
 import com.bubbaTech.api.user.Gender;
+import org.json.simple.JSONObject;
 
 import javax.transaction.Transactional;
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +36,7 @@ public class LikeService {
         like.setBought(likeRequest.isBought());
         like.setLiked(likeRequest.isLiked());
         like.setRating(likeRequest.getRating() + like.getRating());
-
+        sendLike(like);
         return repository.save(like);
     }
 
@@ -42,7 +46,7 @@ public class LikeService {
             like.setId(foundLike.get().getId());
             return update(like);
         }
-
+        sendLike(like);
         return repository.save(like);
     }
 
@@ -88,5 +92,29 @@ public class LikeService {
 
     public Optional<Like> findByClothingAndUser(long clothingId, long userId) {
         return repository.findByClothingAndUser(clothingId, userId);
+    }
+
+    public static void sendLike(Like like) {
+        try {
+            URL url = new URL("https://ai.peachsconemarket.com/like");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type","application/json");
+            connection.setDoOutput(true);
+
+            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userId", like.getUser().getId());
+            jsonObject.put("clothingId", like.getClothing().getId());
+            jsonObject.put("rating", like.getRating());
+            outputStream.writeBytes(jsonObject.toJSONString());
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 200) {
+                throw new Exception("Did not successfully send like with URL https://ai.peachsconemarket.com/like and data " + jsonObject.toJSONString() + ".");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

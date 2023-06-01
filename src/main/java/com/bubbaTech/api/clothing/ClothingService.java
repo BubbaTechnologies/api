@@ -11,10 +11,18 @@ import com.bubbaTech.api.store.StoreService;
 import com.bubbaTech.api.user.Gender;
 import com.bubbaTech.api.user.UserService;
 import lombok.AllArgsConstructor;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +32,7 @@ import java.util.Optional;
 public class ClothingService {
     private final static int MAX_RANDS = 100;
 
-    private final static double randomClothingChance = 1;
+    private final static double randomClothingChance = 0.4;
     private final ClothingRepository repository;
     private final LikeService likeService;
     private final UserService userService;
@@ -50,52 +58,93 @@ public class ClothingService {
                 typeFilters.add(toClothType(str));
         }
 
-        double choice = this.randomDouble(0, 1);
+        double choice = this.randomDouble();
         if (choice <= randomClothingChance) {
-            long count = repository.count();
-            if (count == 0)
-                throw new RuntimeException("Empty Repository");
-
-            int loops = 0;
-            while (loops < MAX_RANDS){
-                loops++;
-
-                Page<Clothing> clothingPage;
-                if (typeFilters == null) {
-                    long amount = repository.countByGender(gender);
-                    int index = (int)(Math.random() * amount);
-                    clothingPage = repository.findAllWithGender(gender, PageRequest.of(index, 1));
+            return getRandom(userId, typeFilters, gender);
+        } else {
+            try {
+                String baseUrl = "https://ai.peachsconemarket.com/reccomendation";
+                StringBuilder query = new StringBuilder("userId=" + URLEncoder.encode(Long.toString(userId), StandardCharsets.UTF_8) +
+                        "&gender=" + URLEncoder.encode(gender.toString(), StandardCharsets.UTF_8));
+                if (typeFilters != null) {
+                    query.append("&clothingType=");
+                    for (ClothType type : typeFilters) {
+                        query.append(URLEncoder.encode(type.toString(), StandardCharsets.UTF_8)).append(",");
+                    }
+                    query.deleteCharAt(query.length() - 1);
                 }
-                else{
-                    System.out.println(typeFilters);
-                    long amount = repository.countByGenderAndTypes(gender, typeFilters);
-                    System.out.println(amount);
-                    int index = (int)(Math.random() * amount);
-                    clothingPage = repository.findAllWithGenderAndTypes(gender, typeFilters, PageRequest.of(index, 1));
+                URL url = new URL(baseUrl + "?" + query.toString());
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setDoInput(true);
+
+                int responseCode = connection.getResponseCode();
+                if (responseCode != 200) {
+                    throw new RuntimeException("Error getting recommendation with following url " + baseUrl + "?" + query.toString() + " . Received response code " + responseCode + ".");
                 }
 
-                Clothing item;
-                if (clothingPage.hasContent())
-                    item = clothingPage.getContent().get(0);
+                BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder responseBuilder = new StringBuilder();
+                String line;
+                while ((line = inputStream.readLine()) != null) {
+                    responseBuilder.append(line);
+                }
+
+                inputStream.close();
+                JSONObject jsonResponse = (JSONObject) new JSONParser().parse(responseBuilder.toString());
+                long clothingId = (long) jsonResponse.get("clothingId");
+                Optional<Clothing> item = repository.findById(clothingId);
+                if (item.isPresent() && likeCheck(item.get(), userId))
+                    return item.get();
                 else
-                    continue;
+                    throw new RuntimeException("Invalid Clothing Id: " + clothingId + ".");
+            } catch (Exception e) {
+                e.printStackTrace();
+                return getRandom(userId, typeFilters, gender);
+            }
+        }
+    }
 
-                if (likeService.findByClothingAndUser(item.getId(), userId).isPresent())
-                    continue;
+    private double randomDouble() {
+        return (Math.random()) + (double) 0;
+    }
 
-                return item;
+    private Clothing getRandom(long userId, List<ClothType> typeFilters, Gender gender) {
+        long count = repository.count();
+        if (count == 0)
+            throw new RuntimeException("Empty Repository");
+
+        int loops = 0;
+        while (loops < MAX_RANDS) {
+            loops++;
+
+            Page<Clothing> clothingPage;
+            if (typeFilters == null) {
+                long amount = repository.countByGender(gender);
+                int index = (int) (Math.random() * amount);
+                clothingPage = repository.findAllWithGender(gender, PageRequest.of(index, 1));
+            } else {
+                long amount = repository.countByGenderAndTypes(gender, typeFilters);
+                int index = (int) (Math.random() * amount);
+                clothingPage = repository.findAllWithGenderAndTypes(gender, typeFilters, PageRequest.of(index, 1));
             }
 
+            Clothing item;
+            if (clothingPage.hasContent())
+                item = clothingPage.getContent().get(0);
+            else
+                continue;
+
+            if (likeCheck(item, userId))
+                continue;
+
+            return item;
         }
         return null;
     }
 
-    private Long randomLong(Long start, Long end) {
-        return start + (long) (Math.random() * (end - start + 1));
-    }
-
-    private double randomDouble(double start, double end) {
-        return (Math.random() * (end - start)) + start;
+    private Boolean likeCheck(Clothing item, long userId) {
+        return likeService.findByClothingAndUser(item.getId(), userId).isPresent();
     }
 
     public Clothing create(Clothing item) {
@@ -133,7 +182,7 @@ public class ClothingService {
     }
 
     static public Gender toGender(String gender) {
-        return switch (gender) {
+        return switch (gender.toLowerCase()) {
             case "male" -> Gender.MALE;
             case "female" -> Gender.FEMALE;
             case "boy" -> Gender.BOY;
@@ -144,7 +193,7 @@ public class ClothingService {
     }
 
     static public ClothType toClothType(String type) {
-        return switch (type) {
+        return switch (type.toLowerCase()) {
             case "top" -> ClothType.TOP;
             case "bottom" -> ClothType.BOTTOM;
             case "shoes" -> ClothType.SHOES;
