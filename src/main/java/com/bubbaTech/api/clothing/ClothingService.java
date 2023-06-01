@@ -5,6 +5,7 @@
 package com.bubbaTech.api.clothing;
 
 import com.bubbaTech.api.data.storeStatDTO;
+import com.bubbaTech.api.info.ServiceLogger;
 import com.bubbaTech.api.like.LikeService;
 import com.bubbaTech.api.store.Store;
 import com.bubbaTech.api.store.StoreService;
@@ -38,6 +39,8 @@ public class ClothingService {
     private final UserService userService;
     private final StoreService storeService;
 
+    private final ServiceLogger logger;
+
 
     public Optional<Clothing> getById(long clothingId) {
         return repository.findById(clothingId);
@@ -63,7 +66,7 @@ public class ClothingService {
             return getRandom(userId, typeFilters, gender);
         } else {
             try {
-                String baseUrl = "https://ai.peachsconemarket.com/reccomendation";
+                String baseUrl = "https://ai.peachsconemarket.com/recommendation";
                 StringBuilder query = new StringBuilder("userId=" + URLEncoder.encode(Long.toString(userId), StandardCharsets.UTF_8) +
                         "&gender=" + URLEncoder.encode(gender.toString(), StandardCharsets.UTF_8));
                 if (typeFilters != null) {
@@ -80,7 +83,7 @@ public class ClothingService {
 
                 int responseCode = connection.getResponseCode();
                 if (responseCode != 200) {
-                    throw new RuntimeException("Error getting recommendation with following url " + baseUrl + "?" + query.toString() + " . Received response code " + responseCode + ".");
+                    logger.error("Error getting recommendation with following url " + baseUrl + "?" + query.toString() + " . Received response code " + responseCode + ".");
                 }
 
                 BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -97,12 +100,12 @@ public class ClothingService {
                 if (item.isPresent() && likeCheck(item.get(), userId))
                     return item.get();
                 else
-                    throw new RuntimeException("Invalid Clothing Id: " + clothingId + ".");
+                    logger.error("Invalid Clothing Id: " + clothingId + ".");
             } catch (Exception e) {
                 e.printStackTrace();
-                return getRandom(userId, typeFilters, gender);
             }
         }
+        return getRandom(userId, typeFilters, gender);
     }
 
     private double randomDouble() {
