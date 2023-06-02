@@ -82,25 +82,25 @@ public class ClothingService {
                 connection.setDoInput(true);
 
                 int responseCode = connection.getResponseCode();
-                if (responseCode != 200) {
+                if (responseCode == 200) {
+                    BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder responseBuilder = new StringBuilder();
+                    String line;
+                    while ((line = inputStream.readLine()) != null) {
+                        responseBuilder.append(line);
+                    }
+
+                    inputStream.close();
+                    JSONObject jsonResponse = (JSONObject) new JSONParser().parse(responseBuilder.toString());
+                    long clothingId = (long) jsonResponse.get("clothingId");
+                    Optional<Clothing> item = repository.getById(clothingId);
+                    if (item.isPresent() && !likeCheck(item.get(), userId))
+                        return item.get();
+                    else
+                        logger.error("Invalid Clothing Id: " + clothingId + ".");
+                } else{
                     logger.error("Error getting recommendation with following url " + baseUrl + "?" + query.toString() + " . Received response code " + responseCode + ".");
                 }
-
-                BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder responseBuilder = new StringBuilder();
-                String line;
-                while ((line = inputStream.readLine()) != null) {
-                    responseBuilder.append(line);
-                }
-
-                inputStream.close();
-                JSONObject jsonResponse = (JSONObject) new JSONParser().parse(responseBuilder.toString());
-                long clothingId = (long) jsonResponse.get("clothingId");
-                Optional<Clothing> item = repository.findById(clothingId);
-                if (item.isPresent() && likeCheck(item.get(), userId))
-                    return item.get();
-                else
-                    logger.error("Invalid Clothing Id: " + clothingId + ".");
             } catch (Exception e) {
                 e.printStackTrace();
             }

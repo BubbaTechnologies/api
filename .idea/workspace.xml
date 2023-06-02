@@ -4,17 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/info/ServiceLogger.java" afterDir="false" />
+    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="Added support for logger. No longer errors out on failed recommend request.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/ai/IntelAssembler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/ai/IntelligenceController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeDeserializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeDeserializer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-archiver/pom.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.bubbaTech.api.ApiApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.bubbaTech.api.ApiApplicationTests.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.bubbaTech.api.ApiApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.bubbaTech.api.ApiApplicationTests.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/ai/IntelAssembler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/ai/IntelligenceController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +65,9 @@
         </option>
       </RecentBranches>
     </option>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar:///Library/Java/JavaVirtualMachines/liberica-jdk-17.jdk/Contents/Home/lib/src.zip!/java.base/java/io/IOException.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -211,7 +212,9 @@
       <workItem from="1684893433422" duration="383000" />
       <workItem from="1685567025112" duration="4380000" />
       <workItem from="1685597004427" duration="1959000" />
-      <workItem from="1685601275149" duration="364000" />
+      <workItem from="1685601275149" duration="862000" />
+      <workItem from="1685634196196" duration="4070000" />
+      <workItem from="1685727850504" duration="767000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -416,7 +419,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685599956876</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Added support for logger. No longer errors out on failed recommend request.">
+      <created>1685601664953</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1685601664953</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -437,7 +447,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Documentation, updated bug in Like Repository" />
     <MESSAGE value="Updated /scraper/store to allow for requests with already created store. Checks if store exists and returns store if it does, else returns new store.&#10;&#10;Updated application.properties to use enviroment variables." />
     <MESSAGE value="Update /scraper/clothing to update clothing when posting an item that already exists." />
     <MESSAGE value="Removed LoadDatabase file" />
@@ -462,7 +471,8 @@
     <MESSAGE value="Debugged DTO and deserializer." />
     <MESSAGE value="Added requests for each like type." />
     <MESSAGE value="Added support for AI." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added support for AI." />
+    <MESSAGE value="Added support for logger. No longer errors out on failed recommend request." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added support for logger. No longer errors out on failed recommend request." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

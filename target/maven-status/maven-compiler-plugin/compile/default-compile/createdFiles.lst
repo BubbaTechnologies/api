@@ -4,7 +4,6 @@ com/bubbaTech/api/user/UserService.class
 com/bubbaTech/api/ApiApplication.class
 com/bubbaTech/api/user/Gender.class
 com/bubbaTech/api/scraper/ScraperAssembler.class
-com/bubbaTech/api/ai/IntelligenceController.class
 com/bubbaTech/api/like/LikeNotFoundException.class
 com/bubbaTech/api/store/StoreDTO.class
 com/bubbaTech/api/security/authentication/CustomUserDetailsService.class
@@ -39,6 +38,7 @@ com/bubbaTech/api/clothing/ClothingDeserializer.class
 com/bubbaTech/api/security/authentication/model/AuthenticationRequestDeserializer.class
 com/bubbaTech/api/user/UserDeserializer.class
 com/bubbaTech/api/store/Store.class
+com/bubbaTech/api/info/ServiceLogger.class
 com/bubbaTech/api/security/securityConfig.class
 com/bubbaTech/api/security/authentication/JwtUtil.class
 com/bubbaTech/api/store/StoreRepository.class
@@ -52,5 +52,4 @@ com/bubbaTech/api/clothing/ClothingDTO.class
 com/bubbaTech/api/security/authentication/UPAuthenticationProvider.class
 com/bubbaTech/api/info/FilterOptionsDTO.class
 com/bubbaTech/api/security/authentication/model/AuthenticationRequest.class
-com/bubbaTech/api/ai/IntelAssembler.class
 com/bubbaTech/api/user/UserRepository.class
