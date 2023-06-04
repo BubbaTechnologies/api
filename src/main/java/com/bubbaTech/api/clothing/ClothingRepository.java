@@ -18,7 +18,6 @@ public interface ClothingRepository extends JpaRepository<Clothing, Long> {
 
     @Query("SELECT c FROM Clothing c WHERE c.productURL = ?1")
     Optional<Clothing> findByProductUrl(String url);
-
     @Query("SELECT c FROM Clothing c WHERE c.id = ?1 AND c.store.enabled = true")
     Optional<Clothing> getById(long id);
     @Query("SELECT COUNT(c) FROM Clothing c WHERE c.gender=?1 AND NOT c.clothingType = 10")

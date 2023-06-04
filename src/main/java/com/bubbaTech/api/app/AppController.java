@@ -4,6 +4,7 @@
 
 package com.bubbaTech.api.app;
 
+import com.bubbaTech.api.clothing.Clothing;
 import com.bubbaTech.api.clothing.ClothingDTO;
 import com.bubbaTech.api.clothing.ClothingListType;
 import com.bubbaTech.api.clothing.ClothingService;
@@ -36,8 +37,9 @@ public class AppController {
     ModelMapper modelMapper;
     LikeService likeService;
 
-    //Clothing card for user based on sessionId
+    public static int CLOTHING_COUNT = 10;
 
+    //Clothing card for user based on sessionId
     @GetMapping(value = "/app/card", produces = "application/json")
     public EntityModel<ClothingDTO> card(
             Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
@@ -50,6 +52,17 @@ public class AppController {
     @RequestMapping(value = "/app/card", method = RequestMethod.OPTIONS)
     public ResponseEntity<?> optionsRequest() {
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/app/cardList", produces = "application/json")
+    public CollectionModel<EntityModel<ClothingDTO>> getCardList(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
+        List<Clothing> items = clothingService.recommendClothingIdList(this.getUserId(principal), typeFilter, genderFilter);
+        List<EntityModel<ClothingDTO>> itemsDTO = new ArrayList<>();
+        for (Clothing item : items) {
+            itemsDTO.add(EntityModel.of(modelMapper.map(item, ClothingDTO.class)));
+        }
+
+        return CollectionModel.of(itemsDTO);
     }
 
     //Liked list for user based on sessionId

@@ -138,6 +138,38 @@ Response:
 }
 ```
 
+### /app/cardList
+
+Mapping: GET
+
+Request Parameters: type *(OPTIONAL)*, gender *(OPTIONAL)*
+
+Description: Returns a list of clothing for user.
+
+Required Headers: ```Authorization: Bearer (JWT)```
+
+Response:
+```
+{
+    "_embedded":{
+        "clothingDTOList":[
+            "id":int,
+            "name":str,
+            "imageURL":[str],
+            "productURL":str,
+            "store": {
+                "id":int,
+                "name":str,
+                "url":str
+            },
+            "type":str,
+            "gender":str,
+            "date":str
+        ]
+    }
+}
+```
+
 ### /app/likes
 Mapping: GET
 

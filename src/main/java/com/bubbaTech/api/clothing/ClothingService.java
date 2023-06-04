@@ -1,9 +1,10 @@
-//Matthew Grohoslki
+//Matthew Groholski
 //Bubba Technologies Inc.
 //10/01/2022
 
 package com.bubbaTech.api.clothing;
 
+import com.bubbaTech.api.app.AppController;
 import com.bubbaTech.api.data.storeStatDTO;
 import com.bubbaTech.api.info.ServiceLogger;
 import com.bubbaTech.api.like.LikeService;
@@ -12,6 +13,7 @@ import com.bubbaTech.api.store.StoreService;
 import com.bubbaTech.api.user.Gender;
 import com.bubbaTech.api.user.UserService;
 import lombok.AllArgsConstructor;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.data.domain.Page;
@@ -46,20 +48,63 @@ public class ClothingService {
         return repository.findById(clothingId);
     }
 
-    public Clothing getCard(long userId, String typeFilter, String genderFilter) {
-        Gender gender;
-        List<ClothType> typeFilters = null;
-        if (genderFilter == null)
-            gender = userService.getGenderById(userId);
-        else
-            gender = toGender(genderFilter);
+    public List<Clothing> recommendClothingIdList(long userId, String typeFilter, String genderFilter) {
+        Gender gender = genderStringToEnum(userId, genderFilter);
+        List<ClothType> typeFilters = typeStringToList(typeFilter);
+        try {
+            String baseUrl = "https://ai.peachsconemarket.com/recommendationList";
+            StringBuilder query = new StringBuilder("userId=" + URLEncoder.encode(Long.toString(userId), StandardCharsets.UTF_8) +
+                    "&gender=" + URLEncoder.encode(gender.toString(), StandardCharsets.UTF_8));
+            if (typeFilters != null) {
+                query.append("&clothingType=");
+                for (ClothType type : typeFilters) {
+                    query.append(URLEncoder.encode(type.toString(), StandardCharsets.UTF_8)).append(",");
+                }
+                query.deleteCharAt(query.length() - 1);
+            }
+            URL url = new URL(baseUrl + "?" + query);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
 
-        if (typeFilter != null) {
-            typeFilters = new ArrayList<>();
-            String[] typeFiltersString = typeFilter.split(",");
-            for (String str : typeFiltersString)
-                typeFilters.add(toClothType(str));
+            int responseCode = connection.getResponseCode();
+            List<Clothing> items = new ArrayList<>();
+            if (responseCode == 200) {
+                BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder responseBuilder = new StringBuilder();
+                String line;
+                while ((line = inputStream.readLine()) != null) {
+                    responseBuilder.append(line);
+                }
+
+                inputStream.close();
+                JSONObject jsonResponse = (JSONObject) new JSONParser().parse(responseBuilder.toString());
+                JSONArray clothingIdArray = (JSONArray) jsonResponse.get("clothingItems");
+
+                for (Object id : clothingIdArray) {
+                    double choice = this.randomDouble();
+                    //Introduces randomness between recommended clothing
+                    if (choice <= randomClothingChance)
+                        items.add(getRandom(userId, typeFilters, gender));
+                    Optional<Clothing> item = repository.getById((long) id);
+                    if (item.isPresent() && items.size() < AppController.CLOTHING_COUNT && !likeCheck(item.get(), userId))
+                        items.add(item.get());
+                }
+            }
+            //Fill rest of items with random
+            for (int i = items.size(); i < AppController.CLOTHING_COUNT; i++) {
+                items.add(getRandom(userId, typeFilters, gender));
+            }
+            return items;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
+    }
+
+    public Clothing getCard(long userId, String typeFilter, String genderFilter) {
+        Gender gender = genderStringToEnum(userId, genderFilter);
+        List<ClothType> typeFilters = typeStringToList(typeFilter);
 
         double choice = this.randomDouble();
         if (choice <= randomClothingChance) {
@@ -76,7 +121,7 @@ public class ClothingService {
                     }
                     query.deleteCharAt(query.length() - 1);
                 }
-                URL url = new URL(baseUrl + "?" + query.toString());
+                URL url = new URL(baseUrl + "?" + query);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -99,7 +144,7 @@ public class ClothingService {
                     else
                         logger.error("Invalid Clothing Id: " + clothingId + ".");
                 } else{
-                    logger.error("Error getting recommendation with following url " + baseUrl + "?" + query.toString() + " . Received response code " + responseCode + ".");
+                    logger.error("Error getting recommendation with following url " + baseUrl + "?" + query + " . Received response code " + responseCode + ".");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -182,6 +227,27 @@ public class ClothingService {
             storeStats.add(new storeStatDTO(store.getName(),maleCount, femaleCount, boyCount, girlCount, kidCount, unisexCount, otherCount));
         }
         return storeStats;
+    }
+
+    private List<ClothType> typeStringToList(String typeFilter) {
+        List<ClothType> typeFilters = null;
+
+        if (typeFilter != null) {
+            typeFilters = new ArrayList<>();
+            String[] typeFiltersString = typeFilter.split(",");
+            for (String str : typeFiltersString)
+                typeFilters.add(toClothType(str));
+        }
+        return typeFilters;
+    }
+
+    private Gender genderStringToEnum(long userId, String genderFilter) {
+        Gender gender;
+        if (genderFilter == null)
+            gender = userService.getGenderById(userId);
+        else
+            gender = toGender(genderFilter);
+        return gender;
     }
 
     static public Gender toGender(String gender) {
