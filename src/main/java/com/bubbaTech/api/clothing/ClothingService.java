@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -195,7 +196,8 @@ public class ClothingService {
         return likeService.findByClothingAndUser(item.getId(), userId).isPresent();
     }
 
-    public Clothing create(Clothing item) {
+    @Transactional
+    public Clothing update(Clothing item) {
         Optional<Clothing> optionalClothingItem = this.findByUrl(item.getProductURL());
         if (optionalClothingItem.isPresent()) {
             Clothing clothingItem = optionalClothingItem.get();
@@ -203,7 +205,14 @@ public class ClothingService {
             clothingItem.setName(item.getName());
             clothingItem.setImageURL(item.getImageURL());
             return repository.save(clothingItem);
+        }
+        return null;
+    }
 
+    public Clothing create(Clothing item) {
+        Optional<Clothing> optionalClothingItem = this.findByUrl(item.getProductURL());
+        if (optionalClothingItem.isPresent()) {
+            return update(optionalClothingItem.get());
         } else {
             return repository.save(item);
         }

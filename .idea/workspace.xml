@@ -9,8 +9,12 @@
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/app/AppController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/app/AppController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingService.class" afterDir="false" />
     </list>
@@ -218,7 +222,9 @@
       <workItem from="1685770487090" duration="589000" />
       <workItem from="1685830839775" duration="4769000" />
       <workItem from="1685852066151" duration="124000" />
-      <workItem from="1685852318150" duration="1367000" />
+      <workItem from="1685852318150" duration="1441000" />
+      <workItem from="1685856670995" duration="193000" />
+      <workItem from="1685982003333" duration="5442000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -437,7 +443,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685729525828</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Created cardList route.">
+      <created>1685855292939</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1685855292939</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -458,7 +471,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Update /scraper/clothing to update clothing when posting an item that already exists." />
     <MESSAGE value="Removed LoadDatabase file" />
     <MESSAGE value="Fixed random card, added support for OPTIONS method to /app/card" />
     <MESSAGE value="Updated getCard and README (/create)" />
@@ -483,7 +495,8 @@
     <MESSAGE value="Added support for AI." />
     <MESSAGE value="Added support for logger. No longer errors out on failed recommend request." />
     <MESSAGE value="Fix bug with gender and like check." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix bug with gender and like check." />
+    <MESSAGE value="Created cardList route." />
+    <option name="LAST_COMMIT_MESSAGE" value="Created cardList route." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

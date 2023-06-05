@@ -1,13 +1,17 @@
-//Matthew Grohoslki
+//Matthew Groholski
 //Bubba Technologies Inc.
 //10/01/2022
 
 package com.bubbaTech.api.like;
 
+import com.bubbaTech.api.app.AppController;
 import com.bubbaTech.api.clothing.ClothType;
 import com.bubbaTech.api.clothing.ClothingListType;
 import com.bubbaTech.api.user.Gender;
 import org.json.simple.JSONObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
 import java.io.DataOutputStream;
@@ -50,7 +54,7 @@ public class LikeService {
         return repository.save(like);
     }
 
-    public List<Like> getAllByUserId(long userId, ClothingListType listType, String typeFilter, String genderFilter) {
+    public List<Like> getAllByUserId(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
         //Convert genderFilter to gender
         Gender gender = null;
         if (genderFilter != null) {
@@ -70,24 +74,31 @@ public class LikeService {
         boolean liked = false;
         boolean bought = false;
         switch (listType) {
-            case LIKE -> {
-                liked = true;
-            }
+            case LIKE -> liked = true;
             case BOUGHT -> {
                 liked = true;
                 bought = true;
             }
         }
-
-        if (genderFilter != null && typeFilter != null) {
-            return repository.findAllByUserIdWithGenderAndTypes(userId, liked, bought, gender, typeFilters);
-        } else if (genderFilter != null) {
-            return repository.findAllByUserIdWithGender(userId, liked, bought, gender);
-        } else if (typeFilter != null) {
-            return repository.findAllByUserIdWithTypes(userId, liked, bought, typeFilters);
+        Pageable pageRequest;
+        if (pageNumber == null) {
+            pageRequest = Pageable.unpaged();
+        } else {
+            pageRequest = PageRequest.of(pageNumber, AppController.PAGE_SIZE);
         }
 
-        return repository.findAllByUserId(userId, liked, bought);
+        Page<Like> likePage;
+        if (genderFilter != null && typeFilter != null) {
+            likePage = repository.findAllByUserIdWithGenderAndTypes(userId, liked, bought, gender, typeFilters, pageRequest);
+        } else if (genderFilter != null) {
+            likePage = repository.findAllByUserIdWithGender(userId, liked, bought, gender, pageRequest);
+        } else if (typeFilter != null) {
+            likePage = repository.findAllByUserIdWithTypes(userId, liked, bought, typeFilters, pageRequest);
+        } else {
+            likePage = repository.findAllByUserId(userId, liked, bought, pageRequest);
+        }
+
+        return likePage.getContent();
     }
 
     public Optional<Like> findByClothingAndUser(long clothingId, long userId) {

@@ -1,5 +1,5 @@
 # Bubba Technologies Inc. API
-Updated 05/17/2023
+Updated 06/05/2023
 
 ## Generic Controller
 ### /
@@ -169,6 +169,12 @@ Response:
     }
 }
 ```
+### /app/checkToken
+Mapping: GET
+
+Description: Returns 200 if valid user and updates last login.
+
+Required Headers: ```Authorization: Bearer (JWT)```
 
 ### /app/likes
 Mapping: GET
@@ -176,6 +182,20 @@ Mapping: GET
 Description: Returns all likes for user.
 
 Required Headers: ```Authorization: Bearer (JWT)```
+
+Parameters: 
+
+**type (OPTIONAL)**
+
+Description: Filters return list by clothing type.
+
+**gender (OPTIONAL)**
+
+Description: Filters return list by gender.
+
+**page (OPTIONAL)**
+
+Description: Returns list in pages that are predefined sizes.
 
 Response:
 
@@ -202,12 +222,27 @@ Response:
 }
 ```
 
+
 ### /app/collection
 Mapping: GET
 
 Description: Returns all loved items for user.
 
 Required Headers: ```Authorization: Bearer (JWT)```
+
+Parameters:
+
+**type (OPTIONAL)**
+
+Description: Filters return list by clothing type.
+
+**gender (OPTIONAL)**
+
+Description: Filters return list by gender.
+
+**page (OPTIONAL)**
+
+Description: Returns list in pages that are predefined sizes.
 
 Response:
 
@@ -317,7 +352,7 @@ Mapping: POST
 
 Required Headers: ```Authorization: Bearer (JWT)```
 
-Description: Updates like to bought.
+Description: Updates like to bought state.
 
 Request:
 

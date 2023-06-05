@@ -11,6 +11,8 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
@@ -22,13 +24,10 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final ModelMapper modelMapper;
-
 
     public UserService(@Lazy UserRepository repository, @Lazy PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
-        this.modelMapper = modelMapper;
     }
 
 
@@ -69,6 +68,7 @@ public class UserService {
         return user;
     }
 
+    @Transactional
     public User update(User userRequest) {
         User user = repository.findById(userRequest.getId()).orElseThrow(() -> new UserNotFoundException(userRequest.getId()));
 
@@ -88,6 +88,15 @@ public class UserService {
         return repository.save(user);
     }
 
+    @Transactional
+    public User updateLastLogin(long userId) {
+        User user = repository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+
+        user.setLastLogin(LocalDate.now());
+        return repository.save(user);
+    }
+
+    @Transactional
     public void delete(User user) {
         repository.delete(user);
     }

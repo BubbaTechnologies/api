@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -53,6 +54,10 @@ public class User implements UserDetails {
 
     private Boolean enabled;
 
+    private LocalDate accountCreated;
+
+    private LocalDate lastLogin;
+
     //Constructors
     protected User() {
     }
@@ -74,6 +79,12 @@ public class User implements UserDetails {
         this.grantedAuthorities = authorities;
         this.enabled = true;
         this.name = name;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.accountCreated = LocalDate.now();
+        this.lastLogin = LocalDate.now();
     }
 
     //Overrides

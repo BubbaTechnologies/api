@@ -1,4 +1,4 @@
-//Matthew Grohoslki
+//Matthew Groholski
 //Bubba Technologies Inc.
 //10/01/2022
 
@@ -38,6 +38,7 @@ public class AppController {
     LikeService likeService;
 
     public static int CLOTHING_COUNT = 10;
+    public static int PAGE_SIZE = 10;
 
     //Clothing card for user based on sessionId
     @GetMapping(value = "/app/card", produces = "application/json")
@@ -67,14 +68,15 @@ public class AppController {
 
     //Liked list for user based on sessionId
     @GetMapping(value = "/app/likes", produces = "application/json")
-    public CollectionModel<EntityModel<ClothingDTO>> likes(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
-        return getClothingList(this.getUserId(principal), ClothingListType.LIKE, typeFilter, genderFilter);
+    public CollectionModel<EntityModel<ClothingDTO>> likes(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value = "page", required = false) Integer pageNumber) {
+        return getClothingList(this.getUserId(principal), ClothingListType.LIKE, typeFilter, genderFilter, pageNumber);
     }
 
     //Collection for user based on sessionId
     @GetMapping(value = "/app/collection", produces = "application/json")
-    public CollectionModel<EntityModel<ClothingDTO>> collection(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
-        return getClothingList(this.getUserId(principal), ClothingListType.BOUGHT, typeFilter, genderFilter);
+    public CollectionModel<EntityModel<ClothingDTO>> collection(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value = "page", required = false) int pageNumber) {
+        //TODO: Return by page
+        return getClothingList(this.getUserId(principal), ClothingListType.BOUGHT, typeFilter, genderFilter, pageNumber);
     }
 
     //Deals with app like
@@ -170,13 +172,19 @@ public class AppController {
         return ResponseEntity.ok().body(like);
     }
 
+    @GetMapping(value="/app/checkToken")
+    public ResponseEntity<?> checkToken(Principal principal) {
+        long userId = getUserId(principal);
+        userService.updateLastLogin(userId);
+
+        return ResponseEntity.ok().build();
+    }
 
 
-    private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, ClothingListType listType, String typeFilter, String genderFilter) {
-        List<Like> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter);
+    private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
+        List<Like> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter, pageNumber);
 
         List<EntityModel<ClothingDTO>> items = new ArrayList<>();
-
         for (Like like : likes) {
             ClothingDTO item = modelMapper.map(clothingService.getById(like.getClothing().getId()),ClothingDTO.class);
             item.reverseImageList();

@@ -1,4 +1,4 @@
-//Matthew Grohoslki
+//Matthew Groholski
 //Bubba Technologies Inc.
 //10/01/2022
 
@@ -6,6 +6,8 @@ package com.bubbaTech.api.like;
 
 import com.bubbaTech.api.clothing.ClothType;
 import com.bubbaTech.api.user.Gender;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,30 +24,15 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     void delete(long clothingId, long userId);
 
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3")
-    List<Like> findAllByUserId(long userId, boolean liked, boolean bought);
+    Page<Like> findAllByUserId(long userId, boolean liked, boolean bought, Pageable pageable);
 
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.clothingType IN ?4")
-    List<Like> findAllByUserIdWithTypes(long userId, boolean liked, boolean bought, List<ClothType> type);
+    Page<Like> findAllByUserIdWithTypes(long userId, boolean liked, boolean bought, List<ClothType> type, Pageable pageable);
 
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4")
-    List<Like> findAllByUserIdWithGender(long userId, boolean liked, boolean bought, Gender gender);
+    Page<Like> findAllByUserIdWithGender(long userId, boolean liked, boolean bought, Gender gender, Pageable pageable);
 
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4 AND l.clothing.clothingType" +
             " IN ?5")
-    List<Like> findAllByUserIdWithGenderAndTypes(long userId, boolean liked, boolean bought, Gender gender, List<ClothType> type);
-
-//    @Query("SELECT l FROM Like l WHERE l.clothing.id = ?1")
-//    List<Like> findByItem(long clothingID);
-//
-//    @Query("DELETE FROM Like l WHERE l.clothing.id = ?1")
-//    void deleteByItem(long clothingID);
-//
-//    @Query("DELETE FROM Like l WHERE l.user.id = ?1")
-//    void deleteByUser(long userID);
-//
-//    @Query("SELECT case WHEN count(l) > 0 THEN true ELSE false END FROM Like l WHERE l.clothing.id = ?2 AND l.user.id = ?1")
-//    boolean checkLike(long userId, long clothingId);
-//
-//    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.clothing.id = ?2")
-//    Like getLikeByUserAndClothing(long userId, long clothingId);
+    Page<Like> findAllByUserIdWithGenderAndTypes(long userId, boolean liked, boolean bought, Gender gender, List<ClothType> type, Pageable pageable);
 }

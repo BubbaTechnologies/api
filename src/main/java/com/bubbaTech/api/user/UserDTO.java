@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -27,6 +28,10 @@ public class UserDTO implements DTO<UserDTO> {
     private Boolean enabled;
 
     private String name;
+
+    private Date accountCreated;
+
+    private Date lastLogin;
 
     public UserDTO() {}
 
