@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import javax.transaction.Transactional;
 import java.io.DataOutputStream;
@@ -27,7 +28,6 @@ import static com.bubbaTech.api.clothing.ClothingService.toGender;
 @org.springframework.stereotype.Service
 public class LikeService {
     private final LikeRepository repository;
-
     public LikeService(LikeRepository repository) {
         super();
         this.repository = repository;
@@ -80,11 +80,12 @@ public class LikeService {
                 bought = true;
             }
         }
+
         Pageable pageRequest;
         if (pageNumber == null) {
             pageRequest = Pageable.unpaged();
         } else {
-            pageRequest = PageRequest.of(pageNumber, AppController.PAGE_SIZE);
+            pageRequest = PageRequest.of(pageNumber, AppController.PAGE_SIZE, Sort.Direction.DESC, "date");
         }
 
         Page<Like> likePage;

@@ -23,15 +23,24 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     @Modifying
     void delete(long clothingId, long userId);
 
+    @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3")
+    Long countByUserId(long userId, boolean liked, boolean bought);
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3")
     Page<Like> findAllByUserId(long userId, boolean liked, boolean bought, Pageable pageable);
 
+    @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.clothingType IN ?4")
+    Long countByUserIdWithTypes(long userId, boolean liked, boolean bought, List<ClothType> type);
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.clothingType IN ?4")
     Page<Like> findAllByUserIdWithTypes(long userId, boolean liked, boolean bought, List<ClothType> type, Pageable pageable);
 
+    @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4")
+    Long countByUserIdWithGender(long userId, boolean liked, boolean bought, Gender gender);
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4")
     Page<Like> findAllByUserIdWithGender(long userId, boolean liked, boolean bought, Gender gender, Pageable pageable);
 
+    @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4 AND l.clothing.clothingType" +
+            " IN ?5")
+    Long countByUserIdWithGenderAndTypes(long userId, boolean liked, boolean bought, Gender gender, List<ClothType> type);
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4 AND l.clothing.clothingType" +
             " IN ?5")
     Page<Like> findAllByUserIdWithGenderAndTypes(long userId, boolean liked, boolean bought, Gender gender, List<ClothType> type, Pageable pageable);
