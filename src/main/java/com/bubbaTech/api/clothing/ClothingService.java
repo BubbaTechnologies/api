@@ -27,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ClothingService {
     private final static int MAX_RANDS = 100;
+    private final static int WEEKS_AGO = 3;
 
     private final static double randomClothingChance = 0.4;
     private final ClothingRepository repository;
@@ -168,14 +170,15 @@ public class ClothingService {
             loops++;
 
             Page<Clothing> clothingPage;
+            LocalDate randomDateRestriction = LocalDate.now().minusWeeks(WEEKS_AGO);
             if (typeFilters == null) {
-                long amount = repository.countByGender(gender);
+                long amount = repository.countByGender(gender, randomDateRestriction);
                 int index = (int) (Math.random() * amount);
-                clothingPage = repository.findAllWithGender(gender, PageRequest.of(index, 1));
+                clothingPage = repository.findAllWithGender(gender, PageRequest.of(index, 1), randomDateRestriction);
             } else {
-                long amount = repository.countByGenderAndTypes(gender, typeFilters);
+                long amount = repository.countByGenderAndTypes(gender, typeFilters, randomDateRestriction);
                 int index = (int) (Math.random() * amount);
-                clothingPage = repository.findAllWithGenderAndTypes(gender, typeFilters, PageRequest.of(index, 1));
+                clothingPage = repository.findAllWithGenderAndTypes(gender, typeFilters, PageRequest.of(index, 1), randomDateRestriction);
             }
 
             Clothing item;

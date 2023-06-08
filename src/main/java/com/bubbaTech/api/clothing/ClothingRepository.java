@@ -11,26 +11,26 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 public interface ClothingRepository extends JpaRepository<Clothing, Long> {
 
-    @Query("SELECT c FROM Clothing c WHERE c.productURL = ?1")
+    @Query("SELECT c FROM Clothing c WHERE c.productURL = :url")
     Optional<Clothing> findByProductUrl(String url);
-    @Query("SELECT c FROM Clothing c WHERE c.id = ?1 AND c.store.enabled = true")
+    @Query("SELECT c FROM Clothing c WHERE c.id = :id AND c.store.enabled = true")
     Optional<Clothing> getById(long id);
-    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.gender=?1 AND NOT c.clothingType = 10")
-    long countByGender(Gender gender);
-
-    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.gender = ?1 AND c.clothingType IN ?2")
-    long countByGenderAndTypes(Gender gender, List<ClothType> type);
-    @Query("SELECT c FROM Clothing c WHERE c.gender = ?1 AND NOT c.clothingType = 10 ")
-    Page<Clothing> findAllWithGender(Gender gender, Pageable pageable);
-    @Query("SELECT c FROM Clothing c WHERE c.gender = ?1 AND c.clothingType IN ?2")
-    Page<Clothing> findAllWithGenderAndTypes(Gender gender, List<ClothType> type, Pageable pageable);
-    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.store = ?1 AND c.gender = ?2")
+    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.gender=:gender AND NOT c.clothingType = 10 AND c.store.enabled = true AND c.date >= :date")
+    long countByGender(Gender gender, LocalDate date);
+    @Query("SELECT c FROM Clothing c WHERE c.gender = :gender AND NOT c.clothingType = 10 AND c.store.enabled = true AND c.date >= :date")
+    Page<Clothing> findAllWithGender(Gender gender, Pageable pageable, LocalDate date);
+    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.gender = :gender AND c.clothingType IN :type AND c.store.enabled = true AND c.date >= :date")
+    long countByGenderAndTypes(Gender gender, List<ClothType> type, LocalDate date);
+    @Query("SELECT c FROM Clothing c WHERE c.gender = :gender AND c.clothingType IN :type AND c.store.enabled = true AND c.date >= :date")
+    Page<Clothing> findAllWithGenderAndTypes(Gender gender, List<ClothType> type, Pageable pageable, LocalDate date);
+    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.store = :store AND c.gender = :gender")
     long countByStoreAndGender(Store store, Gender gender);
-    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.store = ?1 AND c.clothingType = ?2")
+    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.store = :store AND c.clothingType = :type")
     long countByStoreAndType(Store store, ClothType type);
 }

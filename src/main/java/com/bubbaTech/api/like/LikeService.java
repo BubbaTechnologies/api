@@ -85,7 +85,7 @@ public class LikeService {
         if (pageNumber == null) {
             pageRequest = Pageable.unpaged();
         } else {
-            pageRequest = PageRequest.of(pageNumber, AppController.PAGE_SIZE, Sort.Direction.DESC, "date");
+            pageRequest = PageRequest.of(pageNumber, AppController.PAGE_SIZE, Sort.Direction.DESC, "id");
         }
 
         Page<Like> likePage;
