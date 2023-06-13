@@ -4,10 +4,9 @@
 
 package com.bubbaTech.api.security.authorities;
 
+import jakarta.persistence.Embeddable;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
-
-import javax.persistence.Embeddable;
 
 @Embeddable
 @Data

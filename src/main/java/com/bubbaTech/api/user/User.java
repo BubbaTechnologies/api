@@ -7,18 +7,19 @@ package com.bubbaTech.api.user;
 import com.bubbaTech.api.like.Like;
 import com.bubbaTech.api.security.authorities.Authorities;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "USERS")
 public class User implements UserDetails {
@@ -85,23 +86,6 @@ public class User implements UserDetails {
     public void prePersist() {
         this.accountCreated = LocalDate.now();
         this.lastLogin = LocalDate.now();
-    }
-
-    //Overrides
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof User))
-            return false;
-
-        User user = (User) o;
-        return Objects.equals(this.id, user.id) && Objects.equals(this.password, user.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.id, this.password);
     }
 
     @Override

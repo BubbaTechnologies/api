@@ -11,6 +11,7 @@ import com.bubbaTech.api.security.authentication.model.AuthenticationResponse;
 import com.bubbaTech.api.user.User;
 import com.bubbaTech.api.user.UserDTO;
 import com.bubbaTech.api.user.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.EntityModel;
@@ -20,7 +21,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 
 @RestController
@@ -30,7 +30,6 @@ public class GenericController {
     private JwtUtil jwt;
     private CustomUserDetailsService userDetailsService;
     private ModelMapper modelMapper;
-
     private UserService userService;
 
     @GetMapping(value = "/error")

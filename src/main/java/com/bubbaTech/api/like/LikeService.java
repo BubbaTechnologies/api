@@ -8,13 +8,13 @@ import com.bubbaTech.api.app.AppController;
 import com.bubbaTech.api.clothing.ClothType;
 import com.bubbaTech.api.clothing.ClothingListType;
 import com.bubbaTech.api.user.Gender;
+import jakarta.transaction.Transactional;
 import org.json.simple.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import javax.transaction.Transactional;
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;

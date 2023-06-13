@@ -6,15 +6,18 @@ package com.bubbaTech.api.store;
 
 import com.bubbaTech.api.clothing.Clothing;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.Hibernate;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "STORE")
 public class Store {
     @Id
@@ -41,25 +44,21 @@ public class Store {
         this.enabled = true;
     }
 
-    //Overrides
+    @Override
+    public String toString() {
+        return "store{" + "id=" + this.id + ", name='" + this.name + '\'' + ", URL='" + this.URL + '\'' + '}';
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof Store))
-            return false;
-
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Store store = (Store) o;
-        return Objects.equals(this.id, store.id) && Objects.equals(this.name, store.name) && Objects.equals(this.URL, store.URL);
+        return getId() != null && Objects.equals(getId(), store.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.name, this.URL);
-    }
-
-    @Override
-    public String toString() {
-        return "store{" + "id=" + this.id + ", name='" + this.name + '\'' + ", URL='" + this.URL + '\'' + '}';
+        return getClass().hashCode();
     }
 }

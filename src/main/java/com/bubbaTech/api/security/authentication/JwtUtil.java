@@ -18,7 +18,6 @@ import java.util.function.Function;
 
 @Service
 public class JwtUtil {
-    private final long EXPIR_TIME = 7889400000L;
 
     @Value("${jwt.secret}")
     private String SECRET_KEY;
@@ -51,6 +50,7 @@ public class JwtUtil {
 
     private String createToken(Map<String, Object> claims, String subject){
 
+        long EXPIR_TIME = 7889400000L;
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIR_TIME))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();

@@ -4,27 +4,25 @@
 
 package com.bubbaTech.api.security;
 
+import com.bubbaTech.api.security.authentication.CustomAuthenticationManager;
 import com.bubbaTech.api.security.authentication.CustomUserDetailsService;
 import com.bubbaTech.api.security.authentication.JwtRequestFilter;
-import com.bubbaTech.api.security.authentication.UPAuthenticationProvider;
+import com.bubbaTech.api.security.authentication.UpAuthenticationProvider;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.JdbcUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
@@ -32,11 +30,11 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebMvc
 @RequiredArgsConstructor
-public class securityConfig {
+public class SecurityConfig {
     @NonNull
     private CustomUserDetailsService customUserDetailsService;
     @NonNull
-    private UPAuthenticationProvider upAuthenticationProvider;
+    private UpAuthenticationProvider upAuthenticationProvider;
     @NonNull
     private JwtRequestFilter jwtFilter;
 
@@ -58,25 +56,20 @@ public class securityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests((auth) -> {
-                    try {
-                        auth.antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                                .antMatchers("/ai/**").hasAuthority("AI")
-                                .antMatchers("/app/**").hasAuthority("USER")
-                                .antMatchers("/scraper/**").hasAuthority("SCRAPER")
-                                .antMatchers("/admin/**").hasAuthority("ADMIN")
-                                .antMatchers("/", "/create", "/login", "/health", "/logout").permitAll()
-                                .anyRequest().authenticated()
-                                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                                .and().formLogin().disable()
-                                .logout().permitAll();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-        return http.build();
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/ai/**").hasAuthority("AI")
+                        .requestMatchers("/app/**").hasAuthority("USER")
+                        .requestMatchers("/scraper/**").hasAuthority("SCRAPER")
+                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/", "/create", "/login", "/health", "/logout").permitAll()
+                        .anyRequest().authenticated())
+                .authenticationManager(new CustomAuthenticationManager())
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .formLogin(AbstractHttpConfigurer::disable)
+                .build();
     }
 
     @Bean
@@ -91,12 +84,5 @@ public class securityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(BCryptPasswordEncoder.BCryptVersion.$2A, 16, new java.security.SecureRandom());
     }
-
-    @Bean
-    public AuthenticationManager authenticationManagerBean(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
-        authenticationManagerBuilder.authenticationProvider(upAuthenticationProvider);
-        return authenticationManagerBuilder.build();
-    }
 }
+

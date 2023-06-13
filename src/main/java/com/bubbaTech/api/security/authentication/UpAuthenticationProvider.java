@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 @Component
 @AllArgsConstructor
-public class UPAuthenticationProvider implements AuthenticationProvider {
+public class UpAuthenticationProvider implements AuthenticationProvider {
     private UserService userService;
 
     @Override

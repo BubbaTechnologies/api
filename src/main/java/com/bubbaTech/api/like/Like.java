@@ -7,15 +7,18 @@ package com.bubbaTech.api.like;
 import com.bubbaTech.api.clothing.Clothing;
 import com.bubbaTech.api.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.Hibernate;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "LIKES")
 public class Like {
     @Id
@@ -57,25 +60,21 @@ public class Like {
         this.date = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
-    //Overrides
+    @Override
+    public String toString() {
+        return "Like{" + "id=" + this.id + "user=" + this.user + ", clothing=" + this.clothing + ", rating=" + this.rating + '}';
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof Like))
-            return false;
-
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Like like = (Like) o;
-        return Objects.equals(this.id, like.id) && Objects.equals(this.user, like.user) && Objects.equals(this.clothing, like.clothing) && Objects.equals(this.rating, like.rating);
+        return getId() != null && Objects.equals(getId(), like.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.user/*, this.clothing*/, this.rating);
-    }
-
-    @Override
-    public String toString() {
-        return "Like{" + "id=" + this.id + "user=" + this.user + ", clothing=" + this.clothing + ", rating=" + this.rating + '}';
+        return getClass().hashCode();
     }
 }

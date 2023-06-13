@@ -5,13 +5,13 @@
 package com.bubbaTech.api.user;
 
 import com.bubbaTech.api.security.authorities.Authorities;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -89,11 +89,11 @@ public class UserService {
     }
 
     @Transactional
-    public User updateLastLogin(long userId) {
+    public void updateLastLogin(long userId) {
         User user = repository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
         user.setLastLogin(LocalDate.now());
-        return repository.save(user);
+        repository.save(user);
     }
 
     @Transactional

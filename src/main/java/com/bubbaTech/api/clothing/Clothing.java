@@ -8,16 +8,20 @@ import com.bubbaTech.api.like.Like;
 import com.bubbaTech.api.store.Store;
 import com.bubbaTech.api.user.Gender;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "CLOTHING")
 public class Clothing {
     @Id
@@ -39,6 +43,7 @@ public class Clothing {
     @OneToMany()
     @JoinColumn(name = "id")
     @JsonManagedReference
+    @ToString.Exclude
     private List<Like> likes;
 
     private ClothType clothingType;
@@ -71,23 +76,6 @@ public class Clothing {
         this.date = LocalDate.now();
     }
 
-    //Overrides
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof Clothing))
-            return false;
-        Clothing clothing = (Clothing) o;
-        return Objects.equals(this.id, clothing.id) && Objects.equals(this.name, clothing.name) && Objects.equals(this.imageURL, clothing.imageURL)
-                && Objects.equals(this.productURL, clothing.productURL) && Objects.equals(this.store, clothing.store) && this.clothingType == clothing.clothingType;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.id, this.name, this.imageURL, this.productURL, this.store, this.clothingType);
-    }
-
     @Override
     public String toString() {
         StringBuilder returnString = new StringBuilder("Clothing{" + "id=" + this.id + ", name='" + this.name + '\'' + ", productURL='" + this.productURL + '\'' + ", store=" + this.store + ", type=" + this.clothingType);
@@ -97,5 +85,18 @@ public class Clothing {
 
     public String toStringBasic() {
         return "Clothing{" + "id=" + this.id + ", name='" + this.name + '\'' +  ", productURL='" + this.productURL + '\'' + ", store=" + this.store + ", type=" + this.clothingType + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Clothing clothing = (Clothing) o;
+        return getId() != null && Objects.equals(getId(), clothing.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
