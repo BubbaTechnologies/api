@@ -1,4 +1,4 @@
-//Matthew Grohoslki
+//Matthew Groholski
 //Bubba Technologies Inc.
 //10/01/2022
 
@@ -19,20 +19,23 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-
     private final UserRepository repository;
-
     private final PasswordEncoder passwordEncoder;
-
+    private final ModelMapper modelMapper;
 
     public UserService(@Lazy UserRepository repository, @Lazy PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
+        this.modelMapper = modelMapper;
     }
 
 
-    public Optional<User> getById(long userId) {
-        return repository.findById(userId);
+    public UserDTO getById(long userId) throws UserNotFoundException {
+        Optional<User> user = repository.findById(userId);
+        if (user.isPresent())
+            return modelMapper.map(repository.findById(userId),UserDTO.class);
+        else
+            throw new UserNotFoundException(String.format("Could not find user with id %d", userId));
     }
 
     public Gender getGenderById(long userId) {
@@ -40,36 +43,35 @@ public class UserService {
         return user.getGender();
     }
 
-    public User authUser(String username, String password) throws Exception {
-        User user = getByUsername(username);
-        if (passwordEncoder.matches(password, user.getPassword()))
-            return user;
-        else
+    public void authUser(String username, String password) throws AuthenticationServiceException {
+        UserDTO user = getByUsername(username);
+        if (!passwordEncoder.matches(password, user.getPassword()))
             throw new AuthenticationServiceException("Could not authenticate");
     }
 
-    public User getByUsername(String username) {
-        return repository.findByEmail(username).orElseThrow(() -> new UserNotFoundException(username));
+    public UserDTO getByUsername(String username) {
+        return modelMapper.map(repository.findByEmail(username).orElseThrow(() -> new UserNotFoundException(username)),UserDTO.class);
     }
 
-    public Optional<User> checkUsername(String username) {
-        return repository.findByEmail(username);
+    public Boolean checkUsername(String username) {
+        return repository.findByEmail(username).isPresent();
     }
 
-    public User create(User user) {
-        if (this.checkUsername(user.getUsername()).isPresent())
-            throw new UserExistsException(user.getUsername());
+    public UserDTO create(UserDTO userRequest) {
+        if (this.checkUsername(userRequest.getUsername()))
+            throw new UserExistsException(userRequest.getUsername());
+        User user = new User();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Collection<Authorities> auth = new ArrayList<>();
         auth.add(new Authorities("USER"));
         user.setGrantedAuthorities(auth);
         user = repository.save(user);
 
-        return user;
+        return modelMapper.map(user, UserDTO.class);
     }
 
     @Transactional
-    public User update(User userRequest) {
+    public UserDTO update(UserDTO userRequest) {
         User user = repository.findById(userRequest.getId()).orElseThrow(() -> new UserNotFoundException(userRequest.getId()));
 
         user.setId(userRequest.getId());
@@ -85,7 +87,7 @@ public class UserService {
         user.setCredentialExpiration(userRequest.getCredentialExpiration());
         user.setGrantedAuthorities(userRequest.getGrantedAuthorities());
 
-        return repository.save(user);
+        return modelMapper.map(repository.save(user), UserDTO.class);
     }
 
     @Transactional

@@ -37,8 +37,8 @@ import java.util.Optional;
 public class ClothingService {
     private final static int MAX_RANDS = 100;
     private final static int WEEKS_AGO = 3;
+    private final static double RANDOM_CLOTHING_CHANCE = 0.4;
 
-    private final static double randomClothingChance = 0.4;
     private final ClothingRepository repository;
     private final LikeService likeService;
     private final UserService userService;
@@ -87,7 +87,7 @@ public class ClothingService {
                 for (Object id : clothingIdArray) {
                     double choice = this.randomDouble();
                     //Introduces randomness between recommended clothing
-                    if (choice <= randomClothingChance)
+                    if (choice <= RANDOM_CLOTHING_CHANCE)
                         items.add(getRandom(userId, typeFilters, gender));
                     Optional<Clothing> item = repository.getById((long) id);
                     if (item.isPresent() && items.size() < AppController.CLOTHING_COUNT && !likeCheck(item.get(), userId))
@@ -110,7 +110,7 @@ public class ClothingService {
         List<ClothType> typeFilters = typeStringToList(typeFilter);
 
         double choice = this.randomDouble();
-        if (choice <= randomClothingChance) {
+        if (choice <= RANDOM_CLOTHING_CHANCE) {
             return getRandom(userId, typeFilters, gender);
         } else {
             try {

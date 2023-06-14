@@ -8,4 +8,7 @@ public class LikeNotFoundException extends RuntimeException {
     public LikeNotFoundException(Long id) {
         super("Could not find like " + id);
     }
+    public LikeNotFoundException(String message) {
+        super(message);
+    }
 }

@@ -15,7 +15,6 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,7 +30,7 @@ public class Clothing {
     private String name;
 
     @ElementCollection(fetch = FetchType.LAZY)
-    private Collection<String> imageURL;
+    private List<String> imageURL;
 
     private String productURL;
 
@@ -56,7 +55,7 @@ public class Clothing {
     protected Clothing() {
     }
 
-    public Clothing(String name, Collection<String> imageURL, String productURL, Store store, ClothType type, Gender gender) {
+    public Clothing(String name, List<String> imageURL, String productURL, Store store, ClothType type, Gender gender) {
         this.name = name;
         this.imageURL = imageURL;
         this.productURL = productURL;

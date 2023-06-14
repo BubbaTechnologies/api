@@ -4,7 +4,6 @@
 
 package com.bubbaTech.api.security;
 
-import com.bubbaTech.api.security.authentication.CustomAuthenticationManager;
 import com.bubbaTech.api.security.authentication.CustomUserDetailsService;
 import com.bubbaTech.api.security.authentication.JwtRequestFilter;
 import com.bubbaTech.api.security.authentication.UpAuthenticationProvider;
@@ -13,7 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.JdbcUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -23,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
@@ -31,12 +34,9 @@ import javax.sql.DataSource;
 @EnableWebMvc
 @RequiredArgsConstructor
 public class SecurityConfig {
-    @NonNull
-    private CustomUserDetailsService customUserDetailsService;
-    @NonNull
-    private UpAuthenticationProvider upAuthenticationProvider;
-    @NonNull
-    private JwtRequestFilter jwtFilter;
+    @NonNull private CustomUserDetailsService customUserDetailsService;
+    @NonNull private UpAuthenticationProvider upAuthenticationProvider;
+    @NonNull private JwtRequestFilter jwtFilter;
 
     @Value("${spring.datasource.url}")
     private String serverAddress;
@@ -55,25 +55,33 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/**").permitAll()
                         .requestMatchers("/ai/**").hasAuthority("AI")
                         .requestMatchers("/app/**").hasAuthority("USER")
                         .requestMatchers("/scraper/**").hasAuthority("SCRAPER")
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/", "/create", "/login", "/health", "/logout").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated())
-                .authenticationManager(new CustomAuthenticationManager())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .build();
     }
 
     @Bean
-    public UserDetailsManager users (DataSource dataSource, PasswordEncoder passwordEncoder) {
+    public AuthenticationManager authenticationManager(@NonNull HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
+        authenticationManagerBuilder.authenticationProvider(upAuthenticationProvider);
+        return authenticationManagerBuilder.build();
+    }
+
+    @Bean
+    public UserDetailsManager users(DataSource dataSource, PasswordEncoder passwordEncoder) {
         JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
         JdbcUserDetailsManagerConfigurer<?> config = new JdbcUserDetailsManagerConfigurer<>(users);
         config.passwordEncoder(passwordEncoder);

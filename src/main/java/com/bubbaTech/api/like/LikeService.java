@@ -10,6 +10,7 @@ import com.bubbaTech.api.clothing.ClothingListType;
 import com.bubbaTech.api.user.Gender;
 import jakarta.transaction.Transactional;
 import org.json.simple.JSONObject;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,33 +29,38 @@ import static com.bubbaTech.api.clothing.ClothingService.toGender;
 @org.springframework.stereotype.Service
 public class LikeService {
     private final LikeRepository repository;
-    public LikeService(LikeRepository repository) {
+    private final ModelMapper modelMapper;
+    public LikeService(LikeRepository repository, ModelMapper modelMapper) {
         super();
         this.repository = repository;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional
-    public Like update(Like likeRequest) {
+    public LikeDTO update(LikeDTO likeRequest) {
         Like like = repository.findByClothingAndUser(likeRequest.getClothing().getId(), likeRequest.getUser().getId()).orElseThrow(() -> new LikeNotFoundException(likeRequest.getId()));
 
         like.setBought(likeRequest.isBought());
         like.setLiked(likeRequest.isLiked());
         like.setRating(likeRequest.getRating() + like.getRating());
-        sendLike(like);
-        return repository.save(like);
+        like = repository.save(like);
+        LikeDTO returnLikeDTO = modelMapper.map(like, LikeDTO.class);
+        sendLike(returnLikeDTO);
+        return returnLikeDTO;
     }
 
-    public Like create(Like like) {
-        Optional<Like> foundLike = findByClothingAndUser(like.getClothing().getId(), like.getUser().getId());
-        if (foundLike.isPresent()) {
-            like.setId(foundLike.get().getId());
-            return update(like);
+    public LikeDTO create(LikeDTO likeRequest) {
+        try {
+            LikeDTO foundLike = findByClothingAndUser(likeRequest.getClothing().getId(), likeRequest.getUser().getId());
+            likeRequest.setId(foundLike.getId());
+            return update(likeRequest);
+        } catch (LikeNotFoundException exception) {
+            Like like = new Like();
+            return modelMapper.map(repository.save(like),LikeDTO.class);
         }
-        sendLike(like);
-        return repository.save(like);
     }
 
-    public List<Like> getAllByUserId(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
+    public List<LikeDTO> getAllByUserId(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
         //Convert genderFilter to gender
         Gender gender = null;
         if (genderFilter != null) {
@@ -102,11 +108,15 @@ public class LikeService {
         return likePage.getContent();
     }
 
-    public Optional<Like> findByClothingAndUser(long clothingId, long userId) {
-        return repository.findByClothingAndUser(clothingId, userId);
+    public LikeDTO findByClothingAndUser(long clothingId, long userId) throws LikeNotFoundException  {
+        Optional<Like> like = repository.findByClothingAndUser(clothingId, userId);
+        if (like.isEmpty())
+            throw new LikeNotFoundException(String.format("No like found with clothingId %d and userId %d", clothingId, userId));
+
+        return modelMapper.map(like, LikeDTO.class);
     }
 
-    public static void sendLike(Like like) {
+    public static void sendLike(LikeDTO like) {
         try {
             URL url = new URL("https://ai.peachsconemarket.com/like");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();

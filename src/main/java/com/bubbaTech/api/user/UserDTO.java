@@ -6,11 +6,13 @@ package com.bubbaTech.api.user;
 
 import com.bubbaTech.api.generic.DTO;
 import com.bubbaTech.api.like.LikeDTO;
+import com.bubbaTech.api.security.authorities.Authorities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -24,20 +26,19 @@ public class UserDTO implements DTO<UserDTO> {
     @JsonManagedReference
     private List<LikeDTO> likes;
     private Gender gender;
-
     private Boolean enabled;
-
     private String name;
-
     private Date accountCreated;
-
     private Date lastLogin;
+    @JsonIgnore
+    private Collection<Authorities> grantedAuthorities;
+    @JsonIgnore
+    private Date accountExpiration;
+    @JsonIgnore
+    private Date credentialExpiration;
+
 
     public UserDTO() {}
-
-    public UserDTO(Long id) {
-        this.id = id;
-    }
 
     public UserDTO(String username, String password, Gender gender, String name) {
         this.username = username;
@@ -48,14 +49,6 @@ public class UserDTO implements DTO<UserDTO> {
         this.name = name;
     }
 
-    public UserDTO(String username, String password, Gender gender, Boolean enabled, String name) {
-        this.username = username;
-        this.password = password;
-        this.gender = gender;
-        this.likes = null;
-        this.enabled = enabled;
-        this.name = name;
-    }
 
     @Override
     public String toString() {

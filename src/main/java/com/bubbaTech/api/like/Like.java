@@ -33,7 +33,7 @@ public class Like {
     @JsonBackReference
     private Clothing clothing;
 
-    private int rating;
+    private double rating;
 
     @Column(name="date_updated")
     private LocalDateTime date;
