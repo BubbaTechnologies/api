@@ -10,6 +10,7 @@ Updated 07/21/2023
 - ```SERVER_PORT```: Port for the API to accept incoming communications.
 - ```RECOMMENDATION_ADDR```: Recommendation service address.
 - ```IMAGE_ADDR```: Image processing service address.
+- ```JWT_SECRET```: Key used to generate JWT tokens.
 
 ## Properties
 (NOTE: Only included most important properties)
