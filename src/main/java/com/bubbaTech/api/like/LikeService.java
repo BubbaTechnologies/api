@@ -6,8 +6,10 @@ package com.bubbaTech.api.like;
 
 import com.bubbaTech.api.app.AppController;
 import com.bubbaTech.api.clothing.ClothType;
+import com.bubbaTech.api.clothing.Clothing;
 import com.bubbaTech.api.clothing.ClothingListType;
 import com.bubbaTech.api.user.Gender;
+import com.bubbaTech.api.user.User;
 import jakarta.transaction.Transactional;
 import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
@@ -26,7 +29,7 @@ import java.util.Optional;
 import static com.bubbaTech.api.clothing.ClothingService.toClothType;
 import static com.bubbaTech.api.clothing.ClothingService.toGender;
 
-@org.springframework.stereotype.Service
+@Service
 public class LikeService {
     private final LikeRepository repository;
     private final ModelMapper modelMapper;
@@ -51,11 +54,16 @@ public class LikeService {
 
     public LikeDTO create(LikeDTO likeRequest) {
         try {
+            //Updates like if like with clothing and user already exists.
             LikeDTO foundLike = findByClothingAndUser(likeRequest.getClothing().getId(), likeRequest.getUser().getId());
             likeRequest.setId(foundLike.getId());
             return update(likeRequest);
         } catch (LikeNotFoundException exception) {
-            Like like = new Like();
+            //Converts likeRequest to like entity.
+            Clothing likedClothing = modelMapper.map(likeRequest.getClothing(), Clothing.class);
+            User likedUser = modelMapper.map(likeRequest.getUser(), User.class);
+            Like like = new Like(likeRequest, likedUser, likedClothing);
+
             return modelMapper.map(repository.save(like),LikeDTO.class);
         }
     }
@@ -105,7 +113,13 @@ public class LikeService {
             likePage = repository.findAllByUserId(userId, liked, bought, pageRequest);
         }
 
-        return likePage.getContent();
+        //Converts likes to likeDTO
+        List<LikeDTO> likeDTOList = new ArrayList<>();
+        for (Like like : likePage.getContent()) {
+            likeDTOList.add(modelMapper.map(like, LikeDTO.class));
+        }
+
+        return likeDTOList;
     }
 
     public LikeDTO findByClothingAndUser(long clothingId, long userId) throws LikeNotFoundException  {

@@ -45,9 +45,13 @@ public class Like {
     public Like() {
     }
 
-    Like(User user, Clothing clothing) {
+    Like(LikeDTO likeDTO, User user, Clothing clothing) {
         this.user = user;
         this.clothing = clothing;
+        this.rating = likeDTO.getRating();
+        this.date = likeDTO.getDate();
+        this.liked = likeDTO.isLiked();
+        this.bought = likeDTO.isBought();
     }
 
     @PrePersist

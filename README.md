@@ -1,5 +1,19 @@
 # Bubba Technologies Inc. API
-Updated 06/05/2023
+Updated 07/21/2023
+
+## Environment Variables
+
+- ```DB_ADDR_WRITER```: Address for database with write permission.
+- ```DB_USERNAME```: Username for database.
+- ```DB_PASSWORD```: Password for database.
+- ```DB_PORT```: Port for database.
+- ```SERVER_PORT```: Port for the API to accept incoming communications.
+- ```RECOMMENDATION_ADDR```: Recommendation service address.
+- ```IMAGE_ADDR```: Image processing service address.
+
+## Properties
+(NOTE: Only included most important properties)
+- ```spring.jpa.hibernate.ddl-auto```: Determines how API interacts with database upon start.
 
 ## Generic Controller
 ### /

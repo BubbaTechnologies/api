@@ -83,8 +83,6 @@ public class UserService {
         user.setUsername(userRequest.getUsername());
         user.setGender(userRequest.getGender());
         user.setEnabled(userRequest.getEnabled());
-        user.setAccountExpiration(userRequest.getAccountExpiration());
-        user.setCredentialExpiration(userRequest.getCredentialExpiration());
         user.setGrantedAuthorities(userRequest.getGrantedAuthorities());
 
         return modelMapper.map(repository.save(user), UserDTO.class);

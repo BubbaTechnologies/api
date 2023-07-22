@@ -9,6 +9,7 @@ import com.bubbaTech.api.store.StoreDTO;
 import com.bubbaTech.api.user.Gender;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Data
 @JsonDeserialize(using = ClothingDeserializer.class)
+@JsonSerialize(using = ClothingSerializer.class)
 public class ClothingDTO implements DTO<ClothingDTO> {
     private Long id;
     private String name;

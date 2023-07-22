@@ -14,6 +14,7 @@ public class StoreDTO implements DTO<StoreDTO> {
     private Long id;
     private String name;
     private String URL;
+    private boolean enabled;
 
     public StoreDTO() {}
 
@@ -24,11 +25,17 @@ public class StoreDTO implements DTO<StoreDTO> {
     public StoreDTO(String name, String URL) {
         this.name = name;
         this.URL = URL;
+        this.enabled = true;
+    }
+
+    public StoreDTO(String name, String URL, boolean enabled) {
+        this.name = name;
+        this.URL = URL;
+        this.enabled = enabled;
     }
 
     @Override
     public String toString() {
-        String string = "Store{" + "id=" + this.id + ", name='" + this.name + '\'' + ", URL='" + this.URL + '\'' + '}';
-        return string;
+        return "Store{" + "id=" + this.id + ", name='" + this.name + '\'' + ", URL='" + this.URL + '\'' + '}';
     }
 }

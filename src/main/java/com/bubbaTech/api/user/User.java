@@ -15,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -26,9 +25,6 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "name")
-    private String name;
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -46,12 +42,6 @@ public class User implements UserDetails {
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Collection<Authorities> grantedAuthorities;
-
-    private Boolean locked;
-
-    private Date accountExpiration;
-
-    private Date credentialExpiration;
 
     private Boolean enabled;
 
@@ -72,14 +62,13 @@ public class User implements UserDetails {
         this.enabled = true;
     }
 
-    public User(String email, String password, Gender gender, Collection<Authorities> authorities, String name) {
+    public User(String email, String password, Gender gender, Collection<Authorities> authorities) {
         this.password = password;
         this.gender = gender;
         this.username = email;
         this.likes = null;
         this.grantedAuthorities = authorities;
         this.enabled = true;
-        this.name = name;
     }
 
     @PrePersist
@@ -94,7 +83,7 @@ public class User implements UserDetails {
     }
 
     public String toStringBasic() {
-        return "User{" + "id=" + this.id + ", username='" + this.username + '\'' + ", name='" + this.name + '\'' + '}';
+        return "User{" + "id=" + this.id + ", username='" + this.username + '\'' + '}';
     }
 
     @Override
@@ -104,19 +93,16 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        //TODO
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        //TODO
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        //TODO
         return true;
     }
 

@@ -55,14 +55,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/ai/**").hasAuthority("AI")
                         .requestMatchers("/app/**").hasAuthority("USER")
-                        .requestMatchers("/scraper/**").hasAuthority("SCRAPER")
+                        //.requestMatchers("/scraper/**").hasAuthority("SCRAPER")
+                        .requestMatchers("/scraper/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/", "/create", "/login", "/health", "/logout").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

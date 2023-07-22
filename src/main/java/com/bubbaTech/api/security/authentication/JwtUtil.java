@@ -5,6 +5,7 @@
 package com.bubbaTech.api.security.authentication;
 
 import com.bubbaTech.api.user.User;
+import com.bubbaTech.api.user.UserDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -43,7 +44,7 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(User userDetails) {
+    public String generateToken(UserDTO userDetails) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, userDetails.getUsername());
     }

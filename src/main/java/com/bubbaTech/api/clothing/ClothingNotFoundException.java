@@ -8,4 +8,7 @@ public class ClothingNotFoundException extends RuntimeException {
     public ClothingNotFoundException(Long id) {
         super("Could not find item " + id);
     }
+    public ClothingNotFoundException(String url) {
+        super("Could not find item with url " + url);
+    }
 }

@@ -39,18 +39,6 @@ public class GenericController {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<?> login(@RequestBody AuthenticationRequest request) throws Exception {
-        try {
-            System.out.println(auth);
-            auth.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        } catch (Exception e){
-            return ResponseEntity.badRequest().build();
-        }
-        final UserDTO userDetails = userDetailsService.loadUserByUsernameToDTO(request.getUsername());
-        return ResponseEntity.ok(new AuthenticationResponse(jwt.generateToken(userDetails), userDetails.getName(), userDetails.getUsername()));
-    }
-
 
     @GetMapping("/")
     public ResponseEntity<?> home(HttpServletResponse httpServletResponse) {
@@ -59,8 +47,19 @@ public class GenericController {
         return ResponseEntity.status(302).build();
     }
 
+    @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<?> login(@RequestBody AuthenticationRequest request)  {
+        try {
+            auth.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().build();
+        }
+        final UserDTO userDetails = userDetailsService.loadUserByUsernameToDTO(request.getUsername());
+        return ResponseEntity.ok(new AuthenticationResponse(jwt.generateToken(userDetails), userDetails.getName(), userDetails.getUsername()));
+    }
+
     @PostMapping(value = "/create", produces = "application/json")
-    public ResponseEntity<?> create(@RequestBody UserDTO newUser) throws Exception {
+    public ResponseEntity<?> create(@RequestBody UserDTO newUser) {
         UserDTO user;
         try {
             user = userService.create(newUser);
@@ -70,6 +69,10 @@ public class GenericController {
         AuthenticationRequest request = new AuthenticationRequest(user.getUsername(), newUser.getPassword());
         return this.login(request);
     }
+
+    //TODO: Create verify method that takes verification code, verifies and returns jwt.
+    //Post Request:  https://kr6a3lpcylmpny4ehl57z6lxry0lmztz.lambda-url.us-east-1.on.aws
+    //Check Postman for authorization headers.
 
     @PutMapping(value = "/update", produces = "application/json")
     public EntityModel<UserDTO> update(@RequestBody UserDTO userRequest, Principal principal) {

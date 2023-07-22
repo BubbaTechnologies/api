@@ -4,26 +4,32 @@
 
 package com.bubbaTech.api.app;
 
-import com.bubbaTech.api.clothing.Clothing;
+import com.bubbaTech.api.ApiApplication;
 import com.bubbaTech.api.clothing.ClothingDTO;
 import com.bubbaTech.api.clothing.ClothingListType;
 import com.bubbaTech.api.clothing.ClothingService;
-import com.bubbaTech.api.like.Like;
+import com.bubbaTech.api.info.ServiceLogger;
 import com.bubbaTech.api.like.LikeDTO;
+import com.bubbaTech.api.like.LikeNotFoundException;
 import com.bubbaTech.api.like.LikeService;
 import com.bubbaTech.api.like.Ratings;
 import com.bubbaTech.api.user.UserDTO;
 import com.bubbaTech.api.user.UserService;
 import lombok.AllArgsConstructor;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static java.lang.Math.min;
 
@@ -35,13 +41,12 @@ public class AppController {
     ClothingService clothingService;
     LikeService likeService;
 
-    public static int CLOTHING_COUNT = 10;
+    private final ServiceLogger logger;
     public static int PAGE_SIZE = 10;
 
     //Clothing card for user based on sessionId
     @GetMapping(value = "/card", produces = "application/json")
-    public EntityModel<ClothingDTO> card(
-            Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
+    public EntityModel<ClothingDTO> card(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
         ClothingDTO response = clothingService.getCard(this.getUserId(principal), typeFilter, genderFilter);
         response.reverseImageList();
 
@@ -55,13 +60,13 @@ public class AppController {
 
     @GetMapping(value = "/cardList", produces = "application/json")
     public CollectionModel<EntityModel<ClothingDTO>> getCardList(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
-        List<Clothing> items = clothingService.recommendClothingIdList(this.getUserId(principal), typeFilter, genderFilter);
-        List<EntityModel<ClothingDTO>> itemsDTO = new ArrayList<>();
-        for (Clothing item : items) {
-            itemsDTO.add(EntityModel.of(item));
+        List<ClothingDTO> items = clothingService.recommendClothingIdList(this.getUserId(principal), typeFilter, genderFilter);
+        List<EntityModel<ClothingDTO>> entityModelList = new ArrayList<>();
+        for (ClothingDTO item : items) {
+            entityModelList.add(EntityModel.of(item));
         }
 
-        return CollectionModel.of(itemsDTO);
+        return CollectionModel.of(entityModelList);
     }
 
     //Liked list for user based on sessionId
@@ -73,7 +78,6 @@ public class AppController {
     //Collection for user based on sessionId
     @GetMapping(value = "/collection", produces = "application/json")
     public CollectionModel<EntityModel<ClothingDTO>> collection(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value = "page", required = false) int pageNumber) {
-        //TODO: Return by page
         return getClothingList(this.getUserId(principal), ClothingListType.BOUGHT, typeFilter, genderFilter, pageNumber);
     }
 
@@ -83,6 +87,7 @@ public class AppController {
         long userId = getUserId(principal);
         newLike.setClothing(clothingService.getById(newLike.getClothing().getId()));
         newLike.setUser(userService.getById(userId));
+
         //Sets like to like rating + imageTapRatio
         newLike.setRating(Ratings.LIKE_RATING + min(newLike.getImageTapsRatio() * Ratings.TOTAL_IMAGE_TAP_RATING, Ratings.TOTAL_IMAGE_TAP_RATING));
         newLike.setLiked(true);
@@ -116,15 +121,14 @@ public class AppController {
         //Sets like to remove like rating
         newLike.setRating(Ratings.REMOVE_LIKE_RATING);
         newLike.setLiked(false);
-        Optional<Like> findLike = likeService.findByClothingAndUser(newLike.getClothing().getId(),newLike.getUser().getId());
-        if (findLike.isPresent()) {
-            newLike.setBought(findLike.get().isBought());
-        } else {
+        try {
+            LikeDTO findLike = likeService.findByClothingAndUser(newLike.getClothing().getId(), newLike.getUser().getId());
+            newLike.setBought(findLike.isBought());
+        } catch (LikeNotFoundException exception) {
             newLike.setBought(false);
         }
 
         EntityModel<LikeDTO> like = EntityModel.of(likeService.create(newLike));
-
         return ResponseEntity.ok().body(like);
     }
 
@@ -136,14 +140,14 @@ public class AppController {
 
         //Sets like to like rating + imageTapRatio
         newLike.setRating(Ratings.BUY_RATING);
-        Optional<Like> findLike = likeService.findByClothingAndUser(newLike.getClothing().getId(),newLike.getUser().getId());
-        if (findLike.isPresent()) {
-            newLike.setLiked(findLike.get().isLiked());
-        } else {
+
+        try {
+            LikeDTO findLike = likeService.findByClothingAndUser(newLike.getClothing().getId(),newLike.getUser().getId());
+            newLike.setLiked(findLike.isLiked());
+        } catch (LikeNotFoundException exception) {
             newLike.setLiked(false);
         }
         newLike.setBought(true);
-
         EntityModel<LikeDTO> like = EntityModel.of(likeService.create(newLike));
 
         return ResponseEntity.ok().body(like);
@@ -156,11 +160,11 @@ public class AppController {
         newLike.setUser(userService.getById(userId));
 
         newLike.setRating(Ratings.PAGE_CLICK_RATING);
-        Optional<Like> findLike = likeService.findByClothingAndUser(newLike.getClothing().getId(),newLike.getUser().getId());
-        if (findLike.isPresent()) {
-            newLike.setLiked(findLike.get().isLiked());
-            newLike.setBought(findLike.get().isBought());
-        } else {
+        try {
+            LikeDTO findLike = likeService.findByClothingAndUser(newLike.getClothing().getId(),newLike.getUser().getId());
+            newLike.setLiked(findLike.isLiked());
+            newLike.setBought(findLike.isBought());
+        } catch (LikeNotFoundException exception) {
             newLike.setLiked(false);
             newLike.setBought(false);
         }
@@ -178,14 +182,63 @@ public class AppController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping(value="/image", produces="image/jpeg")
+    public ResponseEntity<byte[]> redirectToImageProcessing(@RequestParam(value = "clothingId", required = true) int clothingId, @RequestParam(value = "imageId", required = true) int imageId) {
+        try {
+            String redirectUrl = ApiApplication.imageProcessingAddr + "/image?clothingId=" + clothingId + "&imageId=" + imageId;
+            URL url = new URL(redirectUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            InputStream inputStream = connection.getInputStream();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read()) != -1){
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            return ResponseEntity.ok().body(outputStream.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value="/images", produces = "application/json")
+    public ResponseEntity<?> beginImageProcessing(@RequestParam(value="clothingId", required = true) int clothingId) {
+        try {
+            String redirectUrl = ApiApplication.imageProcessingAddr + "/images?clothingId=" + clothingId;
+            URL url = new URL(redirectUrl);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode != 200) {
+                String errorMessage = "Unable to connect to image processing system.";
+                logger.error(errorMessage);
+                throw new Exception(errorMessage);
+            }
+
+            JSONObject jsonResponse = ClothingService.getConnectionResponse(connection);
+            JSONArray imageUrls = (JSONArray) jsonResponse.get("imageUrls");
+
+            for (int i = 0; i < imageUrls.size(); i++) {
+                imageUrls.add(i, ApiApplication.systemUrl  + imageUrls.get(i).toString());
+            }
+            return ResponseEntity.ok().body(imageUrls);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
     private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
-        List<Like> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter, pageNumber);
+        List<LikeDTO> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter, pageNumber);
 
         List<EntityModel<ClothingDTO>> items = new ArrayList<>();
-        for (Like like : likes) {
+        for (LikeDTO like : likes) {
             ClothingDTO item = clothingService.getById(like.getClothing().getId());
-            item.reverseImageList();
+            List<String> imageUrls = item.getImageURL();
+            item.setImageURL(imageUrls.subList(imageUrls.size() - 1,imageUrls.size() - 1));
             items.add(EntityModel.of(item));
         }
 

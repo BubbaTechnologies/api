@@ -4,11 +4,13 @@
 
 package com.bubbaTech.api.clothing;
 
-import com.bubbaTech.api.app.AppController;
+import com.bubbaTech.api.ApiApplication;
 import com.bubbaTech.api.data.storeStatDTO;
 import com.bubbaTech.api.info.ServiceLogger;
+import com.bubbaTech.api.like.LikeNotFoundException;
 import com.bubbaTech.api.like.LikeService;
 import com.bubbaTech.api.store.Store;
+import com.bubbaTech.api.store.StoreDTO;
 import com.bubbaTech.api.store.StoreService;
 import com.bubbaTech.api.user.Gender;
 import com.bubbaTech.api.user.UserService;
@@ -16,12 +18,14 @@ import lombok.AllArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -37,127 +41,72 @@ import java.util.Optional;
 public class ClothingService {
     private final static int MAX_RANDS = 100;
     private final static int WEEKS_AGO = 3;
-    private final static double RANDOM_CLOTHING_CHANCE = 0.4;
 
     private final ClothingRepository repository;
     private final LikeService likeService;
     private final UserService userService;
     private final StoreService storeService;
+    private final ModelMapper modelMapper;
 
     private final ServiceLogger logger;
 
 
-    public Optional<Clothing> getById(long clothingId) {
-        return repository.findById(clothingId);
+    public ClothingDTO getById(long clothingId) throws ClothingNotFoundException {
+        Optional<Clothing> item = repository.findById(clothingId);
+        if (item.isEmpty())
+            throw new ClothingNotFoundException(clothingId);
+        return modelMapper.map(item.get(), ClothingDTO.class);
     }
 
-    public List<Clothing> recommendClothingIdList(long userId, String typeFilter, String genderFilter) {
+    public List<ClothingDTO> recommendClothingIdList(long userId, String typeFilter, String genderFilter){
         Gender gender = genderStringToEnum(userId, genderFilter);
         List<ClothType> typeFilters = typeStringToList(typeFilter);
         try {
-            String baseUrl = "https://ai.peachsconemarket.com/recommendationList";
-            StringBuilder query = new StringBuilder("userId=" + URLEncoder.encode(Long.toString(userId), StandardCharsets.UTF_8) +
+            StringBuilder urlString = new StringBuilder("https://" + ApiApplication.recommendationSystemAddr +
+                    "/recommendationList?userId" + URLEncoder.encode(Long.toString(userId), StandardCharsets.UTF_8)+
                     "&gender=" + URLEncoder.encode(gender.toString(), StandardCharsets.UTF_8));
             if (typeFilters != null) {
-                query.append("&clothingType=");
-                for (ClothType type : typeFilters) {
-                    query.append(URLEncoder.encode(type.toString(), StandardCharsets.UTF_8)).append(",");
+                urlString.append("&clothingType=");
+                for (ClothType clothType : typeFilters) {
+                    urlString.append(URLEncoder.encode(clothType.toString(), StandardCharsets.UTF_8)).append(",");
                 }
-                query.deleteCharAt(query.length() - 1);
+                urlString.deleteCharAt(urlString.length() - 1);
             }
-            URL url = new URL(baseUrl + "?" + query);
+            URL url = new URL(urlString.toString());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setDoInput(true);
 
             int responseCode = connection.getResponseCode();
             List<Clothing> items = new ArrayList<>();
-            if (responseCode == 200) {
-                BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder responseBuilder = new StringBuilder();
-                String line;
-                while ((line = inputStream.readLine()) != null) {
-                    responseBuilder.append(line);
-                }
+            if (responseCode != 200) {
+                String errorMessage = "Unable to connect to recommendation system.";
+                logger.error(errorMessage);
+                throw new Exception(errorMessage);
 
-                inputStream.close();
-                JSONObject jsonResponse = (JSONObject) new JSONParser().parse(responseBuilder.toString());
-                JSONArray clothingIdArray = (JSONArray) jsonResponse.get("clothingItems");
+            }
 
-                for (Object id : clothingIdArray) {
-                    double choice = this.randomDouble();
-                    //Introduces randomness between recommended clothing
-                    if (choice <= RANDOM_CLOTHING_CHANCE)
-                        items.add(getRandom(userId, typeFilters, gender));
-                    Optional<Clothing> item = repository.getById((long) id);
-                    if (item.isPresent() && items.size() < AppController.CLOTHING_COUNT && !likeCheck(item.get(), userId))
-                        items.add(item.get());
-                }
+            JSONObject jsonResponse = getConnectionResponse(connection);
+            JSONArray clothingIdArray = (JSONArray) jsonResponse.get("clothingItems");
+
+            for (Object id : clothingIdArray) {
+                Optional<Clothing> item = repository.getById((long) id);
+                item.ifPresent(items::add);
             }
-            //Fill rest of items with random
-            for (int i = items.size(); i < AppController.CLOTHING_COUNT; i++) {
-                items.add(getRandom(userId, typeFilters, gender));
+            //Converts List<Clothing> to List<ClothingDTO>
+            List<ClothingDTO> itemsDTO = new ArrayList<>();
+            for (Clothing item : items) {
+                itemsDTO.add(modelMapper.map(item, ClothingDTO.class));
             }
-            return items;
+            return itemsDTO;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public Clothing getCard(long userId, String typeFilter, String genderFilter) {
-        Gender gender = genderStringToEnum(userId, genderFilter);
-        List<ClothType> typeFilters = typeStringToList(typeFilter);
-
-        double choice = this.randomDouble();
-        if (choice <= RANDOM_CLOTHING_CHANCE) {
-            return getRandom(userId, typeFilters, gender);
-        } else {
-            try {
-                String baseUrl = "https://ai.peachsconemarket.com/recommendation";
-                StringBuilder query = new StringBuilder("userId=" + URLEncoder.encode(Long.toString(userId), StandardCharsets.UTF_8) +
-                        "&gender=" + URLEncoder.encode(gender.toString(), StandardCharsets.UTF_8));
-                if (typeFilters != null) {
-                    query.append("&clothingType=");
-                    for (ClothType type : typeFilters) {
-                        query.append(URLEncoder.encode(type.toString(), StandardCharsets.UTF_8)).append(",");
-                    }
-                    query.deleteCharAt(query.length() - 1);
-                }
-                URL url = new URL(baseUrl + "?" + query);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setDoInput(true);
-
-                int responseCode = connection.getResponseCode();
-                if (responseCode == 200) {
-                    BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    StringBuilder responseBuilder = new StringBuilder();
-                    String line;
-                    while ((line = inputStream.readLine()) != null) {
-                        responseBuilder.append(line);
-                    }
-
-                    inputStream.close();
-                    JSONObject jsonResponse = (JSONObject) new JSONParser().parse(responseBuilder.toString());
-                    long clothingId = (long) jsonResponse.get("clothingId");
-                    Optional<Clothing> item = repository.getById(clothingId);
-                    if (item.isPresent() && !likeCheck(item.get(), userId))
-                        return item.get();
-                    else
-                        logger.error("Invalid Clothing Id: " + clothingId + ".");
-                } else{
-                    logger.error("Error getting recommendation with following url " + baseUrl + "?" + query + " . Received response code " + responseCode + ".");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return getRandom(userId, typeFilters, gender);
-    }
-
-    private double randomDouble() {
-        return (Math.random()) + (double) 0;
+    public ClothingDTO getCard(long userId, String typeFilter, String genderFilter){
+        return recommendClothingIdList(userId, typeFilter, genderFilter).get(0);
     }
 
     private Clothing getRandom(long userId, List<ClothType> typeFilters, Gender gender) {
@@ -196,39 +145,45 @@ public class ClothingService {
     }
 
     private Boolean likeCheck(Clothing item, long userId) {
-        return likeService.findByClothingAndUser(item.getId(), userId).isPresent();
-    }
-
-    @Transactional
-    public Clothing update(Clothing item) {
-        Optional<Clothing> optionalClothingItem = this.findByUrl(item.getProductURL());
-        if (optionalClothingItem.isPresent()) {
-            Clothing clothingItem = optionalClothingItem.get();
-            clothingItem.setGender(item.getGender());
-            clothingItem.setName(item.getName());
-            clothingItem.setImageURL(item.getImageURL());
-            return repository.save(clothingItem);
-        }
-        return null;
-    }
-
-    public Clothing create(Clothing item) {
-        Optional<Clothing> optionalClothingItem = this.findByUrl(item.getProductURL());
-        if (optionalClothingItem.isPresent()) {
-            return update(optionalClothingItem.get());
-        } else {
-            return repository.save(item);
+        try {
+            likeService.findByClothingAndUser(item.getId(), userId);
+            return true;
+        } catch (LikeNotFoundException exception) {
+            return false;
         }
     }
 
-    public Optional<Clothing> findByUrl(String url) {
-        return repository.findByProductUrl(url);
+    public ClothingDTO update(ClothingDTO item) {
+        ClothingDTO clothingDTOItem = this.findByUrl(item.getProductURL());
+        Clothing clothingItem = modelMapper.map(clothingDTOItem, Clothing.class);
+        clothingItem.setGender(item.getGender());
+        clothingItem.setName(item.getName());
+        clothingItem.setImageURL(item.getImageURL());
+        return modelMapper.map(repository.save(clothingItem), ClothingDTO.class);
+    }
+
+    public ClothingDTO create(ClothingDTO item) {
+        try {
+            ClothingDTO clothingItem = this.findByUrl(item.getProductURL());
+            return update(clothingItem);
+        } catch (ClothingNotFoundException exception) {
+            Clothing itemEntity = modelMapper.map(item, Clothing.class);
+            return modelMapper.map(repository.save(itemEntity), ClothingDTO.class);
+        }
+    }
+
+    public ClothingDTO findByUrl(String url) throws ClothingNotFoundException {
+        Optional<Clothing> item = repository.findByProductUrl(url);
+        if (item.isEmpty())
+            throw new ClothingNotFoundException(url);
+        return modelMapper.map(item.get(), ClothingDTO.class);
     }
 
     public List<storeStatDTO> getClothingPerStoreData() {
-        List<Store> stores = storeService.getAll();
+        List<StoreDTO> stores = storeService.getAll();
         List<storeStatDTO> storeStats = new ArrayList<>();
-        for (Store store: stores) {
+        for (StoreDTO storeDTO: stores) {
+            Store store = modelMapper.map(storeDTO, Store.class);
             Long maleCount = repository.countByStoreAndGender(store, Gender.MALE);
             Long femaleCount = repository.countByStoreAndGender(store, Gender.FEMALE);
             Long boyCount = repository.countByStoreAndGender(store, Gender.BOY);
@@ -288,6 +243,18 @@ public class ClothingService {
             case "set" -> ClothType.SET;
             default -> ClothType.OTHER;
         };
+    }
+
+    public static JSONObject getConnectionResponse(HttpURLConnection connection) throws IOException, ParseException {
+        BufferedReader inputStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        StringBuilder responseBuilder = new StringBuilder();
+        String line;
+        while ((line = inputStream.readLine()) != null) {
+            responseBuilder.append(line);
+        }
+        inputStream.close();
+
+        return (JSONObject) new JSONParser().parse(responseBuilder.toString());
     }
 }
 

@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,8 +39,13 @@ public class Store {
     public Store(String name, String URL) {
         this.name = name;
         this.URL = URL;
-        this.items = new ArrayList<>();
         this.enabled = true;
+    }
+
+    public Store(StoreDTO storeDTO) {
+        this.name = storeDTO.getName();
+        this.URL = storeDTO.getURL();
+        this.enabled = storeDTO.isEnabled();
     }
 
     @Override
