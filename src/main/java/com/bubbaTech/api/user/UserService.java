@@ -61,7 +61,10 @@ public class UserService {
         if (this.checkUsername(userRequest.getUsername()))
             throw new UserExistsException(userRequest.getUsername());
         User user = new User();
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setUsername(userRequest.getUsername());
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        user.setGender(userRequest.getGender());
+        user.setEnabled(userRequest.getEnabled());
         Collection<Authorities> auth = new ArrayList<>();
         auth.add(new Authorities("USER"));
         user.setGrantedAuthorities(auth);

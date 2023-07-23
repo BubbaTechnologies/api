@@ -27,31 +27,25 @@ public class UserDTO implements DTO<UserDTO> {
     private List<LikeDTO> likes;
     private Gender gender;
     private Boolean enabled;
-    private String name;
     private Date accountCreated;
     private Date lastLogin;
     @JsonIgnore
     private Collection<Authorities> grantedAuthorities;
-    @JsonIgnore
-    private Date accountExpiration;
-    @JsonIgnore
-    private Date credentialExpiration;
 
 
     public UserDTO() {}
 
-    public UserDTO(String username, String password, Gender gender, String name) {
+    public UserDTO(String username, String password, Gender gender) {
         this.username = username;
         this.password = password;
         this.gender = gender;
         this.likes = null;
         this.enabled = true;
-        this.name = name;
     }
 
 
     @Override
     public String toString() {
-        return "UserDTO{" + "id=" + this.id + ", username='" + this.username + '\'' + ", password='" + this.password + '\'' + ", gender=" + this.gender + '\'' + "name='" + this.name + '\'' + "}";
+        return "UserDTO{" + "id=" + this.id + ", username='" + this.username + '\'' + ", password='" + this.password + '\'' + ", gender=" + this.gender + '\'' + "}";
     }
 }

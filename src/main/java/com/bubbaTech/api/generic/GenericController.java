@@ -4,6 +4,7 @@
 
 package com.bubbaTech.api.generic;
 
+import com.bubbaTech.api.info.ServiceLogger;
 import com.bubbaTech.api.security.authentication.CustomUserDetailsService;
 import com.bubbaTech.api.security.authentication.JwtUtil;
 import com.bubbaTech.api.security.authentication.model.AuthenticationRequest;
@@ -28,6 +29,7 @@ public class GenericController {
     private JwtUtil jwt;
     private CustomUserDetailsService userDetailsService;
     private UserService userService;
+    private final ServiceLogger logger;
 
     @GetMapping(value = "/error")
     public ResponseEntity<?> error() {
@@ -52,10 +54,12 @@ public class GenericController {
         try {
             auth.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         } catch (Exception e){
+            e.printStackTrace();
+            logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
         final UserDTO userDetails = userDetailsService.loadUserByUsernameToDTO(request.getUsername());
-        return ResponseEntity.ok(new AuthenticationResponse(jwt.generateToken(userDetails), userDetails.getName(), userDetails.getUsername()));
+        return ResponseEntity.ok(new AuthenticationResponse(jwt.generateToken(userDetails), userDetails.getUsername()));
     }
 
     @PostMapping(value = "/create", produces = "application/json")
@@ -64,6 +68,8 @@ public class GenericController {
         try {
             user = userService.create(newUser);
         } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
         AuthenticationRequest request = new AuthenticationRequest(user.getUsername(), newUser.getPassword());
@@ -80,8 +86,6 @@ public class GenericController {
         UserDTO update = userRequest;
         update.setId(loggedUser.getId());
         update.setEnabled(loggedUser.getEnabled());
-        update.setAccountExpiration(loggedUser.getAccountExpiration());
-        update.setCredentialExpiration(loggedUser.getCredentialExpiration());
         update.setGrantedAuthorities(loggedUser.getGrantedAuthorities());
         userRequest = userService.update(update);
         return EntityModel.of(userRequest);

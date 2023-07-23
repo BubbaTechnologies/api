@@ -19,6 +19,9 @@ public class ApiApplication {
     @Value("${system.url}")
     public static String systemUrl;
 
+    @Value("system.load_data")
+    public static boolean load_data;
+
     public static void main(String[] args) {
         SpringApplication.run(ApiApplication.class, args);
     }

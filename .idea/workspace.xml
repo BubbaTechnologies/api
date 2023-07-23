@@ -6,17 +6,23 @@
   <component name="ChangeListManager">
     <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/authentication/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/authentication/JwtUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/app/AppController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/app/AppController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/security/securityConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/store/Store.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/store/Store.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/ApiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/ApiApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/generic/GenericController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/generic/GenericController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/authentication/CustomAuthenticationManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/authentication/model/AuthenticationResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/authentication/model/AuthenticationResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDeserializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/application/LoadDatabase.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/application/LoadDatabase.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/generic/GenericController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/generic/GenericController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/security/authentication/JwtUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/security/authentication/JwtUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/security/authentication/model/AuthenticationResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/security/authentication/model/AuthenticationResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/user/UserDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/user/UserDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/user/UserDeserializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/user/UserDeserializer.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -247,7 +253,8 @@
       <workItem from="1689376967734" duration="1000" />
       <workItem from="1689376973367" duration="3000" />
       <workItem from="1689700476057" duration="6257000" />
-      <workItem from="1690002424966" duration="3779000" />
+      <workItem from="1690002424966" duration="3996000" />
+      <workItem from="1690057394368" duration="2491000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -523,7 +530,15 @@
       <option name="project" value="LOCAL" />
       <updated>1690004296730</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Fixed application.properties.">
+      <option name="closed" value="true" />
+      <created>1690008235435</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1690008235435</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -544,7 +559,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added filterOptions route." />
     <MESSAGE value="Updated read me." />
     <MESSAGE value="Updated getCard, remove gender list." />
     <MESSAGE value="Updated getCard." />
@@ -569,7 +583,8 @@
     <MESSAGE value="Updated to newest version of spring." />
     <MESSAGE value="Created ip rate limiting for &quot;/login&quot; and &quot;/create&quot;" />
     <MESSAGE value="Initial deploy." />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial deploy." />
+    <MESSAGE value="Fixed application.properties." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed application.properties." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

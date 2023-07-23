@@ -6,7 +6,6 @@ package com.bubbaTech.api.user;
 
 import com.bubbaTech.api.like.Like;
 import com.bubbaTech.api.security.authorities.Authorities;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,9 +31,8 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @OneToMany()
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @JsonManagedReference
     private List<Like> likes;
 
     @Column(name = "gender")
