@@ -22,4 +22,15 @@ public enum Gender {
     public static String[] names() {
         return Arrays.toString(Gender.values()).replaceAll("^.|.$", "").split(", ");
     }
+
+    static public Gender stringToGender(String gender) {
+        return switch (gender.toLowerCase()) {
+            case "male" -> Gender.MALE;
+            case "female" -> Gender.FEMALE;
+            case "boy" -> Gender.BOY;
+            case "girl" -> Gender.GIRL;
+            case "kids" -> Gender.KID;
+            default -> Gender.UNISEX;
+        };
+    }
 }

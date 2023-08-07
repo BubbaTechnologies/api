@@ -1,4 +1,4 @@
-//Matthew Grohoslki
+//Matthew Groholski
 //Bubba Technologies Inc.
 //10/01/2022
 
@@ -15,9 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bubbaTech.api.clothing.ClothingService.toClothType;
-import static com.bubbaTech.api.clothing.ClothingService.toGender;
-
 public class ClothingDeserializer extends JsonDeserializer<ClothingDTO> {
 
     public ClothingDeserializer() {
@@ -33,6 +30,7 @@ public class ClothingDeserializer extends JsonDeserializer<ClothingDTO> {
         long storeID = Long.parseLong(node.get("storeId").textValue());
         String type = node.get("type").textValue();
         String gender = node.get("gender").textValue();
+        JsonNode tags = node.get("tags");
 
         //Deal with imageUrl
         List<String> imageUrlCollection = new ArrayList<>();
@@ -43,11 +41,19 @@ public class ClothingDeserializer extends JsonDeserializer<ClothingDTO> {
             throw new RuntimeException();
         }
 
-        //Change type into clothType
-        ClothType clothType = toClothType(type);
-        Gender g = toGender(gender);
+        List<ClothingTag> tagCollection = new ArrayList<>();
+        if (tags.isArray()) {
+            for (JsonNode tag : tags)
+                tagCollection.add(ClothingTag.stringToClothingTag(tag.textValue()));
+        } else {
+            throw new RuntimeException();
+        }
 
-        return new ClothingDTO(name, imageUrlCollection, productURL, new StoreDTO(storeID), clothType, g);
+        //Change type into clothType
+        ClothType clothType = ClothType.stringToClothType(type);
+        Gender g = Gender.stringToGender(gender);
+
+        return new ClothingDTO(name, imageUrlCollection, productURL, new StoreDTO(storeID), clothType, g, tagCollection);
     }
 }
 

@@ -29,22 +29,24 @@ public class ClothingDTO implements DTO<ClothingDTO> {
     private ClothType type;
     private Gender gender;
     private LocalDate date;
+    private List<ClothingTag> tags;
 
     public ClothingDTO() {}
     public ClothingDTO(Long id) {
         this.id = id;
     }
 
-    public ClothingDTO(String name, List<String> imageURL, String productURL, StoreDTO store, ClothType type, Gender gender) {
+    public ClothingDTO(String name, List<String> imageURL, String productURL, StoreDTO store, ClothType type, Gender gender, List<ClothingTag> tags) {
         this.name = name;
         this.imageURL = imageURL;
         this.productURL = productURL;
         this.store = store;
         this.type = type;
         this.gender = gender;
+        this.tags = tags;
     }
 
-    public ClothingDTO(String name, List<String> imageURL, String productURL, StoreDTO store, ClothType type, Gender gender, LocalDate date) {
+    public ClothingDTO(String name, List<String> imageURL, String productURL, StoreDTO store, ClothType type, Gender gender, LocalDate date, List<ClothingTag> tags) {
         this.name = name;
         this.imageURL = imageURL;
         this.productURL = productURL;
@@ -52,6 +54,7 @@ public class ClothingDTO implements DTO<ClothingDTO> {
         this.type = type;
         this.gender = gender;
         this.date = date;
+        this.tags = tags;
     }
 
     public void reverseImageList() {

@@ -26,9 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.bubbaTech.api.clothing.ClothingService.toClothType;
-import static com.bubbaTech.api.clothing.ClothingService.toGender;
-
 @Service
 public class LikeService {
     private final LikeRepository repository;
@@ -72,7 +69,7 @@ public class LikeService {
         //Convert genderFilter to gender
         Gender gender = null;
         if (genderFilter != null) {
-            gender = toGender(genderFilter);
+            gender = Gender.stringToGender(genderFilter);
         }
 
         //Convert typeFilter to list of types
@@ -81,7 +78,7 @@ public class LikeService {
             typeFilters = new ArrayList<>();
             String[] filters = typeFilter.split(",");
             for (String str : filters) {
-                typeFilters.add(toClothType(str));
+                typeFilters.add(ClothType.stringToClothType(str));
             }
         }
 

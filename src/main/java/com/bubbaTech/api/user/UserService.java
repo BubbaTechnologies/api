@@ -65,6 +65,8 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         user.setGender(userRequest.getGender());
         user.setEnabled(userRequest.getEnabled());
+        user.setAccountCreated(LocalDate.now());
+        user.setLastLogin(LocalDate.now());
         Collection<Authorities> auth = new ArrayList<>();
         auth.add(new Authorities("USER"));
         user.setGrantedAuthorities(auth);

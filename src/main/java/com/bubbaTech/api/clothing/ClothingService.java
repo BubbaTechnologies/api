@@ -203,7 +203,7 @@ public class ClothingService {
             typeFilters = new ArrayList<>();
             String[] typeFiltersString = typeFilter.split(",");
             for (String str : typeFiltersString)
-                typeFilters.add(toClothType(str));
+                typeFilters.add(ClothType.stringToClothType(str));
         }
         return typeFilters;
     }
@@ -213,36 +213,8 @@ public class ClothingService {
         if (genderFilter == null)
             gender = userService.getGenderById(userId);
         else
-            gender = toGender(genderFilter);
+            gender = Gender.stringToGender(genderFilter);
         return gender;
-    }
-
-    static public Gender toGender(String gender) {
-        return switch (gender.toLowerCase()) {
-            case "male" -> Gender.MALE;
-            case "female" -> Gender.FEMALE;
-            case "boy" -> Gender.BOY;
-            case "girl" -> Gender.GIRL;
-            case "kids" -> Gender.KID;
-            default -> Gender.UNISEX;
-        };
-    }
-
-    static public ClothType toClothType(String type) {
-        return switch (type.toLowerCase()) {
-            case "top" -> ClothType.TOP;
-            case "bottom" -> ClothType.BOTTOM;
-            case "shoes" -> ClothType.SHOES;
-            case "underclothing" -> ClothType.UNDERCLOTHING;
-            case "jacket" -> ClothType.JACKET;
-            case "skirt" -> ClothType.SKIRT;
-            case "one_piece" -> ClothType.ONE_PIECE;
-            case "sleepwear" -> ClothType.SLEEPWEAR;
-            case "dress" -> ClothType.DRESS;
-            case "accessory" -> ClothType.ACCESSORY;
-            case "set" -> ClothType.SET;
-            default -> ClothType.OTHER;
-        };
     }
 
     public static JSONObject getConnectionResponse(HttpURLConnection connection) throws IOException, ParseException {

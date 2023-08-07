@@ -1,5 +1,5 @@
 # Bubba Technologies Inc. API
-Updated 07/21/2023
+Updated 07/23/2023
 
 ## Environment Variables
 
@@ -149,7 +149,8 @@ Response:
     },
     "type":str,
     "gender":str,
-    "date":str
+    "date":str,
+    "tags":[str]
 }
 ```
 
@@ -179,7 +180,8 @@ Response:
             },
             "type":str,
             "gender":str,
-            "date":str
+            "date":str,
+            "tags":[str]
         ]
     }
 }
@@ -414,21 +416,6 @@ Response:
 }
 ```
 
-### /app/filterOptions
-Mapping: GET
-
-Required Headers: ```Authorization: Bearer (JWT)```
-
-Description: Returns genders and types per gender.
-
-Response:
-```
-{
-    "genders":[str],
-    "types":[[str]]
-}
-```
-
 ## Scraper Controller
 
 ### /scraper/checkStore
@@ -484,7 +471,8 @@ else,
     },
     "type": str,
     "gender":[str],
-    "date":str
+    "date":str,
+    "tags":[str]
 }
 ```
 
@@ -530,7 +518,8 @@ Request Body:
     "productUrl":str,
     "storeId":str,
     "type":str,
-    "gender":str
+    "gender":str,
+    "tags":[str]
 }
 ```
 
@@ -547,12 +536,11 @@ Response:
         "url":str
     },
     "type":str,
-    "gender": [str]
+    "gender":[str],
+    "tags":[str]
 }
 ```
 
-## AI Controller
-**TODO**
 
 
 

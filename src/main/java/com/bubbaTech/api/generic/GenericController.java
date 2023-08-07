@@ -59,6 +59,7 @@ public class GenericController {
             return ResponseEntity.badRequest().build();
         }
         final UserDTO userDetails = userDetailsService.loadUserByUsernameToDTO(request.getUsername());
+        userService.updateLastLogin(userDetails.getId());
         return ResponseEntity.ok(new AuthenticationResponse(jwt.generateToken(userDetails), userDetails.getUsername()));
     }
 
