@@ -35,6 +35,7 @@ com/bubbaTech/api/clothing/ClothingNotFoundException.class
 com/bubbaTech/api/app/AppController.class
 com/bubbaTech/api/like/LikeService$1.class
 com/bubbaTech/api/security/authentication/JwtRequestFilter.class
+com/bubbaTech/api/clothing/ClothingTag.class
 com/bubbaTech/api/clothing/ClothType.class
 com/bubbaTech/api/clothing/ClothingDeserializer.class
 com/bubbaTech/api/security/authentication/model/AuthenticationRequestDeserializer.class
