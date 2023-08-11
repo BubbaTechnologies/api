@@ -4,7 +4,6 @@
 
 package com.bubbaTech.api.clothing;
 
-import com.bubbaTech.api.ApiApplication;
 import com.bubbaTech.api.data.storeStatDTO;
 import com.bubbaTech.api.info.ServiceLogger;
 import com.bubbaTech.api.like.LikeNotFoundException;
@@ -14,12 +13,14 @@ import com.bubbaTech.api.store.StoreDTO;
 import com.bubbaTech.api.store.StoreService;
 import com.bubbaTech.api.user.Gender;
 import com.bubbaTech.api.user.UserService;
-import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -37,18 +38,26 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ClothingService {
     private final static int MAX_RANDS = 100;
     private final static int WEEKS_AGO = 3;
 
+    @NonNull
     private final ClothingRepository repository;
+    @NonNull
     private final LikeService likeService;
+    @NonNull
     private final UserService userService;
+    @NonNull
     private final StoreService storeService;
+    @NonNull
     private final ModelMapper modelMapper;
-
+    @NonNull
     private final ServiceLogger logger;
+
+    @Value("${system.recommendation_system_addr}")
+    public String recommendationSystemAddr;
 
 
     public ClothingDTO getById(long clothingId) throws ClothingNotFoundException {
@@ -62,13 +71,13 @@ public class ClothingService {
         Gender gender = genderStringToEnum(userId, genderFilter);
         List<ClothType> typeFilters = typeStringToList(typeFilter);
         try {
-            StringBuilder urlString = new StringBuilder("https://" + ApiApplication.recommendationSystemAddr +
-                    "/recommendationList?userId" + URLEncoder.encode(Long.toString(userId), StandardCharsets.UTF_8)+
-                    "&gender=" + URLEncoder.encode(gender.toString(), StandardCharsets.UTF_8));
+            StringBuilder urlString = new StringBuilder("http://" + recommendationSystemAddr +
+                    "/recommendationList?userId=" + URLEncoder.encode(Long.toString(userId), StandardCharsets.UTF_8)+
+                    "&gender=" + URLEncoder.encode(Integer.toString(gender.getIntValue()), StandardCharsets.UTF_8));
             if (typeFilters != null) {
                 urlString.append("&clothingType=");
                 for (ClothType clothType : typeFilters) {
-                    urlString.append(URLEncoder.encode(clothType.toString(), StandardCharsets.UTF_8)).append(",");
+                    urlString.append(URLEncoder.encode(Integer.toString(clothType.getIntValue()), StandardCharsets.UTF_8)).append(",");
                 }
                 urlString.deleteCharAt(urlString.length() - 1);
             }
@@ -83,11 +92,10 @@ public class ClothingService {
                 String errorMessage = "Unable to connect to recommendation system.";
                 logger.error(errorMessage);
                 throw new Exception(errorMessage);
-
             }
 
             JSONObject jsonResponse = getConnectionResponse(connection);
-            JSONArray clothingIdArray = (JSONArray) jsonResponse.get("clothingItems");
+            JSONArray clothingIdArray = (JSONArray) jsonResponse.get("clothingIds");
 
             for (Object id : clothingIdArray) {
                 Optional<Clothing> item = repository.getById((long) id);
@@ -98,6 +106,7 @@ public class ClothingService {
             for (Clothing item : items) {
                 itemsDTO.add(modelMapper.map(item, ClothingDTO.class));
             }
+
             return itemsDTO;
         } catch (Exception e) {
             e.printStackTrace();

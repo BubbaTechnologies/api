@@ -1,11 +1,11 @@
 package com.bubbaTech.api.clothing;
 
-import com.bubbaTech.api.ApiApplication;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -14,12 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClothingSerializer extends JsonSerializer<ClothingDTO> {
+
+    @Value("${system.image_processing_addr}")
+    private String imageProcessingAddr;
+
     @Override
     public void serialize(ClothingDTO clothingDTO, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         List<String> imageUrls = new ArrayList<>();
         try {
             //Builds url
-            URL url = new URL("https://" + ApiApplication.imageProcessingAddr + "/images?clothingId=" + clothingDTO.getId());
+            URL url = new URL("https://" + imageProcessingAddr + "/images?clothingId=" + clothingDTO.getId());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setDoInput(true);
@@ -30,7 +34,7 @@ public class ClothingSerializer extends JsonSerializer<ClothingDTO> {
                 for (Object imageUrl : imageUrlArray)
                     imageUrls.add((String) imageUrl);
             } else {
-                throw new Exception("Could not connect to image processing server at: " + ApiApplication.imageProcessingAddr);
+                throw new Exception("Could not connect to image processing server at: " + imageProcessingAddr);
             }
         } catch (Exception e) {
             e.printStackTrace();

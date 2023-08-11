@@ -4,7 +4,6 @@
 
 package com.bubbaTech.api.app;
 
-import com.bubbaTech.api.ApiApplication;
 import com.bubbaTech.api.clothing.ClothingDTO;
 import com.bubbaTech.api.clothing.ClothingListType;
 import com.bubbaTech.api.clothing.ClothingService;
@@ -15,9 +14,11 @@ import com.bubbaTech.api.like.LikeService;
 import com.bubbaTech.api.like.Ratings;
 import com.bubbaTech.api.user.UserDTO;
 import com.bubbaTech.api.user.UserService;
-import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
@@ -34,15 +35,27 @@ import java.util.List;
 import static java.lang.Math.min;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/app")
 public class AppController {
-    UserService userService;
-    ClothingService clothingService;
-    LikeService likeService;
 
+    @NonNull
+    UserService userService;
+    @NonNull
+    ClothingService clothingService;
+    @NonNull
+    LikeService likeService;
+    @NonNull
     private final ServiceLogger logger;
     public static int PAGE_SIZE = 10;
+
+    @Value("${system.image_processing_addr}")
+    private String imageProcessingAddr;
+
+    @Value("${system.url}")
+    private String systemUrl;
+
+
 
     //Clothing card for user based on sessionId
     @GetMapping(value = "/card", produces = "application/json")
@@ -185,7 +198,7 @@ public class AppController {
     @GetMapping(value="/image", produces="image/jpeg")
     public ResponseEntity<byte[]> redirectToImageProcessing(@RequestParam(value = "clothingId", required = true) int clothingId, @RequestParam(value = "imageId", required = true) int imageId) {
         try {
-            String redirectUrl = ApiApplication.imageProcessingAddr + "/image?clothingId=" + clothingId + "&imageId=" + imageId;
+            String redirectUrl = "https://" + imageProcessingAddr + "/image?clothingId=" + clothingId + "&imageId=" + imageId;
             URL url = new URL(redirectUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -207,7 +220,7 @@ public class AppController {
     @GetMapping(value="/images", produces = "application/json")
     public ResponseEntity<?> beginImageProcessing(@RequestParam(value="clothingId", required = true) int clothingId) {
         try {
-            String redirectUrl = ApiApplication.imageProcessingAddr + "/images?clothingId=" + clothingId;
+            String redirectUrl = imageProcessingAddr + "/images?clothingId=" + clothingId;
             URL url = new URL(redirectUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             int responseCode = connection.getResponseCode();
@@ -222,7 +235,7 @@ public class AppController {
             JSONArray imageUrls = (JSONArray) jsonResponse.get("imageUrls");
 
             for (int i = 0; i < imageUrls.size(); i++) {
-                imageUrls.add(i, ApiApplication.systemUrl  + imageUrls.get(i).toString());
+                imageUrls.add(i, systemUrl  + imageUrls.get(i).toString());
             }
             return ResponseEntity.ok().body(imageUrls);
         } catch (Exception e) {

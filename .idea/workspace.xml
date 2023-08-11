@@ -4,35 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingTag.java" afterDir="false" />
+    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="Merge from signUpVerification.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/ApiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/ApiApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/Clothing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/Clothing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingDeserializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingSerializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/generic/GenericController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/generic/GenericController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/info/FilterOptionsDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/info/FilterOptionsDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/Gender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/Gender.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/rateLimiting/IpRateLimitingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/rateLimiting/IpRateLimitingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/ApiApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/ApiApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/application/LoadDatabase.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/application/LoadDatabase.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/app/AppController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/app/AppController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/Clothing.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/Clothing.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingDTO.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingDeserializer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingDeserializer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/clothing/ClothingService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/generic/GenericController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/generic/GenericController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/like/LikeService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/user/Gender.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/user/Gender.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/user/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/user/User.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/user/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/bubbaTech/api/user/UserService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +44,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="SIGN_OFF_COMMIT" value="true" />
   </component>
   <component name="GitToolBoxStore">
     <option name="projectConfigVersion" value="5" />
@@ -121,7 +107,7 @@
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;signUpVerification&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -155,6 +141,7 @@
         <option value="SpringBootApplicationConfigurationType" />
       </set>
     </option>
+    <option name="openRunningConfigInTab" value="true" />
   </component>
   <component name="RunManager">
     <configuration name="ApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
@@ -268,6 +255,13 @@
       <workItem from="1690907923498" duration="297000" />
       <workItem from="1690936438189" duration="1502000" />
       <workItem from="1691359897998" duration="2594000" />
+      <workItem from="1691620912686" duration="429000" />
+      <workItem from="1691621355511" duration="701000" />
+      <workItem from="1691624720964" duration="485000" />
+      <workItem from="1691735041798" duration="1116000" />
+      <workItem from="1691781092291" duration="880000" />
+      <workItem from="1691782164408" duration="1013000" />
+      <workItem from="1691784100280" duration="2018000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>

@@ -40,7 +40,7 @@ public class Clothing {
     private Store store;
 
     @OneToMany()
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "like_ids")
     @JsonManagedReference
     @ToString.Exclude
     private List<Like> likes;

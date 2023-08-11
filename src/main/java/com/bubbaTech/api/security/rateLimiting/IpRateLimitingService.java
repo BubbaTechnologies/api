@@ -19,7 +19,7 @@ public class IpRateLimitingService {
 
     private Bucket newBucket(String ipAddress) {
         return Bucket.builder()
-                .addLimit(Bandwidth.classic(10, Refill.intervally(5, Duration.ofHours(1))))
+                .addLimit(Bandwidth.classic(10, Refill.intervally(10, Duration.ofHours(1))))
                 .build();
     }
 }
