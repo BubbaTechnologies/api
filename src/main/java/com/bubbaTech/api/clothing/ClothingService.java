@@ -87,7 +87,6 @@ public class ClothingService {
             connection.setDoInput(true);
 
             int responseCode = connection.getResponseCode();
-            List<Clothing> items = new ArrayList<>();
             if (responseCode != 200) {
                 String errorMessage = "Unable to connect to recommendation system.";
                 logger.error(errorMessage);
@@ -96,18 +95,23 @@ public class ClothingService {
 
             JSONObject jsonResponse = getConnectionResponse(connection);
             JSONArray clothingIdArray = (JSONArray) jsonResponse.get("clothingIds");
+            List<Long> idList = new ArrayList<>();
 
             for (Object id : clothingIdArray) {
-                Optional<Clothing> item = repository.getById((long) id);
-                item.ifPresent(items::add);
-            }
-            //Converts List<Clothing> to List<ClothingDTO>
-            List<ClothingDTO> itemsDTO = new ArrayList<>();
-            for (Clothing item : items) {
-                itemsDTO.add(modelMapper.map(item, ClothingDTO.class));
+                idList.add((Long) id);
             }
 
-            return itemsDTO;
+            Page<Clothing> itemsPage = repository.getListById(idList, PageRequest.of(0, idList.size()));
+
+            if (itemsPage.hasContent()) {
+                List<Clothing> items = itemsPage.getContent();
+                //Converts List<Clothing> to List<ClothingDTO>
+                List<ClothingDTO> itemsDTO = new ArrayList<>();
+                for (Clothing item : items) {
+                    itemsDTO.add(modelMapper.map(item, ClothingDTO.class));
+                }
+                return itemsDTO;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

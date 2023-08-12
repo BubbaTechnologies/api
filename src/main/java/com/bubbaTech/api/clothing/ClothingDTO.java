@@ -29,6 +29,7 @@ public class ClothingDTO implements DTO<ClothingDTO> {
     private ClothType type;
     private Gender gender;
     private LocalDate date;
+    @JsonManagedReference
     private List<ClothingTag> tags;
 
     public ClothingDTO() {}
@@ -60,5 +61,4 @@ public class ClothingDTO implements DTO<ClothingDTO> {
     public void reverseImageList() {
         Collections.reverse(imageURL);
     }
-
 }

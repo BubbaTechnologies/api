@@ -56,7 +56,6 @@ public class AppController {
     private String systemUrl;
 
 
-
     //Clothing card for user based on sessionId
     @GetMapping(value = "/card", produces = "application/json")
     public EntityModel<ClothingDTO> card(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
@@ -198,7 +197,7 @@ public class AppController {
     @GetMapping(value="/image", produces="image/jpeg")
     public ResponseEntity<byte[]> redirectToImageProcessing(@RequestParam(value = "clothingId", required = true) int clothingId, @RequestParam(value = "imageId", required = true) int imageId) {
         try {
-            String redirectUrl = "https://" + imageProcessingAddr + "/image?clothingId=" + clothingId + "&imageId=" + imageId;
+            String redirectUrl = "http://" + imageProcessingAddr + "/image?clothingId=" + clothingId + "&imageId=" + imageId;
             URL url = new URL(redirectUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
@@ -220,7 +219,7 @@ public class AppController {
     @GetMapping(value="/images", produces = "application/json")
     public ResponseEntity<?> beginImageProcessing(@RequestParam(value="clothingId", required = true) int clothingId) {
         try {
-            String redirectUrl = imageProcessingAddr + "/images?clothingId=" + clothingId;
+            String redirectUrl = "http://" + imageProcessingAddr + "/images?clothingId=" + clothingId;
             URL url = new URL(redirectUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             int responseCode = connection.getResponseCode();

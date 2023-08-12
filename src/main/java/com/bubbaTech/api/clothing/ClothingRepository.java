@@ -33,4 +33,6 @@ public interface ClothingRepository extends JpaRepository<Clothing, Long> {
     long countByStoreAndGender(Store store, Gender gender);
     @Query("SELECT COUNT(c) FROM Clothing c WHERE c.store = :store AND c.clothingType = :type")
     long countByStoreAndType(Store store, ClothType type);
+    @Query("SELECT c FROM Clothing c WHERE c.id IN :ids")
+    Page<Clothing> getListById(List<Long> ids, Pageable pageable);
 }

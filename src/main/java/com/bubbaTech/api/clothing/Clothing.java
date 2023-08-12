@@ -7,7 +7,6 @@ package com.bubbaTech.api.clothing;
 import com.bubbaTech.api.like.Like;
 import com.bubbaTech.api.store.Store;
 import com.bubbaTech.api.user.Gender;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,28 +27,19 @@ public class Clothing {
     @Column(name = "id")
     private Long id;
     private String name;
-
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> imageURL;
-
     private String productURL;
-
     @ManyToOne()
     @JoinColumn(name = "store_id")
-    @JsonManagedReference
     private Store store;
-
     @OneToMany()
     @JoinColumn(name = "like_ids")
-    @JsonManagedReference
     @ToString.Exclude
     private List<Like> likes;
-
     private ClothType clothingType;
-
     private Gender gender;
-
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<ClothingTag> tags;
 
     @Column(name = "date_created")
@@ -77,17 +67,6 @@ public class Clothing {
     @PreUpdate
     public void preUpdate() {
         this.date = LocalDate.now();
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder returnString = new StringBuilder("Clothing{" + "id=" + this.id + ", name='" + this.name + '\'' + ", productURL='" + this.productURL + '\'' + ", store=" + this.store + ", type=" + this.clothingType);
-        returnString.append('}');
-        return returnString.toString();
-    }
-
-    public String toStringBasic() {
-        return "Clothing{" + "id=" + this.id + ", name='" + this.name + '\'' +  ", productURL='" + this.productURL + '\'' + ", store=" + this.store + ", type=" + this.clothingType + '}';
     }
 
     @Override
