@@ -60,12 +60,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/create", "/login", "/health", "/logout", "/app/image").permitAll()
                         .requestMatchers("/ai/**").hasAuthority("AI")
                         .requestMatchers("/app/**").hasAuthority("USER")
                         .requestMatchers("/scraper/**").hasAuthority("SCRAPER")
                         .requestMatchers("/scraper/**").permitAll()
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/", "/create", "/login", "/health", "/logout").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
