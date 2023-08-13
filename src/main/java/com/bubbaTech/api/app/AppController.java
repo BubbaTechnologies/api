@@ -23,9 +23,8 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.Principal;
@@ -194,27 +193,21 @@ public class AppController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value="/image", produces="image/jpeg")
+    @GetMapping(value="/image")
     public ResponseEntity<byte[]> redirectToImageProcessing(@RequestParam(value = "clothingId", required = true) int clothingId, @RequestParam(value = "imageId", required = true) int imageId) {
         try {
             String redirectUrl = "http://" + imageProcessingAddr + "/image?clothingId=" + clothingId + "&imageId=" + imageId;
             URL url = new URL(redirectUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setDoInput(true);
-            InputStream inputStream = connection.getInputStream();
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = inputStream.read()) != -1){
-                outputStream.write(buffer, 0, bytesRead);
-            }
-            return ResponseEntity.ok().body(outputStream.toByteArray());
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<byte[]> response = restTemplate.getForEntity(redirectUrl, byte[].class);
+
+            return ResponseEntity.ok().contentType(response.getHeaders().getContentType()).body(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.notFound().build();
         }
     }
+
 
     @GetMapping(value="/images", produces = "application/json")
     public ResponseEntity<?> beginImageProcessing(@RequestParam(value="clothingId", required = true) int clothingId) {
