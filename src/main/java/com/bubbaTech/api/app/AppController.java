@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.min;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,9 +51,6 @@ public class AppController {
 
     @Value("${system.image_processing_addr}")
     private String imageProcessingAddr;
-
-    @Value("${system.url}")
-    private String systemUrl;
 
 
     //Clothing card for user based on sessionId
@@ -227,7 +225,9 @@ public class AppController {
             JSONArray imageUrls = (JSONArray) jsonResponse.get("imageUrls");
 
             for (int i = 0; i < imageUrls.size(); i++) {
-                imageUrls.add(i, systemUrl  + imageUrls.get(i).toString());
+                imageUrls.add(i, linkTo(AppController.class)
+                        .slash(imageUrls.get(i).toString())
+                        .toUriComponentsBuilder().scheme("https").toUriString());
             }
             return ResponseEntity.ok().body(imageUrls);
         } catch (Exception e) {

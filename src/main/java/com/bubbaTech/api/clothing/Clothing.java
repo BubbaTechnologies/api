@@ -27,7 +27,7 @@ public class Clothing {
     @Column(name = "id")
     private Long id;
     private String name;
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     private List<String> imageURL;
     private String productURL;
     @ManyToOne()
@@ -39,7 +39,7 @@ public class Clothing {
     private List<Like> likes;
     private ClothType clothingType;
     private Gender gender;
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     private List<ClothingTag> tags;
 
     @Column(name = "date_created")

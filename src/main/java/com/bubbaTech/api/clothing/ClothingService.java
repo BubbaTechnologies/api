@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class ClothingService {
     private final static int MAX_RANDS = 100;
@@ -93,21 +95,27 @@ public class ClothingService {
                 throw new Exception(errorMessage);
             }
 
+            System.out.println("Response Start");
             JSONObject jsonResponse = getConnectionResponse(connection);
             JSONArray clothingIdArray = (JSONArray) jsonResponse.get("clothingIds");
             List<Long> idList = new ArrayList<>();
+            System.out.println("Response End");
 
             for (Object id : clothingIdArray) {
                 idList.add((Long) id);
             }
 
-            Page<Clothing> itemsPage = repository.getListById(idList, PageRequest.of(0, idList.size()));
+            System.out.println("Query Start");
+            List<Clothing> items = new ArrayList<>();
+            for (Long id : idList) {
+                repository.findById(id).ifPresent(items::add);
+            }
 
-            if (itemsPage.hasContent()) {
-                List<Clothing> items = itemsPage.getContent();
+            if (!items.isEmpty()) {
                 //Converts List<Clothing> to List<ClothingDTO>
                 List<ClothingDTO> itemsDTO = new ArrayList<>();
                 for (Clothing item : items) {
+                    System.out.println("Converter");
                     itemsDTO.add(modelMapper.map(item, ClothingDTO.class));
                 }
                 return itemsDTO;

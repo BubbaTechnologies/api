@@ -6,6 +6,7 @@ package com.bubbaTech.api.clothing;
 
 import com.bubbaTech.api.store.Store;
 import com.bubbaTech.api.user.Gender;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,8 +20,6 @@ public interface ClothingRepository extends JpaRepository<Clothing, Long> {
 
     @Query("SELECT c FROM Clothing c WHERE c.productURL = :url")
     Optional<Clothing> findByProductUrl(String url);
-    @Query("SELECT c FROM Clothing c WHERE c.id = :id AND c.store.enabled = true")
-    Optional<Clothing> getById(long id);
     @Query("SELECT COUNT(c) FROM Clothing c WHERE c.gender=:gender AND NOT c.clothingType = 10 AND c.store.enabled = true AND c.date >= :date")
     long countByGender(Gender gender, LocalDate date);
     @Query("SELECT c FROM Clothing c WHERE c.gender = :gender AND NOT c.clothingType = 10 AND c.store.enabled = true AND c.date >= :date")
@@ -33,6 +32,8 @@ public interface ClothingRepository extends JpaRepository<Clothing, Long> {
     long countByStoreAndGender(Store store, Gender gender);
     @Query("SELECT COUNT(c) FROM Clothing c WHERE c.store = :store AND c.clothingType = :type")
     long countByStoreAndType(Store store, ClothType type);
+
+    @BatchSize(size=25)
     @Query("SELECT c FROM Clothing c WHERE c.id IN :ids")
-    Page<Clothing> getListById(List<Long> ids, Pageable pageable);
+    List<Clothing> getListById(List<Long> ids);
 }
