@@ -4,6 +4,7 @@
 
 package com.bubbaTech.api.clothing;
 
+import com.bubbaTech.api.app.AppController;
 import com.bubbaTech.api.data.storeStatDTO;
 import com.bubbaTech.api.info.ServiceLogger;
 import com.bubbaTech.api.like.LikeNotFoundException;
@@ -38,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -61,6 +64,8 @@ public class ClothingService {
     @Value("${system.recommendation_system_addr}")
     public String recommendationSystemAddr;
 
+    @Value("${system.image_processing_addr}")
+    private String imageProcessingAddr;
 
     public ClothingDTO getById(long clothingId) throws ClothingNotFoundException {
         Optional<Clothing> item = repository.findById(clothingId);
@@ -69,7 +74,7 @@ public class ClothingService {
         return modelMapper.map(item.get(), ClothingDTO.class);
     }
 
-    public List<ClothingDTO> recommendClothingIdList(long userId, String typeFilter, String genderFilter){
+    public List<ClothingDTO> recommendClothingList(long userId, String typeFilter, String genderFilter, Boolean singleItem){
         Gender gender = genderStringToEnum(userId, genderFilter);
         List<ClothType> typeFilters = typeStringToList(typeFilter);
         try {
@@ -95,29 +100,45 @@ public class ClothingService {
                 throw new Exception(errorMessage);
             }
 
-            System.out.println("Response Start");
             JSONObject jsonResponse = getConnectionResponse(connection);
             JSONArray clothingIdArray = (JSONArray) jsonResponse.get("clothingIds");
             List<Long> idList = new ArrayList<>();
-            System.out.println("Response End");
 
-            for (Object id : clothingIdArray) {
-                idList.add((Long) id);
+            if (singleItem) {
+                idList.add((Long) clothingIdArray.get(0));
+            } else {
+                for (Object id : clothingIdArray) {
+                    idList.add((Long) id);
+                }
             }
 
-            System.out.println("Query Start");
+            long startTime = System.nanoTime();
             List<Clothing> items = new ArrayList<>();
+            String idQuery = "";
             for (Long id : idList) {
                 repository.findById(id).ifPresent(items::add);
+                idQuery += (id + ",");
             }
+            idQuery = idQuery.substring(0, idQuery.length() - 2);
+            System.out.println("Repo Execution Time: " + ((System.nanoTime() - startTime) / 1000000) + " ms");
 
             if (!items.isEmpty()) {
                 //Converts List<Clothing> to List<ClothingDTO>
+                startTime = System.nanoTime();
                 List<ClothingDTO> itemsDTO = new ArrayList<>();
+
+                url = new URL("http://" + imageProcessingAddr + "/images?clothingIds=" + idQuery);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setDoInput(true);
                 for (Clothing item : items) {
-                    System.out.println("Converter");
-                    itemsDTO.add(modelMapper.map(item, ClothingDTO.class));
+                    ClothingDTO clothingDTO = modelMapper.map(item, ClothingDTO.class);
+                    if (connection.getResponseCode() == 200) {
+                        clothingDTO = convertDTOToImageUrls(clothingDTO);
+                    }
+                    itemsDTO.add(clothingDTO);
                 }
+                System.out.println("Converter Execution Time: " + ((System.nanoTime() - startTime) / 1000000) + " ms");
                 return itemsDTO;
             }
         } catch (Exception e) {
@@ -127,7 +148,7 @@ public class ClothingService {
     }
 
     public ClothingDTO getCard(long userId, String typeFilter, String genderFilter){
-        return recommendClothingIdList(userId, typeFilter, genderFilter).get(0);
+        return recommendClothingList(userId, typeFilter, genderFilter, true).get(0);
     }
 
     private Clothing getRandom(long userId, List<ClothType> typeFilters, Gender gender) {
@@ -248,6 +269,20 @@ public class ClothingService {
         inputStream.close();
 
         return (JSONObject) new JSONParser().parse(responseBuilder.toString());
+    }
+
+    private ClothingDTO convertDTOToImageUrls(ClothingDTO clothing) {
+        List<String> imageUrls = new ArrayList<>();
+        for (int i = 0; i < clothing.getImageURL().size(); i++) {
+            imageUrls.add(linkTo(AppController.class)
+                    .slash("/image")
+                    .toUriComponentsBuilder().scheme("https")
+                    .queryParam("clothingId", clothing.getId())
+                    .queryParam("imageId", i)
+                    .toUriString());
+        }
+        clothing.setImageURL(imageUrls);
+        return clothing;
     }
 }
 

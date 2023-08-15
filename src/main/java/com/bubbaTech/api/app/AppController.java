@@ -68,14 +68,19 @@ public class AppController {
     }
 
     @GetMapping(value = "/cardList", produces = "application/json")
-    public CollectionModel<EntityModel<ClothingDTO>> getCardList(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
-        List<ClothingDTO> items = clothingService.recommendClothingIdList(this.getUserId(principal), typeFilter, genderFilter);
-        List<EntityModel<ClothingDTO>> entityModelList = new ArrayList<>();
-        for (ClothingDTO item : items) {
-            entityModelList.add(EntityModel.of(item));
-        }
+    public CollectionModel<EntityModel<?>> getCardList(Principal principal, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
+        List<ClothingDTO> items = clothingService.recommendClothingList(this.getUserId(principal), typeFilter, genderFilter, false);
+        List<EntityModel<?>> entityModelList = new ArrayList<>();
+        try {
+            for (ClothingDTO item : items) {
+                entityModelList.add(EntityModel.of(item));
+            }
 
-        return CollectionModel.of(entityModelList);
+            return CollectionModel.of(entityModelList);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return CollectionModel.of(entityModelList);
+        }
     }
 
     //Liked list for user based on sessionId
