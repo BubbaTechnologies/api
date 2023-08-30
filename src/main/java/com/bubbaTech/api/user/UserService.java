@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
@@ -75,7 +76,6 @@ public class UserService {
         return modelMapper.map(user, UserDTO.class);
     }
 
-    @Transactional
     public UserDTO update(UserDTO userRequest) {
         User user = repository.findById(userRequest.getId()).orElseThrow(() -> new UserNotFoundException(userRequest.getId()));
 

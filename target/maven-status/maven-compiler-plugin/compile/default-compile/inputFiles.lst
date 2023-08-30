@@ -2,7 +2,6 @@
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/like/LikeDeserializer.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/ClothType.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/ClothingDTO.java
-/Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/ClothingSerializer.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/user/User.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/security/authentication/UpAuthenticationProvider.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/Clothing.java
@@ -21,6 +20,7 @@
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/application/LoadDatabase.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/data/storeStatDTO.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/store/StoreNotFoundException.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/async/AsyncConfiguration.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/user/UserNotFoundException.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/store/Store.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/security/authorities/Authorities.java
@@ -45,6 +45,7 @@
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/application/ApplicationConfig.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/security/authentication/model/AuthenticationRequestDeserializer.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/ClothingDeserializer.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/filterOptions/FilterOptionsDTO.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/user/UserDTO.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/ClothingService.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/generic/GenericController.java
@@ -53,5 +54,7 @@
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/like/Like.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/ApiApplication.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/admin/AdminController.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/cache/CachingConfig.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/security/rateLimiting/RateLimitInterceptor.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/ClothingListType.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/cache/CacheCustomizer.java

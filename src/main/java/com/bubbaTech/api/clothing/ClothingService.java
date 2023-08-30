@@ -6,6 +6,7 @@ package com.bubbaTech.api.clothing;
 
 import com.bubbaTech.api.app.AppController;
 import com.bubbaTech.api.data.storeStatDTO;
+import com.bubbaTech.api.filterOptions.FilterOptionsDTO;
 import com.bubbaTech.api.info.ServiceLogger;
 import com.bubbaTech.api.like.LikeNotFoundException;
 import com.bubbaTech.api.like.LikeService;
@@ -22,8 +23,11 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,9 +39,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -112,33 +114,37 @@ public class ClothingService {
                 }
             }
 
-            long startTime = System.nanoTime();
             List<Clothing> items = new ArrayList<>();
-            String idQuery = "";
+            StringBuilder idQuery = new StringBuilder();
             for (Long id : idList) {
                 repository.findById(id).ifPresent(items::add);
-                idQuery += (id + ",");
+                idQuery.append(id).append(",");
             }
-            idQuery = idQuery.substring(0, idQuery.length() - 2);
-            System.out.println("Repo Execution Time: " + ((System.nanoTime() - startTime) / 1000000) + " ms");
+            idQuery = new StringBuilder(idQuery.substring(0, idQuery.length() - 2));
 
             if (!items.isEmpty()) {
                 //Converts List<Clothing> to List<ClothingDTO>
-                startTime = System.nanoTime();
                 List<ClothingDTO> itemsDTO = new ArrayList<>();
-
-                url = new URL("http://" + imageProcessingAddr + "/images?clothingIds=" + idQuery);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.setDoInput(true);
-                for (Clothing item : items) {
-                    ClothingDTO clothingDTO = modelMapper.map(item, ClothingDTO.class);
-                    if (connection.getResponseCode() == 200) {
-                        clothingDTO = convertDTOToImageUrls(clothingDTO);
+                try {
+                    url = new URL("http://" + imageProcessingAddr + "/images?clothingIds=" + idQuery);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setConnectTimeout(3000);
+                    connection.setRequestMethod("GET");
+                    connection.setDoInput(true);
+                    for (Clothing item : items) {
+                        ClothingDTO clothingDTO = modelMapper.map(item, ClothingDTO.class);
+                        if (connection.getResponseCode() == 200) {
+                            convertDTOToImageUrls(clothingDTO);
+                        }
+                        itemsDTO.add(clothingDTO);
                     }
-                    itemsDTO.add(clothingDTO);
+                } catch (Exception e) {
+                    logger.error("Could not connect to image processing server at " + imageProcessingAddr);
+                    for (Clothing item : items) {
+                        itemsDTO.add( modelMapper.map(item, ClothingDTO.class));
+                    }
                 }
-                System.out.println("Converter Execution Time: " + ((System.nanoTime() - startTime) / 1000000) + " ms");
+
                 return itemsDTO;
             }
         } catch (Exception e) {
@@ -238,6 +244,48 @@ public class ClothingService {
         return storeStats;
     }
 
+    @Cacheable("filterOptions")
+    public FilterOptionsDTO getFilterOptions() {
+        //Calculate genders and types per gender
+        List<Gender> genders = new ArrayList<>();
+        List<List<ClothType>> typesPerGender = new ArrayList<>();
+
+        LocalDate TIME_RESTRICTION = LocalDate.now().minusWeeks(WEEKS_AGO);
+
+        for (Gender gender : Gender.values()) {
+            if (repository.countByGender(gender, TIME_RESTRICTION) > 0) {
+                genders.add(gender);
+                List<ClothType> typeList = new ArrayList<>();
+                for (ClothType type : ClothType.values()) {
+                    if (repository.countByGenderAndTypes(gender, new ArrayList<>(List.of(type)), TIME_RESTRICTION) > 0) {
+                        typeList.add(type);
+                    }
+                }
+                typesPerGender.add(typeList);
+            }
+        }
+
+        //Calculate tags per type
+        Map<ClothType, List<ClothingTag>> tagsPerType = new HashMap<>();
+        for (ClothType type :  ClothType.values()) {
+            ArrayList<ClothingTag> tagList = new ArrayList<>();
+            for (ClothingTag tag : ClothingTag.values()) {
+                if (repository.countByTypeAndTag(type, tag, TIME_RESTRICTION) > 0) {
+                    tagList.add(tag);
+                }
+            }
+            tagsPerType.put(type, tagList);
+        }
+
+        return new FilterOptionsDTO(genders, typesPerGender, tagsPerType);
+    }
+
+    @CacheEvict(value = "filterOptions", allEntries = true)
+    @Scheduled(fixedRateString = "${caching.spring.filterOptionsTTL}")
+    public void filterOptionsEvict() {
+        logger.info("Emptying filterOptions cache.");
+    }
+
     private List<ClothType> typeStringToList(String typeFilter) {
         List<ClothType> typeFilters = null;
 
@@ -271,7 +319,7 @@ public class ClothingService {
         return (JSONObject) new JSONParser().parse(responseBuilder.toString());
     }
 
-    private ClothingDTO convertDTOToImageUrls(ClothingDTO clothing) {
+    private void convertDTOToImageUrls(ClothingDTO clothing) {
         List<String> imageUrls = new ArrayList<>();
         for (int i = 0; i < clothing.getImageURL().size(); i++) {
             imageUrls.add(linkTo(AppController.class)
@@ -282,7 +330,6 @@ public class ClothingService {
                     .toUriString());
         }
         clothing.setImageURL(imageUrls);
-        return clothing;
     }
 }
 

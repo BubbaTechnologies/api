@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class LikeService {
     private final LikeRepository repository;
     private final ModelMapper modelMapper;

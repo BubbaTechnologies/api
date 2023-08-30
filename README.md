@@ -416,6 +416,29 @@ Response:
 }
 ```
 
+### /app/filterOptions
+Mapping: GET
+
+Description: Returns genders, types, and tags to filter by.
+
+Response:
+```
+{
+    "genders":[str],
+    "types":[[str]],
+    "tags": {
+        type:[str]
+    }
+}
+```
+
+
+Each string array in type with correspond to the gender with the same index. Tags will be formatted with the key being a type and the string array containing the corresponding tags. 
+e.g. 
+```
+top:[active]
+```
+
 ## Scraper Controller
 
 ### /scraper/checkStore

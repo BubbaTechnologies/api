@@ -30,6 +30,7 @@ import java.net.URL;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static java.lang.Math.min;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -204,7 +205,7 @@ public class AppController {
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<byte[]> response = restTemplate.getForEntity(redirectUrl, byte[].class);
 
-            return ResponseEntity.ok().contentType(response.getHeaders().getContentType()).body(response.getBody());
+            return ResponseEntity.ok().contentType(Objects.requireNonNull(response.getHeaders().getContentType())).body(response.getBody());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.notFound().build();
@@ -241,6 +242,13 @@ public class AppController {
         }
     }
 
+    @GetMapping(value="/filterOptions", produces = "application/json")
+    public ResponseEntity<?> filterOptions() {
+        return ResponseEntity
+                .ok()
+                .body(clothingService.getFilterOptions());
+    }
+
     private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
         List<LikeDTO> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter, pageNumber);
 
@@ -248,7 +256,8 @@ public class AppController {
         for (LikeDTO like : likes) {
             ClothingDTO item = clothingService.getById(like.getClothing().getId());
             List<String> imageUrls = item.getImageURL();
-            item.setImageURL(imageUrls.subList(imageUrls.size() - 1,imageUrls.size() - 1));
+            //TODO: Consolidate images into one serializer
+            item.setImageURL(imageUrls.subList(imageUrls.size() - 2, imageUrls.size() - 1));
             items.add(EntityModel.of(item));
         }
 
