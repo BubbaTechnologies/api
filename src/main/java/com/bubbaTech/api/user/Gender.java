@@ -7,17 +7,20 @@ package com.bubbaTech.api.user;
 import java.util.Arrays;
 
 public enum Gender {
-    FEMALE(0), MALE(1), BOY(2), GIRL(3), KID(4), UNISEX(5);
+    FEMALE(0, "Female"), MALE(1, "Male"), BOY(2, "Boy"), GIRL(3, "Girl"), KID(4, "Kid"), UNISEX(5, "Unisex");
 
     private final int value;
+    private final String stringValue;
 
-    Gender(int value) {
+    Gender(int value, String stringValue) {
         this.value = value;
+        this.stringValue = stringValue;
     }
 
     public int getIntValue() {
         return this.value;
     }
+    public String getStringValue() {return this.stringValue;}
 
     public static String[] names() {
         return Arrays.toString(Gender.values()).replaceAll("^.|.$", "").split(", ");

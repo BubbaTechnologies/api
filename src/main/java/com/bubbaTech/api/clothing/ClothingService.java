@@ -211,10 +211,10 @@ public class ClothingService {
     }
 
     public ClothingDTO create(ClothingDTO item) {
-        try {
-            ClothingDTO clothingItem = this.findByUrl(item.getProductURL());
-            return update(clothingItem);
-        } catch (ClothingNotFoundException exception) {
+        Optional<ClothingDTO> itemOptional = this.getIfExists(item);
+        if (itemOptional.isPresent()) {
+            return update(itemOptional.get());
+        } else {
             Clothing itemEntity = modelMapper.map(item, Clothing.class);
             return modelMapper.map(repository.save(itemEntity), ClothingDTO.class);
         }
@@ -225,6 +225,14 @@ public class ClothingService {
         if (item.isEmpty())
             throw new ClothingNotFoundException(url);
         return modelMapper.map(item.get(), ClothingDTO.class);
+    }
+
+    public Optional<ClothingDTO> getIfExists(ClothingDTO item) {
+        Optional<Clothing> itemOptional = repository.getIfExists(item.getName(), item.getProductURL(), item.getStore().getId());
+        if (itemOptional.isPresent()) {
+            return Optional.of(modelMapper.map(itemOptional, ClothingDTO.class));
+        }
+        return Optional.empty();
     }
 
     public List<storeStatDTO> getClothingPerStoreData() {

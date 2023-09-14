@@ -4,12 +4,14 @@ import com.bubbaTech.api.clothing.ClothType;
 import com.bubbaTech.api.clothing.ClothingTag;
 import com.bubbaTech.api.generic.DTO;
 import com.bubbaTech.api.user.Gender;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 
 import java.util.List;
 import java.util.Map;
 
 @Data
+@JsonSerialize(using = FilterOptionsSerializer.class)
 public class FilterOptionsDTO implements DTO<FilterOptionsDTO> {
     private List<Gender> genders;
     private List<List<ClothType>> types;

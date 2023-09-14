@@ -13,6 +13,7 @@ import com.bubbaTech.api.user.User;
 import jakarta.transaction.Transactional;
 import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,9 @@ import java.util.Optional;
 public class LikeService {
     private final LikeRepository repository;
     private final ModelMapper modelMapper;
+
+    @Value("${system.recommendation_system_addr}")
+    public String recommendationSystemAddr;
     public LikeService(LikeRepository repository, ModelMapper modelMapper) {
         super();
         this.repository = repository;
@@ -61,8 +65,9 @@ public class LikeService {
             Clothing likedClothing = modelMapper.map(likeRequest.getClothing(), Clothing.class);
             User likedUser = modelMapper.map(likeRequest.getUser(), User.class);
             Like like = new Like(likeRequest, likedUser, likedClothing);
-
-            return modelMapper.map(repository.save(like),LikeDTO.class);
+            LikeDTO likeDTO = modelMapper.map(repository.save(like),LikeDTO.class);
+            sendLike(likeDTO);
+            return likeDTO;
         }
     }
 
@@ -128,9 +133,9 @@ public class LikeService {
         return modelMapper.map(like, LikeDTO.class);
     }
 
-    public static void sendLike(LikeDTO like) {
+    public void sendLike(LikeDTO like) {
         try {
-            URL url = new URL("https://ai.peachsconemarket.com/like");
+            URL url = new URL("http://" + recommendationSystemAddr + "/like");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type","application/json");
