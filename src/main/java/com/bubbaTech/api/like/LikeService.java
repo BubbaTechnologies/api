@@ -150,7 +150,7 @@ public class LikeService {
 
             int responseCode = connection.getResponseCode();
             if (responseCode != 200) {
-                throw new Exception("Did not successfully send like with URL https://ai.peachsconemarket.com/like and data " + jsonObject.toJSONString() + ".");
+                throw new Exception("Did not successfully send like with URL http://" + recommendationSystemAddr + "/like and data " + jsonObject.toJSONString() + ".");
             }
         } catch (Exception e) {
             e.printStackTrace();
