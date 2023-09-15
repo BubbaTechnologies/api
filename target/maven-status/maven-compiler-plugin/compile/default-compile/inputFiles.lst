@@ -2,6 +2,7 @@
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/like/LikeDeserializer.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/ClothType.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/ClothingDTO.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/ClothingSerializer.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/user/User.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/security/authentication/UpAuthenticationProvider.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/Clothing.java

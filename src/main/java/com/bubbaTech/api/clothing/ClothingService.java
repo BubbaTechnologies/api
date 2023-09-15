@@ -115,38 +115,17 @@ public class ClothingService {
             }
 
             List<Clothing> items = new ArrayList<>();
-            StringBuilder idQuery = new StringBuilder();
             for (Long id : idList) {
                 repository.findById(id).ifPresent(items::add);
-                idQuery.append(id).append(",");
             }
-            idQuery = new StringBuilder(idQuery.substring(0, idQuery.length() - 2));
 
-            if (!items.isEmpty()) {
-                //Converts List<Clothing> to List<ClothingDTO>
-                List<ClothingDTO> itemsDTO = new ArrayList<>();
-                try {
-                    url = new URL("http://" + imageProcessingAddr + "/images?clothingIds=" + idQuery);
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.setConnectTimeout(3000);
-                    connection.setRequestMethod("GET");
-                    connection.setDoInput(true);
-                    for (Clothing item : items) {
-                        ClothingDTO clothingDTO = modelMapper.map(item, ClothingDTO.class);
-                        if (connection.getResponseCode() == 200) {
-                            convertDTOToImageUrls(clothingDTO);
-                        }
-                        itemsDTO.add(clothingDTO);
-                    }
-                } catch (Exception e) {
-                    logger.error("Could not connect to image processing server at " + imageProcessingAddr);
-                    for (Clothing item : items) {
-                        itemsDTO.add( modelMapper.map(item, ClothingDTO.class));
-                    }
-                }
-
-                return itemsDTO;
+            //Converts List<Clothing> to List<ClothingDTO>
+            List<ClothingDTO> itemsDTO = new ArrayList<>();
+            for (Clothing item : items) {
+                itemsDTO.add(modelMapper.map(item, ClothingDTO.class));
             }
+
+            return itemsDTO;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -154,7 +133,44 @@ public class ClothingService {
     }
 
     public ClothingDTO getCard(long userId, String typeFilter, String genderFilter){
-        return recommendClothingList(userId, typeFilter, genderFilter, true).get(0);
+        Gender gender = genderStringToEnum(userId, genderFilter);
+        List<ClothType> typeFilters = typeStringToList(typeFilter);
+        try {
+            StringBuilder urlString = new StringBuilder("http://" + recommendationSystemAddr +
+                    "/recommendation?userId=" + URLEncoder.encode(Long.toString(userId), StandardCharsets.UTF_8)+
+                    "&gender=" + URLEncoder.encode(Integer.toString(gender.getIntValue()), StandardCharsets.UTF_8));
+            if (typeFilters != null) {
+                urlString.append("&clothingType=");
+                for (ClothType clothType : typeFilters) {
+                    urlString.append(URLEncoder.encode(Integer.toString(clothType.getIntValue()), StandardCharsets.UTF_8)).append(",");
+                }
+                urlString.deleteCharAt(urlString.length() - 1);
+            }
+            URL url = new URL(urlString.toString());
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 200) {
+                String errorMessage = "Unable to connect to recommendation system.";
+                logger.error(errorMessage);
+                throw new Exception(errorMessage);
+            }
+
+            JSONObject jsonResponse = getConnectionResponse(connection);
+            Long clothingId = (Long) jsonResponse.get("clothingId");
+
+            //Gets clothing
+            Optional<Clothing> item  = repository.findById(clothingId);
+            //If present returns item or else returns null
+            if (item.isPresent()) {
+                return modelMapper.map(item.get(), ClothingDTO.class);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private Clothing getRandom(long userId, List<ClothType> typeFilters, Gender gender) {
@@ -207,6 +223,7 @@ public class ClothingService {
         clothingItem.setGender(item.getGender());
         clothingItem.setName(item.getName());
         clothingItem.setImageURL(item.getImageURL());
+        clothingItem.setDate(LocalDate.now());
         return modelMapper.map(repository.save(clothingItem), ClothingDTO.class);
     }
 
