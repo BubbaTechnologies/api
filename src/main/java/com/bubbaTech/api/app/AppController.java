@@ -257,7 +257,9 @@ public class AppController {
             ClothingDTO item = clothingService.getById(like.getClothing().getId());
             List<String> imageUrls = item.getImageURL();
             //TODO: Consolidate images into one serializer
-            item.setImageURL(imageUrls.subList(imageUrls.size() - 2, imageUrls.size() - 1));
+            if (imageUrls.size() > 1) {
+                item.setImageURL(imageUrls.subList(imageUrls.size() - 2, imageUrls.size() - 1));
+            }
             items.add(EntityModel.of(item));
         }
 

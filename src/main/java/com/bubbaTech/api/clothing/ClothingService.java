@@ -25,8 +25,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -166,44 +164,13 @@ public class ClothingService {
             //If present returns item or else returns null
             if (item.isPresent()) {
                 return modelMapper.map(item.get(), ClothingDTO.class);
+            } else {
+                String errorMessage = "Unable to find item with id:" + clothingId;
+                logger.error(errorMessage);
+                throw new Exception(errorMessage);
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        return null;
-    }
-
-    private Clothing getRandom(long userId, List<ClothType> typeFilters, Gender gender) {
-        long count = repository.count();
-        if (count == 0)
-            throw new RuntimeException("Empty Repository");
-
-        int loops = 0;
-        while (loops < MAX_RANDS) {
-            loops++;
-
-            Page<Clothing> clothingPage;
-            LocalDate randomDateRestriction = LocalDate.now().minusWeeks(WEEKS_AGO);
-            if (typeFilters == null) {
-                long amount = repository.countByGender(gender, randomDateRestriction);
-                int index = (int) (Math.random() * amount);
-                clothingPage = repository.findAllWithGender(gender, PageRequest.of(index, 1), randomDateRestriction);
-            } else {
-                long amount = repository.countByGenderAndTypes(gender, typeFilters, randomDateRestriction);
-                int index = (int) (Math.random() * amount);
-                clothingPage = repository.findAllWithGenderAndTypes(gender, typeFilters, PageRequest.of(index, 1), randomDateRestriction);
-            }
-
-            Clothing item;
-            if (clothingPage.hasContent())
-                item = clothingPage.getContent().get(0);
-            else
-                continue;
-
-            if (likeCheck(item, userId))
-                continue;
-
-            return item;
         }
         return null;
     }

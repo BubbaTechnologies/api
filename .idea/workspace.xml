@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -281,6 +281,10 @@
       <workItem from="1694730228279" duration="4877000" />
       <workItem from="1694746454923" duration="1340000" />
       <workItem from="1694751951770" duration="84000" />
+      <workItem from="1694818545956" duration="523000" />
+      <workItem from="1695498572379" duration="534000" />
+      <workItem from="1695831115793" duration="93000" />
+      <workItem from="1695832999476" duration="1713000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -548,14 +552,6 @@
       <option name="project" value="LOCAL" />
       <updated>1686703978706</updated>
     </task>
-    <task id="LOCAL-00042" summary="Fixed bugs with recommend card.">
-      <option name="closed" value="true" />
-      <created>1691789863706</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1691789863707</updated>
-    </task>
     <task id="LOCAL-00043" summary="Fixed bugs with serializer.">
       <option name="closed" value="true" />
       <created>1691818880627</created>
@@ -636,7 +632,15 @@
       <option name="project" value="LOCAL" />
       <updated>1694742306412</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="Fixed type conversion bug in ClothingService recommend single item.">
+      <option name="closed" value="true" />
+      <created>1694818650980</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1694818650981</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -657,7 +661,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Debugged DTO and deserializer." />
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="Added requests for each like type." />
     <MESSAGE value="Added support for AI." />
     <MESSAGE value="Added support for logger. No longer errors out on failed recommend request." />
@@ -682,7 +686,8 @@
     <MESSAGE value="Updated when likes are sent to recommender." />
     <MESSAGE value="Updated logic for getIfExists query." />
     <MESSAGE value="Added descriptor filtering for names that match &quot; in .+&quot;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added descriptor filtering for names that match &quot; in .+&quot;" />
+    <MESSAGE value="Fixed type conversion bug in ClothingService recommend single item." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed type conversion bug in ClothingService recommend single item." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
