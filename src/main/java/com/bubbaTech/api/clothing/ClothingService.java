@@ -74,6 +74,29 @@ public class ClothingService {
         return modelMapper.map(item.get(), ClothingDTO.class);
     }
 
+    //Returns list of ClothingDTO items based on clothingIds
+    public List<ClothingDTO> getByIds(List<Long> clothingIds) throws ClothingNotFoundException {
+        long startTime = System.currentTimeMillis();
+
+        List<Optional<Clothing>> optionalItems = repository.getListByIds(clothingIds);
+        List<ClothingDTO> clothingDTOList = new ArrayList<>();
+        for (int i = 0; i < optionalItems.size(); i++) {
+            Optional<Clothing> optionalItem = optionalItems.get(i);
+            //Check if image exists
+            if (optionalItem.isEmpty())
+                throw new ClothingNotFoundException(clothingIds.get(i));
+            //Convert to DTO
+            ClothingDTO clothingDTOItem = modelMapper.map(optionalItem.get(), ClothingDTO.class);
+            //Attempts to show the first image presented
+            List<String> imageUrls = clothingDTOItem.getImageURL();
+            if (imageUrls.size() > 1)
+                clothingDTOItem.setImageURL(imageUrls.subList(imageUrls.size() - 2, imageUrls.size() - 1));
+            clothingDTOList.add(clothingDTOItem);
+        }
+
+        return clothingDTOList;
+    }
+
     public List<ClothingDTO> recommendClothingList(long userId, String typeFilter, String genderFilter, Boolean singleItem){
         Gender gender = genderStringToEnum(userId, genderFilter);
         List<ClothType> typeFilters = typeStringToList(typeFilter);
@@ -112,15 +135,14 @@ public class ClothingService {
                 }
             }
 
-            List<Clothing> items = new ArrayList<>();
-            for (Long id : idList) {
-                repository.findById(id).ifPresent(items::add);
-            }
+            List<Optional<Clothing>> items = repository.getListByIds(idList);
 
             //Converts List<Clothing> to List<ClothingDTO>
             List<ClothingDTO> itemsDTO = new ArrayList<>();
-            for (Clothing item : items) {
-                itemsDTO.add(modelMapper.map(item, ClothingDTO.class));
+            for (Optional<Clothing> item : items) {
+                if (item.isPresent()) {
+                    itemsDTO.add(modelMapper.map(item, ClothingDTO.class));
+                }
             }
 
             return itemsDTO;
@@ -212,7 +234,7 @@ public class ClothingService {
     }
 
     public Optional<ClothingDTO> getIfExists(ClothingDTO item) {
-        Optional<Clothing> itemOptional = repository.getIfExists(item.getName(), item.getProductURL(), item.getStore().getId());
+        Optional<Clothing> itemOptional = repository.getIfExists(item.getProductURL());
         if (itemOptional.isPresent()) {
             return Optional.of(modelMapper.map(itemOptional, ClothingDTO.class));
         }

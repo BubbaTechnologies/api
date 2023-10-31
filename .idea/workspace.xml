@@ -6,7 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -284,7 +286,16 @@
       <workItem from="1694818545956" duration="523000" />
       <workItem from="1695498572379" duration="534000" />
       <workItem from="1695831115793" duration="93000" />
-      <workItem from="1695832999476" duration="1713000" />
+      <workItem from="1695832999476" duration="1822000" />
+      <workItem from="1696568869154" duration="450000" />
+      <workItem from="1696783882319" duration="438000" />
+      <workItem from="1697575718099" duration="884000" />
+      <workItem from="1697579068805" duration="150000" />
+      <workItem from="1698427387063" duration="2791000" />
+      <workItem from="1698430480052" duration="337000" />
+      <workItem from="1698641020473" duration="730000" />
+      <workItem from="1698684384524" duration="133000" />
+      <workItem from="1698728392736" duration="305000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -552,14 +563,6 @@
       <option name="project" value="LOCAL" />
       <updated>1686703978706</updated>
     </task>
-    <task id="LOCAL-00043" summary="Fixed bugs with serializer.">
-      <option name="closed" value="true" />
-      <created>1691818880627</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1691818880627</updated>
-    </task>
     <task id="LOCAL-00044" summary="Fixed bugs with serializer.">
       <option name="closed" value="true" />
       <created>1691859445139</created>
@@ -640,7 +643,15 @@
       <option name="project" value="LOCAL" />
       <updated>1694818650981</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="BUG: Updated error reporting in getCard within ClothingService.java. Removed getRandom function in ClothingService.java.">
+      <option name="closed" value="true" />
+      <created>1695836590035</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1695836590035</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -662,7 +673,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Added requests for each like type." />
     <MESSAGE value="Added support for AI." />
     <MESSAGE value="Added support for logger. No longer errors out on failed recommend request." />
     <MESSAGE value="Fix bug with gender and like check." />
@@ -687,7 +697,8 @@
     <MESSAGE value="Updated logic for getIfExists query." />
     <MESSAGE value="Added descriptor filtering for names that match &quot; in .+&quot;" />
     <MESSAGE value="Fixed type conversion bug in ClothingService recommend single item." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed type conversion bug in ClothingService recommend single item." />
+    <MESSAGE value="BUG: Updated error reporting in getCard within ClothingService.java. Removed getRandom function in ClothingService.java." />
+    <option name="LAST_COMMIT_MESSAGE" value="BUG: Updated error reporting in getCard within ClothingService.java. Removed getRandom function in ClothingService.java." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

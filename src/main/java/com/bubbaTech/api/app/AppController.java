@@ -251,19 +251,17 @@ public class AppController {
 
     private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
         List<LikeDTO> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter, pageNumber);
+        List<Long> ids = new ArrayList<>();
+        for (LikeDTO like : likes)
+            ids.add(like.getId());
 
-        List<EntityModel<ClothingDTO>> items = new ArrayList<>();
-        for (LikeDTO like : likes) {
-            ClothingDTO item = clothingService.getById(like.getClothing().getId());
-            List<String> imageUrls = item.getImageURL();
-            //TODO: Consolidate images into one serializer
-            if (imageUrls.size() > 1) {
-                item.setImageURL(imageUrls.subList(imageUrls.size() - 2, imageUrls.size() - 1));
-            }
-            items.add(EntityModel.of(item));
+        List<ClothingDTO> items = clothingService.getByIds(ids);
+        List<EntityModel<ClothingDTO>> entityModelList = new ArrayList<>();
+        for (ClothingDTO item : items) {
+            entityModelList.add(EntityModel.of(item));
         }
 
-        return CollectionModel.of(items);
+        return CollectionModel.of(entityModelList);
     }
 
     private long getUserId(Principal principal) {
