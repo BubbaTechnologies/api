@@ -250,17 +250,24 @@ public class AppController {
     }
 
     private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
+        //TODO: Optimize function
+
+        long startTime = System.currentTimeMillis();
         List<LikeDTO> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter, pageNumber);
         List<Long> ids = new ArrayList<>();
         for (LikeDTO like : likes)
             ids.add(like.getId());
 
+        logger.info("Got list: " + (System.currentTimeMillis() - startTime));
         List<ClothingDTO> items = clothingService.getByIds(ids);
+
+        logger.info("Got items: " + (System.currentTimeMillis() - startTime));
         List<EntityModel<ClothingDTO>> entityModelList = new ArrayList<>();
         for (ClothingDTO item : items) {
             entityModelList.add(EntityModel.of(item));
         }
 
+        logger.info("Finished getClothingList: " + (System.currentTimeMillis() - startTime));
         return CollectionModel.of(entityModelList);
     }
 
