@@ -79,6 +79,7 @@ public class AppController {
 
             return CollectionModel.of(entityModelList);
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             return CollectionModel.of(entityModelList);
         }
@@ -250,8 +251,6 @@ public class AppController {
     }
 
     private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
-        //TODO: Optimize function
-
         long startTime = System.currentTimeMillis();
         List<LikeDTO> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter, pageNumber);
         List<Long> ids = new ArrayList<>();

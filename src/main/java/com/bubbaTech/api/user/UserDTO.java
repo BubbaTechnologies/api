@@ -5,30 +5,27 @@
 package com.bubbaTech.api.user;
 
 import com.bubbaTech.api.generic.DTO;
-import com.bubbaTech.api.like.LikeDTO;
 import com.bubbaTech.api.security.authorities.Authorities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 
 @Data
+@AllArgsConstructor
 @JsonDeserialize(using = UserDeserializer.class)
 public class UserDTO implements DTO<UserDTO> {
     private Long id;
     private String username;
     @JsonIgnore
     private String password;
-    @JsonManagedReference
-    private List<LikeDTO> likes;
     private Gender gender;
     private Boolean enabled;
-    private Date accountCreated;
-    private Date lastLogin;
+    private LocalDate accountCreated;
+    private LocalDate lastLogin;
     @JsonIgnore
     private Collection<Authorities> grantedAuthorities;
 
@@ -39,7 +36,6 @@ public class UserDTO implements DTO<UserDTO> {
         this.username = username;
         this.password = password;
         this.gender = gender;
-        this.likes = null;
         this.enabled = true;
     }
 

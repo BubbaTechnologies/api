@@ -24,24 +24,17 @@ public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @ManyToOne()
     @JsonBackReference
     private User user;
-
     @ManyToOne()
     @JsonBackReference
     private Clothing clothing;
-
     private double rating;
-
     @Column(name="date_updated")
     private LocalDateTime date;
-
     private boolean liked;
-
     private boolean bought;
-
     public Like() {
     }
 

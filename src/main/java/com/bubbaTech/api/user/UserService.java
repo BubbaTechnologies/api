@@ -4,9 +4,9 @@
 
 package com.bubbaTech.api.user;
 
+import com.bubbaTech.api.mapping.Mapper;
 import com.bubbaTech.api.security.authorities.Authorities;
 import jakarta.transaction.Transactional;
-import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,19 +22,19 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
-    private final ModelMapper modelMapper;
 
-    public UserService(@Lazy UserRepository repository, @Lazy PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
+    private final Mapper mapper;
+    public UserService(@Lazy UserRepository repository, @Lazy PasswordEncoder passwordEncoder, Mapper mapper) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
-        this.modelMapper = modelMapper;
+        this.mapper = mapper;
     }
 
 
     public UserDTO getById(long userId) throws UserNotFoundException {
         Optional<User> user = repository.findById(userId);
         if (user.isPresent())
-            return modelMapper.map(repository.findById(userId),UserDTO.class);
+            return mapper.userToUserDTO(user.get());
         else
             throw new UserNotFoundException(String.format("Could not find user with id %d", userId));
     }
@@ -50,13 +50,15 @@ public class UserService {
             throw new AuthenticationServiceException("Could not authenticate");
     }
 
+
     public UserDTO getByUsername(String username) {
-        return modelMapper.map(repository.findByEmail(username).orElseThrow(() -> new UserNotFoundException(username)),UserDTO.class);
+        return mapper.userToUserDTO(repository.findByEmail(username).orElseThrow(() -> new UserNotFoundException(username)));
     }
 
     public Boolean checkUsername(String username) {
         return repository.findByEmail(username).isPresent();
     }
+
 
     public UserDTO create(UserDTO userRequest) {
         if (this.checkUsername(userRequest.getUsername()))
@@ -73,8 +75,9 @@ public class UserService {
         user.setGrantedAuthorities(auth);
         user = repository.save(user);
 
-        return modelMapper.map(user, UserDTO.class);
+        return mapper.userToUserDTO(user);
     }
+
 
     public UserDTO update(UserDTO userRequest) {
         User user = repository.findById(userRequest.getId()).orElseThrow(() -> new UserNotFoundException(userRequest.getId()));
@@ -90,10 +93,10 @@ public class UserService {
         user.setEnabled(userRequest.getEnabled());
         user.setGrantedAuthorities(userRequest.getGrantedAuthorities());
 
-        return modelMapper.map(repository.save(user), UserDTO.class);
+        return mapper.userToUserDTO(repository.save(user));
     }
 
-    @Transactional
+
     public void updateLastLogin(long userId) {
         User user = repository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
@@ -101,7 +104,7 @@ public class UserService {
         repository.save(user);
     }
 
-    @Transactional
+
     public void delete(User user) {
         repository.delete(user);
     }

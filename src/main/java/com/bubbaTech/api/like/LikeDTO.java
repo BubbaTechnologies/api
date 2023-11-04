@@ -19,20 +19,15 @@ import java.time.LocalDateTime;
 @JsonDeserialize(using = LikeDeserializer.class)
 public class LikeDTO implements DTO<LikeDTO> {
     private Long id;
-
     @JsonBackReference
     private UserDTO user;
     @JsonBackReference
     private ClothingDTO clothing;
     @JsonIgnore
     private double rating;
-
     private LocalDateTime date;
-
     private boolean liked;
-
     private boolean bought;
-
     @JsonIgnore
     private double imageTapsRatio;
 

@@ -4,10 +4,11 @@
 
 package com.bubbaTech.api.security.authentication;
 
+import com.bubbaTech.api.mapping.Mapper;
 import com.bubbaTech.api.user.User;
 import com.bubbaTech.api.user.UserDTO;
 import com.bubbaTech.api.user.UserService;
-import org.modelmapper.ModelMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,16 +17,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserService userService;
-    private final ModelMapper modelMapper;
+    private final Mapper mapper;
 
-    CustomUserDetailsService(@Lazy UserService userService, ModelMapper modelMapper) {
+    CustomUserDetailsService(@Lazy UserService userService, Mapper mapper) {
         this.userService = userService;
-        this.modelMapper = modelMapper;
+        this.mapper = mapper;
     }
 
+    @Transactional
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return modelMapper.map(userService.getByUsername(username),User.class);
+        return mapper.userDTOToUser(userService.getByUsername(username));
     }
 
     public UserDTO loadUserByUsernameToDTO(String username) throws UsernameNotFoundException {

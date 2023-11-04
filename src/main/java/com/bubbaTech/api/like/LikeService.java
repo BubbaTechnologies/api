@@ -8,11 +8,11 @@ import com.bubbaTech.api.app.AppController;
 import com.bubbaTech.api.clothing.ClothType;
 import com.bubbaTech.api.clothing.Clothing;
 import com.bubbaTech.api.clothing.ClothingListType;
+import com.bubbaTech.api.mapping.Mapper;
 import com.bubbaTech.api.user.Gender;
 import com.bubbaTech.api.user.User;
 import jakarta.transaction.Transactional;
 import org.json.simple.JSONObject;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,17 +31,16 @@ import java.util.Optional;
 @Transactional
 public class LikeService {
     private final LikeRepository repository;
-    private final ModelMapper modelMapper;
+    private final Mapper mapper;
 
     @Value("${system.recommendation_system_addr}")
     public String recommendationSystemAddr;
-    public LikeService(LikeRepository repository, ModelMapper modelMapper) {
+    public LikeService(LikeRepository repository, Mapper mapper) {
         super();
         this.repository = repository;
-        this.modelMapper = modelMapper;
+        this.mapper = mapper;
     }
 
-    @Transactional
     public LikeDTO update(LikeDTO likeRequest) {
         Like like = repository.findByClothingAndUser(likeRequest.getClothing().getId(), likeRequest.getUser().getId()).orElseThrow(() -> new LikeNotFoundException(likeRequest.getId()));
 
@@ -49,7 +48,7 @@ public class LikeService {
         like.setLiked(likeRequest.isLiked());
         like.setRating(likeRequest.getRating() + like.getRating());
         like = repository.save(like);
-        LikeDTO returnLikeDTO = modelMapper.map(like, LikeDTO.class);
+        LikeDTO returnLikeDTO = mapper.likeToLikeDTO(like);
         sendLike(returnLikeDTO);
         return returnLikeDTO;
     }
@@ -61,17 +60,20 @@ public class LikeService {
             likeRequest.setId(foundLike.getId());
             return update(likeRequest);
         } catch (LikeNotFoundException exception) {
-            //Converts likeRequest to like entity.
-            Clothing likedClothing = modelMapper.map(likeRequest.getClothing(), Clothing.class);
-            User likedUser = modelMapper.map(likeRequest.getUser(), User.class);
+            // Converts likeRequest to like entity.
+            Clothing likedClothing = mapper.clothingDTOToClothing(likeRequest.getClothing());
+            User likedUser = mapper.userDTOToUser(likeRequest.getUser());
             Like like = new Like(likeRequest, likedUser, likedClothing);
-            LikeDTO likeDTO = modelMapper.map(repository.save(like),LikeDTO.class);
+            LikeDTO likeDTO = mapper.likeToLikeDTO(repository.save(like));
+            // Sends like to recommender service
             sendLike(likeDTO);
             return likeDTO;
         }
     }
 
     public List<LikeDTO> getAllByUserId(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
+        long startTime = System.currentTimeMillis();
+
         //Convert genderFilter to gender
         Gender gender = null;
         if (genderFilter != null) {
@@ -105,6 +107,7 @@ public class LikeService {
             pageRequest = PageRequest.of(pageNumber, AppController.PAGE_SIZE, Sort.Direction.DESC, "id");
         }
 
+        System.out.println("Preprocessed query in: " + (System.currentTimeMillis() - startTime));
         Page<Like> likePage;
         if (genderFilter != null && typeFilter != null) {
             likePage = repository.findAllByUserIdWithGenderAndTypes(userId, liked, bought, gender, typeFilters, pageRequest);
@@ -116,12 +119,16 @@ public class LikeService {
             likePage = repository.findAllByUserId(userId, liked, bought, pageRequest);
         }
 
+        System.out.println("Repo query in: " + (System.currentTimeMillis() - startTime));
         //Converts likes to likeDTO
+        int count = 0;
         List<LikeDTO> likeDTOList = new ArrayList<>();
         for (Like like : likePage.getContent()) {
-            likeDTOList.add(modelMapper.map(like, LikeDTO.class));
+            count += 1;
+            likeDTOList.add(mapper.likeToLikeDTO(like));
         }
-
+        System.out.println("Like to LikeDTO count: " + count);
+        System.out.println("DTO Conversion: " + (System.currentTimeMillis() - startTime));
         return likeDTOList;
     }
 
@@ -130,7 +137,7 @@ public class LikeService {
         if (like.isEmpty())
             throw new LikeNotFoundException(String.format("No like found with clothingId %d and userId %d", clothingId, userId));
 
-        return modelMapper.map(like, LikeDTO.class);
+        return mapper.likeToLikeDTO(like.get());
     }
 
     public void sendLike(LikeDTO like) {

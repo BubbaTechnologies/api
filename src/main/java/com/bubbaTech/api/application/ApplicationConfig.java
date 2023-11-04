@@ -1,17 +1,15 @@
-//Matthew Grohoslki
-//Bubba Technologies Inc.
-//10/01/2022
-
 package com.bubbaTech.api.application;
 
-import org.modelmapper.ModelMapper;
+import com.bubbaTech.api.mapping.Mapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
+@EnableTransactionManagement
 public class ApplicationConfig {
     @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
+    public Mapper mapper() {
+        return new Mapper();
     }
 }

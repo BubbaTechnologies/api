@@ -24,31 +24,23 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name = "username", nullable = false)
     private String username;
-
     @Column(name = "password")
     private String password;
-
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Like> likes;
-
     @Column(name = "gender")
     private Gender gender;
-
     @ElementCollection(fetch = FetchType.EAGER)
     private Collection<Authorities> grantedAuthorities;
-
     private Boolean enabled;
-
     private LocalDate accountCreated;
-
     private LocalDate lastLogin;
 
     //Constructors
-    protected User() {
+    public User() {
     }
 
     public User(String email, String password, Gender gender) {

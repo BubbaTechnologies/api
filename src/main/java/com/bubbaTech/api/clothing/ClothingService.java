@@ -4,12 +4,10 @@
 
 package com.bubbaTech.api.clothing;
 
-import com.bubbaTech.api.app.AppController;
 import com.bubbaTech.api.data.storeStatDTO;
 import com.bubbaTech.api.filterOptions.FilterOptionsDTO;
 import com.bubbaTech.api.info.ServiceLogger;
-import com.bubbaTech.api.like.LikeNotFoundException;
-import com.bubbaTech.api.like.LikeService;
+import com.bubbaTech.api.mapping.Mapper;
 import com.bubbaTech.api.store.Store;
 import com.bubbaTech.api.store.StoreDTO;
 import com.bubbaTech.api.store.StoreService;
@@ -21,7 +19,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -39,45 +36,37 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ClothingService {
-    private final static int MAX_RANDS = 100;
     private final static int WEEKS_AGO = 3;
 
     @NonNull
     private final ClothingRepository repository;
     @NonNull
-    private final LikeService likeService;
-    @NonNull
     private final UserService userService;
     @NonNull
     private final StoreService storeService;
     @NonNull
-    private final ModelMapper modelMapper;
-    @NonNull
     private final ServiceLogger logger;
-
+    @NonNull
+    private final Mapper mapper;
     @Value("${system.recommendation_system_addr}")
     public String recommendationSystemAddr;
 
-    @Value("${system.image_processing_addr}")
-    private String imageProcessingAddr;
 
     public ClothingDTO getById(long clothingId) throws ClothingNotFoundException {
         Optional<Clothing> item = repository.findById(clothingId);
         if (item.isEmpty())
             throw new ClothingNotFoundException(clothingId);
-        return modelMapper.map(item.get(), ClothingDTO.class);
+        return mapper.clothingToClothingDTO(item.get());
     }
 
     //Returns list of ClothingDTO items based on clothingIds
-    public List<ClothingDTO> getByIds(List<Long> clothingIds) throws ClothingNotFoundException {
-        long startTime = System.currentTimeMillis();
 
+    public List<ClothingDTO> getByIds(List<Long> clothingIds) throws ClothingNotFoundException {
         List<Optional<Clothing>> optionalItems = repository.getListByIds(clothingIds);
         List<ClothingDTO> clothingDTOList = new ArrayList<>();
         for (int i = 0; i < optionalItems.size(); i++) {
@@ -86,7 +75,7 @@ public class ClothingService {
             if (optionalItem.isEmpty())
                 throw new ClothingNotFoundException(clothingIds.get(i));
             //Convert to DTO
-            ClothingDTO clothingDTOItem = modelMapper.map(optionalItem.get(), ClothingDTO.class);
+            ClothingDTO clothingDTOItem = mapper.clothingToClothingDTO(optionalItem.get());
             //Attempts to show the first image presented
             List<String> imageUrls = clothingDTOItem.getImageURL();
             if (imageUrls.size() > 1)
@@ -96,6 +85,7 @@ public class ClothingService {
 
         return clothingDTOList;
     }
+
 
     public List<ClothingDTO> recommendClothingList(long userId, String typeFilter, String genderFilter, Boolean singleItem){
         Gender gender = genderStringToEnum(userId, genderFilter);
@@ -140,9 +130,7 @@ public class ClothingService {
             //Converts List<Clothing> to List<ClothingDTO>
             List<ClothingDTO> itemsDTO = new ArrayList<>();
             for (Optional<Clothing> item : items) {
-                if (item.isPresent()) {
-                    itemsDTO.add(modelMapper.map(item, ClothingDTO.class));
-                }
+                item.ifPresent(clothing -> itemsDTO.add(mapper.clothingToClothingDTO(clothing)));
             }
 
             return itemsDTO;
@@ -151,6 +139,7 @@ public class ClothingService {
         }
         return null;
     }
+
 
     public ClothingDTO getCard(long userId, String typeFilter, String genderFilter){
         Gender gender = genderStringToEnum(userId, genderFilter);
@@ -185,7 +174,7 @@ public class ClothingService {
             Optional<Clothing> item  = repository.findById(clothingId);
             //If present returns item or else returns null
             if (item.isPresent()) {
-                return modelMapper.map(item.get(), ClothingDTO.class);
+                return mapper.clothingToClothingDTO(item.get());
             } else {
                 String errorMessage = "Unable to find item with id:" + clothingId;
                 logger.error(errorMessage);
@@ -197,55 +186,49 @@ public class ClothingService {
         return null;
     }
 
-    private Boolean likeCheck(Clothing item, long userId) {
-        try {
-            likeService.findByClothingAndUser(item.getId(), userId);
-            return true;
-        } catch (LikeNotFoundException exception) {
-            return false;
-        }
-    }
 
     public ClothingDTO update(ClothingDTO item) {
         ClothingDTO clothingDTOItem = this.findByUrl(item.getProductURL());
-        Clothing clothingItem = modelMapper.map(clothingDTOItem, Clothing.class);
+        Clothing clothingItem = mapper.clothingDTOToClothing(clothingDTOItem);
         clothingItem.setGender(item.getGender());
         clothingItem.setName(item.getName());
         clothingItem.setImageURL(item.getImageURL());
         clothingItem.setDate(LocalDate.now());
-        return modelMapper.map(repository.save(clothingItem), ClothingDTO.class);
+        return mapper.clothingToClothingDTO(repository.save(clothingItem));
     }
+
 
     public ClothingDTO create(ClothingDTO item) {
         Optional<ClothingDTO> itemOptional = this.getIfExists(item);
         if (itemOptional.isPresent()) {
             return update(itemOptional.get());
         } else {
-            Clothing itemEntity = modelMapper.map(item, Clothing.class);
-            return modelMapper.map(repository.save(itemEntity), ClothingDTO.class);
+            Clothing itemEntity = mapper.clothingDTOToClothing(item);
+            return mapper.clothingToClothingDTO(repository.save(itemEntity));
         }
     }
+
 
     public ClothingDTO findByUrl(String url) throws ClothingNotFoundException {
         Optional<Clothing> item = repository.findByProductUrl(url);
         if (item.isEmpty())
             throw new ClothingNotFoundException(url);
-        return modelMapper.map(item.get(), ClothingDTO.class);
+        return mapper.clothingToClothingDTO(item.get());
     }
+
 
     public Optional<ClothingDTO> getIfExists(ClothingDTO item) {
         Optional<Clothing> itemOptional = repository.getIfExists(item.getProductURL());
-        if (itemOptional.isPresent()) {
-            return Optional.of(modelMapper.map(itemOptional, ClothingDTO.class));
-        }
-        return Optional.empty();
+        return itemOptional.map(mapper::clothingToClothingDTO);
+
     }
+
 
     public List<storeStatDTO> getClothingPerStoreData() {
         List<StoreDTO> stores = storeService.getAll();
         List<storeStatDTO> storeStats = new ArrayList<>();
         for (StoreDTO storeDTO: stores) {
-            Store store = modelMapper.map(storeDTO, Store.class);
+            Store store = mapper.storeDTOToStore(storeDTO);
             Long maleCount = repository.countByStoreAndGender(store, Gender.MALE);
             Long femaleCount = repository.countByStoreAndGender(store, Gender.FEMALE);
             Long boyCount = repository.countByStoreAndGender(store, Gender.BOY);
@@ -331,19 +314,6 @@ public class ClothingService {
         inputStream.close();
 
         return (JSONObject) new JSONParser().parse(responseBuilder.toString());
-    }
-
-    private void convertDTOToImageUrls(ClothingDTO clothing) {
-        List<String> imageUrls = new ArrayList<>();
-        for (int i = 0; i < clothing.getImageURL().size(); i++) {
-            imageUrls.add(linkTo(AppController.class)
-                    .slash("/image")
-                    .toUriComponentsBuilder().scheme("https")
-                    .queryParam("clothingId", clothing.getId())
-                    .queryParam("imageId", i)
-                    .toUriString());
-        }
-        clothing.setImageURL(imageUrls);
     }
 }
 

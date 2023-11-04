@@ -26,11 +26,9 @@ public class Store {
     private String name;
     @Column(name = "URL")
     private String URL;
-
     @OneToMany(mappedBy = "store", fetch = FetchType.EAGER)
     @JsonBackReference
     private List<Clothing> items;
-
     private boolean enabled;
 
     public Store() {

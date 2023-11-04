@@ -41,7 +41,6 @@ public class GenericController {
         return ResponseEntity.ok().build();
     }
 
-
     @GetMapping("/")
     public ResponseEntity<?> home(HttpServletResponse httpServletResponse) {
         httpServletResponse.setHeader("Location", "https://www.peachsconemarket.com");

@@ -41,11 +41,10 @@ public class Clothing {
     private Gender gender;
     @ElementCollection(fetch = FetchType.LAZY)
     private List<ClothingTag> tags;
-
     @Column(name = "date_created")
     private LocalDate date;
 
-    protected Clothing() {
+    public Clothing() {
     }
 
     public Clothing(String name, List<String> imageURL, String productURL, Store store, ClothType type, Gender gender, List<ClothingTag> tags) {
