@@ -72,7 +72,6 @@ public class LikeService {
     }
 
     public List<LikeDTO> getAllByUserId(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
-        long startTime = System.currentTimeMillis();
 
         //Convert genderFilter to gender
         Gender gender = null;
@@ -107,7 +106,6 @@ public class LikeService {
             pageRequest = PageRequest.of(pageNumber, AppController.PAGE_SIZE, Sort.Direction.DESC, "id");
         }
 
-        System.out.println("Preprocessed query in: " + (System.currentTimeMillis() - startTime));
         Page<Like> likePage;
         if (genderFilter != null && typeFilter != null) {
             likePage = repository.findAllByUserIdWithGenderAndTypes(userId, liked, bought, gender, typeFilters, pageRequest);
@@ -119,7 +117,6 @@ public class LikeService {
             likePage = repository.findAllByUserId(userId, liked, bought, pageRequest);
         }
 
-        System.out.println("Repo query in: " + (System.currentTimeMillis() - startTime));
         //Converts likes to likeDTO
         int count = 0;
         List<LikeDTO> likeDTOList = new ArrayList<>();
@@ -127,8 +124,6 @@ public class LikeService {
             count += 1;
             likeDTOList.add(mapper.likeToLikeDTO(like));
         }
-        System.out.println("Like to LikeDTO count: " + count);
-        System.out.println("DTO Conversion: " + (System.currentTimeMillis() - startTime));
         return likeDTOList;
     }
 
