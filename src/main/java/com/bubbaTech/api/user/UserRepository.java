@@ -7,11 +7,19 @@ package com.bubbaTech.api.user;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.username = ?1")
     Optional<User> findByEmail(String email);
+
+    @Query("SELECT u FROM User u WHERE u.lastLogin >= :beforeDate")
+    List<User> activeUsersInLastWeek(LocalDate beforeDate);
+
+    @Query("SELECT u FROM User u WHERE u.accountCreated >= :beforeDate")
+    List<User> lastDaySignUps(LocalDate beforeDate);
 
 //    @Query("DELETE FROM Like l WHERE l.user.id = ?1")
 //    @Modifying

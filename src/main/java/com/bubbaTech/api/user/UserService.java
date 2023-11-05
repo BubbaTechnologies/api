@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -107,6 +108,26 @@ public class UserService {
 
     public void delete(User user) {
         repository.delete(user);
+    }
+
+    public List<UserDTO> lastWeekUsers() {
+        List<User> users = repository.activeUsersInLastWeek(LocalDate.now().minusWeeks(1));
+        List<UserDTO> userDTOS = new ArrayList<>();
+        for (User user : users){
+            userDTOS.add(mapper.userToUserDTO(user));
+        }
+
+        return userDTOS;
+    }
+
+    public List<UserDTO> lastDaySignUps() {
+        List<User> users = repository.lastDaySignUps(LocalDate.now().minusDays(1));
+        List<UserDTO> userDTOS = new ArrayList<>();
+        for (User user : users){
+            userDTOS.add(mapper.userToUserDTO(user));
+        }
+
+        return userDTOS;
     }
 
 }
