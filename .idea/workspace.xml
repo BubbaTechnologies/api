@@ -4,18 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/statEmailList.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="FEATURE: Feature added daily metrics to email.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/actuator/RouteResponseTimeEndpoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/actuator/RouteResponseTimeEndpoint.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/admin/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/admin/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/data/storeStatDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/data/storeStatDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/scraper/ScraperController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/scraper/ScraperController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/store/StoreService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/store/StoreService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -311,7 +309,16 @@
       <workItem from="1699058769741" duration="9267000" />
       <workItem from="1699079566759" duration="256000" />
       <workItem from="1699079855554" duration="12251000" />
-      <workItem from="1699138808748" duration="7655000" />
+      <workItem from="1699138808748" duration="7882000" />
+      <workItem from="1699147022452" duration="2441000" />
+      <workItem from="1699226671389" duration="2550000" />
+      <workItem from="1699242442683" duration="3024000" />
+      <workItem from="1699249557944" duration="189000" />
+      <workItem from="1699249761532" duration="1115000" />
+      <workItem from="1699294311992" duration="313000" />
+      <workItem from="1699302783354" duration="768000" />
+      <workItem from="1699410072025" duration="1846000" />
+      <workItem from="1699412642607" duration="365000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -579,14 +586,6 @@
       <option name="project" value="LOCAL" />
       <updated>1686703978706</updated>
     </task>
-    <task id="LOCAL-00048" summary="Updated ClothingService to load images faster.">
-      <option name="closed" value="true" />
-      <created>1692067975095</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1692067975095</updated>
-    </task>
     <task id="LOCAL-00049" summary="Created dynamic filter options.">
       <option name="closed" value="true" />
       <created>1693375840312</created>
@@ -667,7 +666,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699127347078</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="FEATURE: Feature added daily metrics to email.">
+      <option name="closed" value="true" />
+      <created>1699146673983</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1699146673985</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -689,7 +696,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Created pageable like list and colleciton list." />
     <MESSAGE value="Reversed sort for pages." />
     <MESSAGE value="Updated random to return clothing from last two weeks." />
     <MESSAGE value="Test new branch." />
@@ -714,7 +720,8 @@
     <MESSAGE value="DOC: Added documentation for design patterns." />
     <MESSAGE value="BUG: Optimized /likes response time. Added custom mapping between entities and their respective DTOs." />
     <MESSAGE value="FEATURE: Added average response time tracking for /app routes." />
-    <option name="LAST_COMMIT_MESSAGE" value="FEATURE: Added average response time tracking for /app routes." />
+    <MESSAGE value="FEATURE: Feature added daily metrics to email." />
+    <option name="LAST_COMMIT_MESSAGE" value="FEATURE: Feature added daily metrics to email." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

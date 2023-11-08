@@ -34,8 +34,8 @@ import software.amazon.awssdk.services.lambda.LambdaClient;
 import software.amazon.awssdk.services.lambda.model.InvokeRequest;
 import software.amazon.awssdk.services.lambda.model.InvokeResponse;
 
-import java.io.File;
-import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,6 +76,7 @@ public class AdminController {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
+        logger.info("Changed permissions of " + user.getUsername() + ", id: " + user.getId()  + ", to " + auth.toString());
         return ResponseEntity.ok().headers(headers).body(user);
     }
 
@@ -95,13 +96,13 @@ public class AdminController {
         return ResponseEntity.ok().headers(headers).body(store);
     }
 
-    @Scheduled(fixedRateString = "${caching.spring.filterOptionsTTL}")
+    @Scheduled(cron = "0 0 14 * * *")
     public void sendMetricsEmails() {
         try {
-            File resource = new ClassPathResource("static/statEmailList.json").getFile();
+            InputStream resource = new ClassPathResource("static/statEmailList.json").getInputStream();
 
             JSONParser parser = new JSONParser();
-            JSONObject obj = (JSONObject) parser.parse(new FileReader(resource));
+            JSONObject obj = (JSONObject) parser.parse(new InputStreamReader(resource));
 
             //Gets and sends executive emails
             JSONArray executiveEmails = (JSONArray) obj.get("executive");
@@ -152,16 +153,14 @@ public class AdminController {
         }
         object.put("Weekly Active Users Count", weeklyUserEmails.size());
         object.put("Past Week Active Users",  weeklyUserEmails);
-
+        object.put("Average Response Times", routeResponseTimeEndpoint.getAverageResponseTimes().toString());
         clothingService.getClothingPerStoreData();
         JSONArray storeArray = new JSONArray();
         List<storeStatDTO> storeStatDTOS = clothingService.getClothingPerStoreData();
         for (storeStatDTO storeStatDTO : storeStatDTOS) {
             storeArray.add(storeStatDTO.toString());
         }
-        object.put("Store Stats", storeArray);
-        object.put("Average Response Times", routeResponseTimeEndpoint.getAverageResponseTimes().toString());
-
+        object.put("Store Statistics", storeArray);
         for (String email : emails) {
             sendEmail(email, object);
         }

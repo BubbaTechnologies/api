@@ -524,6 +524,23 @@ Response:
 }
 ```
 
+### /scraper/store
+
+Mapping: GET
+
+Request Parameter: ```storeName: str```
+
+Required Header: ```Authorization: Bearer (JWT)```
+
+Description: If store exists, returns the amount of clothing collected within the last week. 
+Otherwise, returns a 404 status code.
+
+Response:
+```
+{
+    "lastWeekCollections":long
+}
+```
 
 
 ### /scraper/clothing
@@ -563,6 +580,12 @@ Response:
     "tags":[str]
 }
 ```
+
+## Admin Controller
+### /admin/routeResponseTime
+Mapping: GET
+Required Header: ```Authorization: Bearer (JWT)```
+Description: Returns JSON response containing average response times for /app routes.
 
 
 

@@ -11,11 +11,14 @@ import com.bubbaTech.api.clothing.ClothingService;
 import com.bubbaTech.api.store.StoreDTO;
 import com.bubbaTech.api.store.StoreService;
 import lombok.AllArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -61,6 +64,24 @@ public class ScraperController {
         return ResponseEntity.ok().headers(headers).body(store);
     }
 
+    /**
+     * @param storeName: A string containing the store name.
+     * @return: Returns the number of clothing collected within the last week.
+     * {
+     *     "lastWeekCollections": int
+     * }
+     */
+    @GetMapping(value = "/store", produces = "application/json")
+    public ResponseEntity<?> getStoreCollection(@RequestParam(name="storeName") String storeName) {
+        Optional<Long> collectionAmount = clothingService.getLastWeekCollection(storeName);
+        if (collectionAmount.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Map<String, Long> response = new HashMap<>();
+        response.put("lastWeekCollections", collectionAmount.get());
+        return ResponseEntity.ok().body(response);
+    }
+
     @PostMapping(value = "/clothing", produces = "application/json")
     public ResponseEntity<?> createClothing(@RequestBody ClothingDTO clothing) {
         clothing = clothingService.create(clothing);
@@ -68,6 +89,6 @@ public class ScraperController {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        return ResponseEntity.ok().headers(headers).body(clothing);
+        return ResponseEntity.ok().headers(headers).body(EntityModel.of(clothing));
     }
 }

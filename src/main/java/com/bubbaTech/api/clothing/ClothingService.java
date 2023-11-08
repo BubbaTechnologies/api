@@ -315,6 +315,22 @@ public class ClothingService {
 
         return (JSONObject) new JSONParser().parse(responseBuilder.toString());
     }
+
+    /**
+     * @param storeName: String containing the name of the store.
+     * @return: The amount of clothing the store collected within the last week.
+     */
+    public Optional<Long> getLastWeekCollection(String storeName) {
+        //Gets store
+        Optional<StoreDTO> storeDTO = storeService.getByName(storeName);
+        if (storeDTO.isEmpty()) {
+            return Optional.empty();
+        }
+
+        //Gets data on store
+        Store store = mapper.storeDTOToStore(storeDTO.get());
+        return Optional.of(repository.countByStoreAndDate(store, LocalDate.now().minusWeeks(1)));
+    }
 }
 
 

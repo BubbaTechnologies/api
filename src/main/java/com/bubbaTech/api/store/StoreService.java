@@ -52,4 +52,9 @@ public class StoreService {
         }
         return storeDTOS;
     }
+
+    public Optional<StoreDTO> getByName(String storeName) {
+        Optional<Store> store = repository.findByName(storeName);
+        return store.map(mapper::storeToStoreDTO);
+    }
 }

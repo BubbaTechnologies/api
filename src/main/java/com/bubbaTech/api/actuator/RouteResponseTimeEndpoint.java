@@ -18,10 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Endpoint(id="routeResponseTime")
 public class RouteResponseTimeEndpoint {
-    /**
-     * Amount of values to include within the average.
-     */
-    private final int MAX_AMOUNT = 25;
 
     /**
      * Key-value pair where the key is the route and the value is a queue of MAX_AMOUNT most recent response times.
@@ -42,7 +38,9 @@ public class RouteResponseTimeEndpoint {
             longList = routeResponseTime.get(route);
         }
 
-        //Adds value to route
+
+        //Amount of values to include within the average.
+        int MAX_AMOUNT = 100;
         if (longList.size() + 1 > MAX_AMOUNT) {
             longList.remove(0);
         }

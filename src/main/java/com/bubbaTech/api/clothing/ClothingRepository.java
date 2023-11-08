@@ -41,4 +41,6 @@ public interface ClothingRepository extends JpaRepository<Clothing, Long> {
 
     @Query("SELECT c FROM Clothing c WHERE c.id IN :ids")
     List<Optional<Clothing>> getListByIds(List<Long> ids);
+    @Query("SELECT COUNT(c) FROM Clothing c WHERE c.store = :store AND c.date >= :date")
+    long countByStoreAndDate(Store store, LocalDate date);
 }

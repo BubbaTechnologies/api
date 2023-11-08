@@ -114,15 +114,23 @@ public class AppController {
     @PostMapping(value = "/like", produces = "application/json")
     public ResponseEntity<?> like(@RequestBody LikeDTO newLike, HttpServletRequest request, Principal principal){
         long startTime = System.currentTimeMillis();
-        long userId = getUserId(principal);
         newLike.setClothing(clothingService.getById(newLike.getClothing().getId()));
-        newLike.setUser(userService.getById(userId));
+
+        logger.info("/app/like: After service clothing  queries: " + (System.currentTimeMillis() - startTime));
+
+        newLike.setUser(getUserDTO(principal));
+
+        logger.info("/app/like: After service user queries: " + (System.currentTimeMillis() - startTime));
 
         //Sets like to like rating + imageTapRatio
         newLike.setRating(Ratings.LIKE_RATING + min(newLike.getImageTapsRatio() * Ratings.TOTAL_IMAGE_TAP_RATING, Ratings.TOTAL_IMAGE_TAP_RATING));
         newLike.setLiked(true);
 
+        logger.info("/app/like: After like settings: " + (System.currentTimeMillis() - startTime));
+
         EntityModel<LikeDTO> like = EntityModel.of(likeService.create(newLike));
+
+        logger.info("/app/like: After like creation: " + (System.currentTimeMillis() - startTime));
 
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok().body(like);
@@ -131,15 +139,21 @@ public class AppController {
     @PostMapping(value = "/dislike", produces = "application/json")
     public ResponseEntity<?> dislike(HttpServletRequest request, @RequestBody LikeDTO newLike, Principal principal) {
         long startTime = System.currentTimeMillis();
-        long userId = getUserId(principal);
         newLike.setClothing(clothingService.getById(newLike.getClothing().getId()));
-        newLike.setUser(userService.getById(userId));
+        newLike.setUser(getUserDTO(principal));
+
+        logger.info("/app/dislike: After service queries: " + (System.currentTimeMillis() - startTime));
 
         //Sets like to dislike rating
         newLike.setRating(Ratings.DISLIKE_RATING);
         newLike.setLiked(false);
 
+        logger.info("/app/dislike: After like settings: " + (System.currentTimeMillis() - startTime));
+
         EntityModel<LikeDTO> like = EntityModel.of(likeService.create(newLike));
+
+        logger.info("/app/dislike: After creation: " + (System.currentTimeMillis() - startTime));
+
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok().body(like);
     }
@@ -147,9 +161,10 @@ public class AppController {
     @PostMapping(value = "/removeLike", produces = "application/json")
     public ResponseEntity<?> removeLike(HttpServletRequest request, @RequestBody LikeDTO newLike, Principal principal) {
         long startTime = System.currentTimeMillis();
-        long userId = getUserId(principal);
         newLike.setClothing(clothingService.getById(newLike.getClothing().getId()));
-        newLike.setUser(userService.getById(userId));
+        newLike.setUser(getUserDTO(principal));
+
+        logger.info("/app/removeLike: After service queries: " + (System.currentTimeMillis() - startTime));
 
         //Sets like to remove like rating
         newLike.setRating(Ratings.REMOVE_LIKE_RATING);
@@ -161,7 +176,12 @@ public class AppController {
             newLike.setBought(false);
         }
 
+        logger.info("/app/removeLike: After like settings: " + (System.currentTimeMillis() - startTime));
+
         EntityModel<LikeDTO> like = EntityModel.of(likeService.create(newLike));
+
+        logger.info("/app/removeLike: After creation: " + (System.currentTimeMillis() - startTime));
+
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok().body(like);
     }
@@ -169,9 +189,8 @@ public class AppController {
     @PostMapping(value = "/bought", produces = "application/json")
     public ResponseEntity<?> bought(HttpServletRequest request, @RequestBody LikeDTO newLike, Principal principal) {
         long startTime = System.currentTimeMillis();
-        long userId = getUserId(principal);
         newLike.setClothing(clothingService.getById(newLike.getClothing().getId()));
-        newLike.setUser(userService.getById(userId));
+        newLike.setUser(getUserDTO(principal));
 
         //Sets like to like rating + imageTapRatio
         newLike.setRating(Ratings.BUY_RATING);
@@ -191,9 +210,8 @@ public class AppController {
     @PostMapping(value = "/pageClick", produces = "application/json")
     public ResponseEntity<?> pageClick(HttpServletRequest request, @RequestBody LikeDTO newLike, Principal principal) {
         long startTime = System.currentTimeMillis();
-        long userId = getUserId(principal);
         newLike.setClothing(clothingService.getById(newLike.getClothing().getId()));
-        newLike.setUser(userService.getById(userId));
+        newLike.setUser(getUserDTO(principal));
 
         newLike.setRating(Ratings.PAGE_CLICK_RATING);
         try {
@@ -296,8 +314,16 @@ public class AppController {
         return CollectionModel.of(entityModelList);
     }
 
+    /**
+     * @param principal: The user making the request.
+     * @return: A long representing the user id.
+     */
     private long getUserId(Principal principal) {
         UserDTO user = userService.getByUsername(principal.getName());
         return user.getId();
+    }
+
+    private UserDTO getUserDTO(Principal principal) {
+        return userService.getByUsername(principal.getName());
     }
 }
