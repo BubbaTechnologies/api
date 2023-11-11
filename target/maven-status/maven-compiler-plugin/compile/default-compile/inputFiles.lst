@@ -37,6 +37,7 @@
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/security/authentication/JwtRequestFilter.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/user/UserService.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/ClothingNotFoundException.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/aws/LambdaService.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/store/StoreService.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/store/StoreDeserializer.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/like/LikeRepository.java

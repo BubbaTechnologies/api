@@ -39,7 +39,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     Long countAllByUserId(long userId, boolean liked, boolean bought);
     @Query("SELECT count(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.clothingType IN ?4")
     Long countAllByUserIdWithTypes(long userId, boolean liked, boolean bought, List<ClothType> type);
-
     @Query("SELECT count(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4")
     Long countAllByUserIdWithGender(long userId, boolean liked, boolean bought, Gender gender);
 }

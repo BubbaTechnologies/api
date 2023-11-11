@@ -30,14 +30,10 @@ import org.springframework.web.client.RestTemplate;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static java.lang.Math.min;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
@@ -96,15 +92,35 @@ public class AppController {
         return CollectionModel.of(entityModelList);
     }
 
+    @GetMapping(value = "/totalPages", produces="application/json")
+    public ResponseEntity<?> getTotalPages(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value="queryType", required = true) String queryType) {
+        long startTime = System.currentTimeMillis();
+
+        //Converts ClothingListType
+        ClothingListType listType;
+        switch (queryType.toLowerCase()) {
+            case "likes":
+                listType = ClothingListType.LIKE;
+                break;
+            case "collection":
+                listType = ClothingListType.BOUGHT;
+                break;
+            default:
+                return ResponseEntity.badRequest().build();
+        }
+
+        long totalPages = likeService.getPageCount(this.getUserId(principal), listType, typeFilter, genderFilter);
+        Map<String, Long> response = new HashMap<>();
+        response.put("totalPages", totalPages);
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok(response);
+    }
+
     //Liked list for user based on sessionId
     @GetMapping(value = "/likes", produces = "application/json")
     public CollectionModel<EntityModel<ClothingDTO>> likes(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value = "page", required = false) Integer pageNumber) {
         long startTime = System.currentTimeMillis();
         CollectionModel<EntityModel<ClothingDTO>> likesList = getClothingList(this.getUserId(principal), ClothingListType.LIKE, typeFilter, genderFilter, pageNumber);
-        long totalPages = likeService.getPageCount(this.getUserId(principal), ClothingListType.LIKE, typeFilter, genderFilter);
-        if (pageNumber != null && pageNumber < totalPages - 1) {
-            likesList.add(linkTo(methodOn(AppController.class).likes(null, null, typeFilter, genderFilter, pageNumber + 1)).withRel("nextPage"));
-        }
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return likesList;
     }
@@ -316,6 +332,20 @@ public class AppController {
         userDTO.setLatitude(locationInformation.get("latitude"));
         userDTO.setLongitude(locationInformation.get("longitude"));
         userService.update(userDTO);
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/updateDeviceId")
+    public ResponseEntity<?> updateDeviceId(HttpServletRequest request, Principal principal, @RequestBody Map<String, String> locationInformation) {
+        long startTime = System.currentTimeMillis();
+        if (!(locationInformation.containsKey("deviceId"))) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+        UserDTO userDTO = getUserDTO(principal);
+        userDTO.setDeviceId(locationInformation.get("deviceId"));
+        userService.update(userDTO);
+
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok().build();
     }

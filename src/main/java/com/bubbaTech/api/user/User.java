@@ -46,6 +46,8 @@ public class User implements UserDetails {
     @Nullable
     @Column(name = "longitude")
     private Double longitude;
+    @Column(name = "deviceId")
+    private String deviceId;
 
     //Constructors
     public User() {

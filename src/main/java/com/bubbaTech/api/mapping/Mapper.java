@@ -31,6 +31,7 @@ public class Mapper {
         userDTO.setLastLogin(user.getLastLogin());
         userDTO.setGrantedAuthorities(user.getGrantedAuthorities());
         userDTO.setBirthDate(user.getBirthDate());
+        userDTO.setDeviceId(user.getDeviceId());
 
         try {
             userDTO.setLatitude(user.getLatitude());
@@ -56,6 +57,9 @@ public class Mapper {
         user.setLastLogin(userDTO.getLastLogin());
         user.setGrantedAuthorities(userDTO.getGrantedAuthorities());
         user.setBirthDate(userDTO.getBirthDate());
+        user.setDeviceId(user.getDeviceId());
+        user.setLatitude(user.getLatitude());
+        user.setLongitude(user.getLongitude());
 
         return user;
     }

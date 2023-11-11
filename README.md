@@ -57,10 +57,27 @@ Response:
     "username":str
 }
 ```
+### /verify
+
+Mapping: POST
+
+Description: Sends verification code to users email.
+
+Request Body:
+```
+{
+    "email":str
+}
+```
+
+
+Response: 200 if sent.
 
 ### /create
 
 Mapping: POST
+
+Parameters: ```code: str``` 
 
 Description: Create user. If user exists, response code will be 400.
 
@@ -197,6 +214,40 @@ Description: Returns 200 if valid user and updates last login.
 
 Required Headers: ```Authorization: Bearer (JWT)```
 
+### /app/totalPage
+Mapping: GET
+
+Description: Returns all likes for user.
+
+Required Headers: ```Authorization: Bearer (JWT)```
+
+Parameters:
+
+**type (OPTIONAL)**
+
+Description: Filters return list by clothing type.
+
+**gender (OPTIONAL)**
+
+Description: Filters return list by gender.
+
+**page (OPTIONAL)**
+
+Description: Returns list in pages that are predefined sizes.
+
+**queryType**
+
+Description: Defines type of query.
+Values: `likes` or `collection`.
+
+Response:
+
+```
+{
+    "totalPages":Long
+}
+```
+
 ### /app/likes
 Mapping: GET
 
@@ -204,7 +255,7 @@ Description: Returns all likes for user.
 
 Required Headers: ```Authorization: Bearer (JWT)```
 
-Parameters: 
+Parameters:
 
 **type (OPTIONAL)**
 
@@ -442,6 +493,35 @@ e.g.
 ```
 top:[active]
 ```
+
+### /app/updateLocation
+Mapping: POST
+
+Description: Updates a users location.
+
+Request:
+```
+{
+    "latitude":Double,
+    "longitude":Double
+}
+```
+
+Response: If requests succeed 200.
+
+### /app/updateDeviceId
+Mapping: POST
+
+Description: Updates a users location.
+
+Request:
+```
+{
+    "deviceId":String
+}
+```
+
+Response: If requests succeed 200.
 
 ## Scraper Controller
 

@@ -74,11 +74,10 @@ public class GenericController {
     }
 
     @PostMapping(value = "/create", produces = "application/json")
-    public ResponseEntity<?> create(@RequestBody UserDTO newUser, @RequestParam String verificationCode) {
+    public ResponseEntity<?> create(@RequestBody UserDTO newUser, @RequestParam(value="code") String verificationCode) {
         if (!generateVerificationCode(newUser.getUsername()).equals(verificationCode)) {
             return ResponseEntity.unprocessableEntity().build();
         }
-
 
         UserDTO user;
         try {
@@ -107,7 +106,7 @@ public class GenericController {
 
         JSONObject requestBody = new JSONObject();
         requestBody.put("recipient", userEmail);
-        requestBody.put("verificationCode", verificationCode.toString());
+        requestBody.put("verificationCode", verificationCode);
 
         Boolean sent = lambdaService.useLambda("verificationEmailFunction", requestBody);
         if (sent) {

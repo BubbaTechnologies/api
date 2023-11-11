@@ -31,6 +31,7 @@ public class UserDTO implements DTO<UserDTO> {
     private LocalDate birthDate;
     private double latitude;
     private double longitude;
+    private String deviceId;
 
     public UserDTO() {}
 
