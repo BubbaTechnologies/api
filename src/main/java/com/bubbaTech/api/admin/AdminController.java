@@ -6,6 +6,7 @@ package com.bubbaTech.api.admin;
 
 
 import com.bubbaTech.api.actuator.RouteResponseTimeEndpoint;
+import com.bubbaTech.api.aws.LambdaService;
 import com.bubbaTech.api.clothing.ClothingService;
 import com.bubbaTech.api.data.storeStatDTO;
 import com.bubbaTech.api.info.ServiceLogger;
@@ -19,20 +20,12 @@ import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.core.SdkBytes;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.lambda.LambdaClient;
-import software.amazon.awssdk.services.lambda.model.InvokeRequest;
-import software.amazon.awssdk.services.lambda.model.InvokeResponse;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -56,11 +49,9 @@ public class AdminController {
     private ServiceLogger logger;
     @NonNull
     private RouteResponseTimeEndpoint routeResponseTimeEndpoint;
+    @NonNull
+    private LambdaService lambdaService;
 
-    @Value("${system.aws.accessKey}")
-    private String accessKey;
-    @Value("${system.aws.privateKey}")
-    private String privateKey;
 
     @RequestMapping(value = "/permissions", method = RequestMethod.POST)
     public ResponseEntity<?> changePermission(@RequestBody Map<String, String> permissions) {
@@ -180,28 +171,9 @@ public class AdminController {
         requestBody.put("subject", "App Metrics - " + LocalDate.now().toString());
         requestBody.put("data", data);
 
-        try {
-            AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, privateKey);
-            LambdaClient lambdaClient = LambdaClient.builder()
-                    .region(Region.US_EAST_1)
-                    .credentialsProvider(StaticCredentialsProvider.create(credentials))
-                    .build();
-
-            InvokeRequest invokeRequest = InvokeRequest.builder()
-                    .functionName("genericEmailFunction")
-                    .payload(SdkBytes.fromUtf8String(requestBody.toJSONString()))
-                    .build();
-
-            InvokeResponse invokeResponse = lambdaClient.invoke(invokeRequest);
-            if (invokeResponse.statusCode() != 200) {
-                String errorMessage = "Unable to connect to emailClient";
-                logger.error(errorMessage);
-                throw new Exception(errorMessage);
-            } else {
-                logger.info("Sent metric email to " + email + ".");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        Boolean sent = lambdaService.useLambda("genericEmailFunction", requestBody);
+        if (sent) {
+            logger.info("Sent metric email to " + email + ".");
         }
     }
 }

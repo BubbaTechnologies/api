@@ -6,6 +6,7 @@ package com.bubbaTech.api.user;
 
 import com.bubbaTech.api.like.Like;
 import com.bubbaTech.api.security.authorities.Authorities;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,8 +40,10 @@ public class User implements UserDetails {
     private LocalDate accountCreated;
     private LocalDate lastLogin;
     private LocalDate birthDate;
+    @Nullable
     @Column(name = "latitude")
     private Double latitude;
+    @Nullable
     @Column(name = "longitude")
     private Double longitude;
 

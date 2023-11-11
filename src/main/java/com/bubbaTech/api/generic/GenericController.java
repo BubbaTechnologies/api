@@ -4,6 +4,7 @@
 
 package com.bubbaTech.api.generic;
 
+import com.bubbaTech.api.aws.LambdaService;
 import com.bubbaTech.api.info.ServiceLogger;
 import com.bubbaTech.api.security.authentication.CustomUserDetailsService;
 import com.bubbaTech.api.security.authentication.JwtUtil;
@@ -12,7 +13,9 @@ import com.bubbaTech.api.security.authentication.model.AuthenticationResponse;
 import com.bubbaTech.api.user.UserDTO;
 import com.bubbaTech.api.user.UserService;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.json.simple.JSONObject;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +24,23 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Map;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GenericController {
+    @NonNull
     private AuthenticationManager auth;
+    @NonNull
     private JwtUtil jwt;
+    @NonNull
     private CustomUserDetailsService userDetailsService;
+    @NonNull
     private UserService userService;
+    @NonNull
     private final ServiceLogger logger;
+    @NonNull
+    private LambdaService lambdaService;
 
     @GetMapping(value = "/error")
     public ResponseEntity<?> error() {
@@ -63,7 +74,12 @@ public class GenericController {
     }
 
     @PostMapping(value = "/create", produces = "application/json")
-    public ResponseEntity<?> create(@RequestBody UserDTO newUser) {
+    public ResponseEntity<?> create(@RequestBody UserDTO newUser, @RequestParam String verificationCode) {
+        if (!generateVerificationCode(newUser.getUsername()).equals(verificationCode)) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+
+
         UserDTO user;
         try {
             user = userService.create(newUser);
@@ -76,9 +92,30 @@ public class GenericController {
         return this.login(request);
     }
 
-    //TODO: Create verify method that takes verification code, verifies and returns jwt.
-    //Post Request:  https://kr6a3lpcylmpny4ehl57z6lxry0lmztz.lambda-url.us-east-1.on.aws
-    //Check Postman for authorization headers.
+    @PostMapping(value = "/verify")
+    public ResponseEntity<?> verifyEmail(@RequestBody Map<String, String> map) {
+        if (!map.containsKey("email")) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+        String userEmail = map.get("email");
+
+        if (userEmail.length() < 4) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+
+        String verificationCode = generateVerificationCode(userEmail);
+
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("recipient", userEmail);
+        requestBody.put("verificationCode", verificationCode.toString());
+
+        Boolean sent = lambdaService.useLambda("verificationEmailFunction", requestBody);
+        if (sent) {
+            return ResponseEntity.ok().build();
+        }
+
+        return ResponseEntity.internalServerError().build();
+    }
 
     @PutMapping(value = "/update", produces = "application/json")
     public EntityModel<UserDTO> update(@RequestBody UserDTO userRequest, Principal principal) {
@@ -98,5 +135,15 @@ public class GenericController {
         user.setEnabled(false);
         userService.update(user);
         return ResponseEntity.ok().build();
+    }
+
+    private String generateVerificationCode(String email) {
+        //Generate verification code
+        StringBuilder verificationCode = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            verificationCode.append((int) email.charAt(i) - 32);
+        }
+
+        return verificationCode.toString();
     }
 }
