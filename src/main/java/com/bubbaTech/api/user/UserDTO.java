@@ -28,15 +28,18 @@ public class UserDTO implements DTO<UserDTO> {
     private LocalDate lastLogin;
     @JsonIgnore
     private Collection<Authorities> grantedAuthorities;
-
+    private LocalDate birthDate;
+    private double latitude;
+    private double longitude;
 
     public UserDTO() {}
 
-    public UserDTO(String username, String password, Gender gender) {
+    public UserDTO(String username, String password, Gender gender, LocalDate birthdate) {
         this.username = username;
         this.password = password;
         this.gender = gender;
         this.enabled = true;
+        this.birthDate = birthdate;
     }
 
 

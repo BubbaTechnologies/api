@@ -142,8 +142,11 @@ public class ClothingService {
 
 
     public ClothingDTO getCard(long userId, String typeFilter, String genderFilter){
+        long startTime = System.currentTimeMillis();
+
         Gender gender = genderStringToEnum(userId, genderFilter);
         List<ClothType> typeFilters = typeStringToList(typeFilter);
+        logger.info("ClothingService.getCard: After gender and type filter conversion: " + (System.currentTimeMillis() - startTime));
         try {
             StringBuilder urlString = new StringBuilder("http://" + recommendationSystemAddr +
                     "/recommendation?userId=" + URLEncoder.encode(Long.toString(userId), StandardCharsets.UTF_8)+
@@ -168,13 +171,16 @@ public class ClothingService {
             }
 
             JSONObject jsonResponse = getConnectionResponse(connection);
+            logger.info("ClothingService.getCard: After request: " + (System.currentTimeMillis() - startTime));
             Long clothingId = (Long) jsonResponse.get("clothingId");
 
             //Gets clothing
             Optional<Clothing> item  = repository.findById(clothingId);
             //If present returns item or else returns null
             if (item.isPresent()) {
-                return mapper.clothingToClothingDTO(item.get());
+                ClothingDTO clothing = mapper.clothingToClothingDTO(item.get());
+                logger.info("ClothingService.getCard: Returning: " + (System.currentTimeMillis() - startTime));
+                return clothing;
             } else {
                 String errorMessage = "Unable to find item with id:" + clothingId;
                 logger.error(errorMessage);

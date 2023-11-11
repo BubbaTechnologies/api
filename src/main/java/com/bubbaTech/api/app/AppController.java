@@ -32,10 +32,12 @@ import java.net.URL;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static java.lang.Math.min;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,7 +65,9 @@ public class AppController {
     public EntityModel<ClothingDTO> card(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
         long startTime = System.currentTimeMillis();
         ClothingDTO response = clothingService.getCard(this.getUserId(principal), typeFilter, genderFilter);
+        logger.info("/app/card: After clothingService get card: " + (System.currentTimeMillis() - startTime));
         response.reverseImageList();
+        logger.info("/app/card: After clothingService reverseImage: " + (System.currentTimeMillis() - startTime));
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return EntityModel.of(response);
     }
@@ -97,6 +101,10 @@ public class AppController {
     public CollectionModel<EntityModel<ClothingDTO>> likes(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value = "page", required = false) Integer pageNumber) {
         long startTime = System.currentTimeMillis();
         CollectionModel<EntityModel<ClothingDTO>> likesList = getClothingList(this.getUserId(principal), ClothingListType.LIKE, typeFilter, genderFilter, pageNumber);
+        long totalPages = likeService.getPageCount(this.getUserId(principal), ClothingListType.LIKE, typeFilter, genderFilter);
+        if (pageNumber != null && pageNumber < totalPages - 1) {
+            likesList.add(linkTo(methodOn(AppController.class).likes(null, null, typeFilter, genderFilter, pageNumber + 1)).withRel("nextPage"));
+        }
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return likesList;
     }
@@ -296,6 +304,20 @@ public class AppController {
         ResponseEntity<?> responseEntity = ResponseEntity.ok().body(clothingService.getFilterOptions());
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return responseEntity;
+    }
+
+    @PostMapping(value="/updateLocation")
+    public ResponseEntity<?> updateLocation(HttpServletRequest request, Principal principal, @RequestBody Map<String, Double> locationInformation) {
+        long startTime = System.currentTimeMillis();
+        if (!(locationInformation.containsKey("latitude") && locationInformation.containsKey("longitude"))) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+        UserDTO userDTO = getUserDTO(principal);
+        userDTO.setLatitude(locationInformation.get("latitude"));
+        userDTO.setLongitude(locationInformation.get("longitude"));
+        userService.update(userDTO);
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().build();
     }
 
     private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {

@@ -23,14 +23,12 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
-
     private final Mapper mapper;
     public UserService(@Lazy UserRepository repository, @Lazy PasswordEncoder passwordEncoder, Mapper mapper) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.mapper = mapper;
     }
-
 
     public UserDTO getById(long userId) throws UserNotFoundException {
         Optional<User> user = repository.findById(userId);
@@ -74,6 +72,9 @@ public class UserService {
         Collection<Authorities> auth = new ArrayList<>();
         auth.add(new Authorities("USER"));
         user.setGrantedAuthorities(auth);
+        user.setBirthDate(userRequest.getBirthDate());
+        user.setLatitude(userRequest.getLatitude());
+        user.setLongitude(userRequest.getLongitude());
         user = repository.save(user);
 
         return mapper.userToUserDTO(user);
@@ -93,6 +94,9 @@ public class UserService {
         user.setGender(userRequest.getGender());
         user.setEnabled(userRequest.getEnabled());
         user.setGrantedAuthorities(userRequest.getGrantedAuthorities());
+        user.setLongitude(userRequest.getLongitude());
+        user.setLatitude(userRequest.getLatitude());
+        user.setBirthDate(userRequest.getBirthDate());
 
         return mapper.userToUserDTO(repository.save(user));
     }
@@ -129,5 +133,4 @@ public class UserService {
 
         return userDTOS;
     }
-
 }

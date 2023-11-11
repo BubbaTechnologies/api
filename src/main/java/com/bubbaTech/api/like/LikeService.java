@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.DataOutputStream;
@@ -69,6 +70,47 @@ public class LikeService {
             sendLike(likeDTO);
             return likeDTO;
         }
+    }
+
+    public Long getPageCount(long userId, ClothingListType listType, String typeFilter, String genderFilter) {
+        //Convert genderFilter to gender
+        Gender gender = null;
+        if (genderFilter != null) {
+            gender = Gender.stringToGender(genderFilter);
+        }
+
+        //Convert typeFilter to list of types
+        List<ClothType> typeFilters = null;
+        if (typeFilter != null) {
+            typeFilters = new ArrayList<>();
+            String[] filters = typeFilter.split(",");
+            for (String str : filters) {
+                typeFilters.add(ClothType.stringToClothType(str));
+            }
+        }
+
+        boolean liked = false;
+        boolean bought = false;
+        switch (listType) {
+            case LIKE -> liked = true;
+            case BOUGHT -> {
+                liked = true;
+                bought = true;
+            }
+        }
+
+        Long pageAmount;
+        if (genderFilter != null && typeFilter != null) {
+            pageAmount = repository.countAllByUserIdWithGenderAndTypes(userId, liked, bought, gender, typeFilters);
+        } else if (genderFilter != null) {
+            pageAmount = repository.countAllByUserIdWithGender(userId, liked, bought, gender);
+        } else if (typeFilter != null) {
+            pageAmount = repository.countAllByUserIdWithTypes(userId, liked, bought, typeFilters);
+        } else {
+            pageAmount = repository.countAllByUserId(userId, liked, bought);
+        }
+
+        return Long.valueOf((long) Math.ceil((double) pageAmount / (double) AppController.PAGE_SIZE));
     }
 
     public List<LikeDTO> getAllByUserId(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
@@ -135,6 +177,7 @@ public class LikeService {
         return mapper.likeToLikeDTO(like.get());
     }
 
+    @Async
     public void sendLike(LikeDTO like) {
         try {
             URL url = new URL("http://" + recommendationSystemAddr + "/like");

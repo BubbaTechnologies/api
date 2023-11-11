@@ -70,9 +70,13 @@ Request Body:
     "username":str, 
     "password":str, 
     "gender":str, 
-    "name":str
+    "name":str,
+    "birthdate":str
 }
 ```
+NOTE: Birthdate must be formatted as follows: YEAR-MONTH-DAY such that December 18th, 2001 is
+2001-12-18.
+
 
 Response: 
 ```

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 import java.io.IOException;
+import java.time.LocalDate;
 
 public class UserDeserializer extends StdDeserializer<UserDTO> {
     public UserDeserializer() {
@@ -26,14 +27,18 @@ public class UserDeserializer extends StdDeserializer<UserDTO> {
         String username = node.get("username").textValue();
         String password = node.get("password").textValue();
         String gender = node.get("gender").textValue();
-        Gender g = switch (gender.toLowerCase()) {
+        Gender genderType = switch (gender.toLowerCase()) {
             case "male" -> Gender.MALE;
             case "female" -> Gender.FEMALE;
             case "boy" -> Gender.BOY;
             case "girl" -> Gender.GIRL;
             default -> Gender.UNISEX;
         };
-        return new UserDTO(username, password, g);
+        String birthdateString = node.get("birthdate").textValue();
+        String[] splitBirthdate = birthdateString.split("-");
+
+        LocalDate birthdate = LocalDate.of(Integer.parseInt(splitBirthdate[0]), Integer.parseInt(splitBirthdate[1]), Integer.parseInt(splitBirthdate[2]));
+        return new UserDTO(username, password, genderType, birthdate);
     }
 
 
