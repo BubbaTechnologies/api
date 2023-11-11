@@ -97,6 +97,7 @@ public class UserService {
         user.setLongitude(userRequest.getLongitude());
         user.setLatitude(userRequest.getLatitude());
         user.setBirthDate(userRequest.getBirthDate());
+        user.setDeviceId(userRequest.getDeviceId());
 
         return mapper.userToUserDTO(repository.save(user));
     }

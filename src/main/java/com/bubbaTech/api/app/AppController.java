@@ -337,13 +337,13 @@ public class AppController {
     }
 
     @PostMapping(value = "/updateDeviceId")
-    public ResponseEntity<?> updateDeviceId(HttpServletRequest request, Principal principal, @RequestBody Map<String, String> locationInformation) {
+    public ResponseEntity<?> updateDeviceId(HttpServletRequest request, Principal principal, @RequestBody Map<String, String> information) {
         long startTime = System.currentTimeMillis();
-        if (!(locationInformation.containsKey("deviceId"))) {
+        if (!(information.containsKey("deviceId"))) {
             return ResponseEntity.unprocessableEntity().build();
         }
         UserDTO userDTO = getUserDTO(principal);
-        userDTO.setDeviceId(locationInformation.get("deviceId"));
+        userDTO.setDeviceId(information.get("deviceId"));
         userService.update(userDTO);
 
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
