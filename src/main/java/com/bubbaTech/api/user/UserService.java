@@ -46,7 +46,7 @@ public class UserService {
     public void authUser(String username, String password) throws AuthenticationServiceException {
         UserDTO user = getByUsername(username);
         if (!passwordEncoder.matches(password, user.getPassword()))
-            throw new AuthenticationServiceException("Could not authenticate");
+            throw new AuthenticationServiceException("Could not authenticate.");
     }
 
 

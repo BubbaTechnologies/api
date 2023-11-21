@@ -12,6 +12,7 @@ import com.bubbaTech.api.security.authentication.model.AuthenticationRequest;
 import com.bubbaTech.api.security.authentication.model.AuthenticationResponse;
 import com.bubbaTech.api.user.UserDTO;
 import com.bubbaTech.api.user.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +59,7 @@ public class GenericController {
         httpServletResponse.setStatus(302);
         return ResponseEntity.status(302).build();
     }
+
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest request)  {
@@ -127,12 +129,20 @@ public class GenericController {
         return EntityModel.of(userRequest);
     }
 
-
     @DeleteMapping(value = "/delete")
     ResponseEntity<?> delete(Principal principal) {
         UserDTO user = userDetailsService.loadUserByUsernameToDTO(principal.getName());
         user.setEnabled(false);
         userService.update(user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/activate")
+    public ResponseEntity<?> activate(HttpServletRequest request, Principal principal) {
+        UserDTO userDTO = userDetailsService.loadUserByUsernameToDTO(principal.getName());
+        userDTO.setEnabled(true);
+        userService.update(userDTO);
+
         return ResponseEntity.ok().build();
     }
 

@@ -10,6 +10,8 @@ import com.bubbaTech.api.user.User;
 import com.bubbaTech.api.user.UserDTO;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDate;
+
 
 /**
  * Author: Matthew Groholski
@@ -30,15 +32,26 @@ public class Mapper {
         userDTO.setAccountCreated(user.getAccountCreated());
         userDTO.setLastLogin(user.getLastLogin());
         userDTO.setGrantedAuthorities(user.getGrantedAuthorities());
-        userDTO.setBirthDate(user.getBirthDate());
         userDTO.setDeviceId(user.getDeviceId());
 
-        try {
+        if (user.getLatitude() != null && user.getLongitude() != null) {
             userDTO.setLatitude(user.getLatitude());
             userDTO.setLongitude(user.getLongitude());
-        } catch (Exception exception) {
+        } else {
             userDTO.setLatitude(0);
             userDTO.setLongitude(0);
+        }
+
+        if (user.getBirthDate() == null) {
+            userDTO.setBirthDate(LocalDate.EPOCH);
+        } else {
+            userDTO.setBirthDate(user.getBirthDate());
+        }
+
+        if (user.getDeviceId() == null) {
+            userDTO.setDeviceId("");
+        } else {
+            userDTO.setDeviceId(user.getDeviceId());
         }
 
         return userDTO;
@@ -56,10 +69,9 @@ public class Mapper {
         user.setAccountCreated(userDTO.getAccountCreated());
         user.setLastLogin(userDTO.getLastLogin());
         user.setGrantedAuthorities(userDTO.getGrantedAuthorities());
-        user.setBirthDate(userDTO.getBirthDate());
-        user.setDeviceId(user.getDeviceId());
-        user.setLatitude(user.getLatitude());
-        user.setLongitude(user.getLongitude());
+        user.setDeviceId(userDTO.getDeviceId());
+        user.setLatitude(userDTO.getLatitude());
+        user.setLongitude(userDTO.getLongitude());
 
         return user;
     }

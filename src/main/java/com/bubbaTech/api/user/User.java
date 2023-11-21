@@ -39,6 +39,7 @@ public class User implements UserDetails {
     private Boolean enabled;
     private LocalDate accountCreated;
     private LocalDate lastLogin;
+    @Nullable
     private LocalDate birthDate;
     @Nullable
     @Column(name = "latitude")
@@ -46,6 +47,7 @@ public class User implements UserDetails {
     @Nullable
     @Column(name = "longitude")
     private Double longitude;
+    @Nullable
     @Column(name = "deviceId")
     private String deviceId;
 

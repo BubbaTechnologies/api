@@ -68,14 +68,24 @@ public class ClothingService {
 
     public List<ClothingDTO> getByIds(List<Long> clothingIds) throws ClothingNotFoundException {
         List<Optional<Clothing>> optionalItems = repository.getListByIds(clothingIds);
+
+        //Constructs map for optionalItems
+        Map<Long, Clothing> itemsMap = new HashMap<>();
+        for (Optional<Clothing> optionalClothing : optionalItems) {
+            //Check if item exists
+            if (optionalClothing.isPresent()) {
+                itemsMap.put(optionalClothing.get().getId(), optionalClothing.get());
+            }
+        }
+
+
         List<ClothingDTO> clothingDTOList = new ArrayList<>();
         for (int i = 0; i < optionalItems.size(); i++) {
-            Optional<Clothing> optionalItem = optionalItems.get(i);
-            //Check if image exists
-            if (optionalItem.isEmpty())
+            if (!itemsMap.containsKey(clothingIds.get(i)))
                 throw new ClothingNotFoundException(clothingIds.get(i));
+
             //Convert to DTO
-            ClothingDTO clothingDTOItem = mapper.clothingToClothingDTO(optionalItem.get());
+            ClothingDTO clothingDTOItem = mapper.clothingToClothingDTO(itemsMap.get(clothingIds.get(i)));
             //Attempts to show the first image presented
             List<String> imageUrls = clothingDTOItem.getImageURL();
             if (imageUrls.size() > 1)

@@ -350,11 +350,35 @@ public class AppController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping(value = "/delete")
+    public ResponseEntity<?> deleteUser(HttpServletRequest request, Principal principal) {
+        long startTime = System.currentTimeMillis();
+
+        UserDTO userDTO = getUserDTO(principal);
+        userDTO.setEnabled(false);
+        userService.update(userDTO);
+
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = "/activate")
+    public ResponseEntity<?> activate(HttpServletRequest request, Principal principal) {
+        long startTime = System.currentTimeMillis();
+
+        UserDTO userDTO = getUserDTO(principal);
+        userDTO.setEnabled(true);
+        userService.update(userDTO);
+
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().build();
+    }
+
     private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
         List<LikeDTO> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter, pageNumber);
         List<Long> ids = new ArrayList<>();
         for (LikeDTO like : likes)
-            ids.add(like.getId());
+            ids.add(like.getClothing().getId());
 
         List<ClothingDTO> items = clothingService.getByIds(ids);
 

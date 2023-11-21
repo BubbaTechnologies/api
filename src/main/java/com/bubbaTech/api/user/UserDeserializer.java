@@ -37,9 +37,13 @@ public class UserDeserializer extends StdDeserializer<UserDTO> {
         String birthdateString = node.get("birthdate").textValue();
         String[] splitBirthdate = birthdateString.split("-");
 
-        LocalDate birthdate = LocalDate.of(Integer.parseInt(splitBirthdate[0]), Integer.parseInt(splitBirthdate[1]), Integer.parseInt(splitBirthdate[2]));
+        LocalDate birthdate;
+        if (birthdateString.equals("null")) {
+            birthdate = null;
+        } else {
+            birthdate = LocalDate.of(Integer.parseInt(splitBirthdate[0]), Integer.parseInt(splitBirthdate[1]), Integer.parseInt(splitBirthdate[2]));
+        }
+
         return new UserDTO(username, password, genderType, birthdate);
     }
-
-
 }

@@ -145,7 +145,7 @@ public class LikeService {
         if (pageNumber == null) {
             pageRequest = Pageable.unpaged();
         } else {
-            pageRequest = PageRequest.of(pageNumber, AppController.PAGE_SIZE, Sort.Direction.DESC, "id");
+            pageRequest = PageRequest.of(pageNumber, AppController.PAGE_SIZE, Sort.by("id").descending());
         }
 
         Page<Like> likePage;
@@ -160,10 +160,8 @@ public class LikeService {
         }
 
         //Converts likes to likeDTO
-        int count = 0;
         List<LikeDTO> likeDTOList = new ArrayList<>();
         for (Like like : likePage.getContent()) {
-            count += 1;
             likeDTOList.add(mapper.likeToLikeDTO(like));
         }
         return likeDTOList;

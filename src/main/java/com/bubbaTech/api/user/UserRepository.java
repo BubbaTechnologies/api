@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Query("SELECT u FROM User u WHERE u.username = ?1")
+    @Query("SELECT u FROM User u WHERE u.username = ?1 AND u.enabled = true")
     Optional<User> findByEmail(String email);
 
     @Query("SELECT u FROM User u WHERE u.lastLogin >= :beforeDate")
@@ -20,6 +20,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.accountCreated >= :beforeDate")
     List<User> lastDaySignUps(LocalDate beforeDate);
+
+
 
 //    @Query("DELETE FROM Like l WHERE l.user.id = ?1")
 //    @Modifying

@@ -509,6 +509,22 @@ Request:
 
 Response: If requests succeed 200.
 
+### /app/activate
+Mapping: POST
+
+Description: Updates a users location.
+
+Request:
+```
+{
+    "latitude":Double,
+    "longitude":Double
+}
+```
+
+Response: If requests succeed 200.
+
+
 ### /app/updateDeviceId
 Mapping: POST
 
