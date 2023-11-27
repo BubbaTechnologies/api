@@ -60,7 +60,6 @@ public class GenericController {
         return ResponseEntity.status(302).build();
     }
 
-
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest request)  {
         try {
@@ -144,6 +143,11 @@ public class GenericController {
         userService.update(userDTO);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value="/browsing")
+    public ResponseEntity<?> inAppBrowsing(HttpServletRequest request, Principal principal) {
+        return ResponseEntity.badRequest().build();
     }
 
     private String generateVerificationCode(String email) {

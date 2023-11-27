@@ -43,7 +43,7 @@ public class Mapper {
         }
 
         if (user.getBirthDate() == null) {
-            userDTO.setBirthDate(LocalDate.EPOCH);
+            userDTO.setBirthDate(LocalDate.of(1,1,1));
         } else {
             userDTO.setBirthDate(user.getBirthDate());
         }

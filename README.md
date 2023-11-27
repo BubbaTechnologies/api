@@ -73,6 +73,14 @@ Request Body:
 
 Response: 200 if sent.
 
+### /browsing
+
+Mapping: GET
+
+Description: Determines what type of browsing the front-end is using.
+
+Return Codes: 200 if true, 400 if false.
+
 ### /create
 
 Mapping: POST

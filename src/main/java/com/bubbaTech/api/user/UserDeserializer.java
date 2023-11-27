@@ -39,7 +39,7 @@ public class UserDeserializer extends StdDeserializer<UserDTO> {
 
         LocalDate birthdate;
         if (birthdateString.equals("null")) {
-            birthdate = null;
+            birthdate = LocalDate.of(1,1,1);
         } else {
             birthdate = LocalDate.of(Integer.parseInt(splitBirthdate[0]), Integer.parseInt(splitBirthdate[1]), Integer.parseInt(splitBirthdate[2]));
         }

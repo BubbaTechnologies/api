@@ -21,24 +21,24 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     @Query("DELETE FROM Like l WHERE l.user.id = ?2 AND l.clothing.id = ?1")
     @Modifying
     void delete(long clothingId, long userId);
-    @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3")
+    @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.store.enabled = true")
     Long countByUserId(long userId, boolean liked, boolean bought);
-    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3")
+    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.store.enabled = true")
     Page<Like> findAllByUserId(long userId, boolean liked, boolean bought, Pageable pageable);
-    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.clothingType IN ?4")
+    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.clothingType IN ?4 AND l.clothing.store.enabled = true")
     Page<Like> findAllByUserIdWithTypes(long userId, boolean liked, boolean bought, List<ClothType> type, Pageable pageable);
-    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4")
+    @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4 AND l.clothing.store.enabled = true")
     Page<Like> findAllByUserIdWithGender(long userId, boolean liked, boolean bought, Gender gender, Pageable pageable);
     @Query("SELECT l FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4 AND l.clothing.clothingType" +
-            " IN ?5")
+            " IN ?5 AND l.clothing.store.enabled = true")
     Page<Like> findAllByUserIdWithGenderAndTypes(long userId, boolean liked, boolean bought, Gender gender, List<ClothType> type, Pageable pageable);
     @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4 AND l.clothing.clothingType" +
-            " IN ?5")
+            " IN ?5 AND l.clothing.store.enabled = true")
     Long countAllByUserIdWithGenderAndTypes(long userId, boolean liked, boolean bought, Gender gender, List<ClothType> type);
-    @Query("SELECT count(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3")
+    @Query("SELECT count(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.store.enabled = true")
     Long countAllByUserId(long userId, boolean liked, boolean bought);
-    @Query("SELECT count(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.clothingType IN ?4")
+    @Query("SELECT count(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.clothingType IN ?4 AND l.clothing.store.enabled = true")
     Long countAllByUserIdWithTypes(long userId, boolean liked, boolean bought, List<ClothType> type);
-    @Query("SELECT count(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4")
+    @Query("SELECT count(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4 AND l.clothing.store.enabled = true")
     Long countAllByUserIdWithGender(long userId, boolean liked, boolean bought, Gender gender);
 }
