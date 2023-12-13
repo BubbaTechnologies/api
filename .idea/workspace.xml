@@ -4,15 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="">
+    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="FEATURE: Added store enabled checking for likes.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/responseObjects/clothingListResponse/ClothingListResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/responseObjects/clothingListResponse/ClothingListResponseSerializer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/generic/GenericController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/generic/GenericController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/mapping/Mapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/mapping/Mapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDeserializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingSerializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -345,7 +344,12 @@
       <workItem from="1700845854201" duration="1075000" />
       <workItem from="1700856965219" duration="1275000" />
       <workItem from="1701021710020" duration="2515000" />
-      <workItem from="1701099777838" duration="838000" />
+      <workItem from="1701099777838" duration="1732000" />
+      <workItem from="1701230225657" duration="1574000" />
+      <workItem from="1701323519046" duration="4878000" />
+      <workItem from="1701380591726" duration="821000" />
+      <workItem from="1702428643642" duration="943000" />
+      <workItem from="1702439430685" duration="6374000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -613,14 +617,6 @@
       <option name="project" value="LOCAL" />
       <updated>1686703978706</updated>
     </task>
-    <task id="LOCAL-00056" summary="DOC: Added documentation for design patterns.">
-      <option name="closed" value="true" />
-      <created>1698902899557</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1698902899559</updated>
-    </task>
     <task id="LOCAL-00057" summary="BUG: Optimized /likes response time. Added custom mapping between entities and their respective DTOs.">
       <option name="closed" value="true" />
       <created>1699123624752</created>
@@ -701,7 +697,15 @@
       <option name="project" value="LOCAL" />
       <updated>1700543237278</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="FEATURE: Added store enabled checking for likes.">
+      <option name="closed" value="true" />
+      <created>1701101374403</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1701101374404</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -723,7 +727,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Fixed problems with User, UserDTO, /create, and /login." />
     <MESSAGE value="Fixed bugs with recommend card." />
     <MESSAGE value="Fixed bugs with serializer." />
     <MESSAGE value="Updated app/image and app/images" />
@@ -748,7 +751,8 @@
     <MESSAGE value="FEATURE: Added deviceId to user." />
     <MESSAGE value="BUG: Fixed bug in update." />
     <MESSAGE value="FEATURE: Added optional birthdate to user." />
-    <option name="LAST_COMMIT_MESSAGE" value="FEATURE: Added optional birthdate to user." />
+    <MESSAGE value="FEATURE: Added store enabled checking for likes." />
+    <option name="LAST_COMMIT_MESSAGE" value="FEATURE: Added store enabled checking for likes." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

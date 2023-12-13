@@ -23,6 +23,7 @@ public class ClothingSerializer extends StdSerializer<ClothingDTO> {
 
     @Override
     public final void serialize(ClothingDTO clothingDTO, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        jsonGenerator.writeStartObject();
         jsonGenerator.writeNumberField("id", clothingDTO.getId());
         //Processes name
         jsonGenerator.writeStringField("name", removeDescriptors(clothingDTO.getName()));
@@ -36,6 +37,7 @@ public class ClothingSerializer extends StdSerializer<ClothingDTO> {
         jsonGenerator.writeStringField("type", clothingDTO.getType().toString());
         jsonGenerator.writeStringField("gender", clothingDTO.getGender().toString());
         jsonGenerator.writeStringField("date", clothingDTO.getDate().toString());
+        jsonGenerator.writeEndObject();
     }
 
     public String removeDescriptors(String string) {

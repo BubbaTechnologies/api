@@ -5,6 +5,7 @@
 package com.bubbaTech.api.app;
 
 import com.bubbaTech.api.actuator.RouteResponseTimeEndpoint;
+import com.bubbaTech.api.app.responseObjects.clothingListResponse.ClothingListResponse;
 import com.bubbaTech.api.clothing.ClothingDTO;
 import com.bubbaTech.api.clothing.ClothingListType;
 import com.bubbaTech.api.clothing.ClothingService;
@@ -56,42 +57,65 @@ public class AppController {
     private final RouteResponseTimeEndpoint routeResponseTimeEndpoint;
 
 
-    //Clothing card for user based on sessionId
+    /**
+     * @param principal - The user requesting.
+     * @param request - The request.
+     * @param typeFilter - The filter of clothingType being applied.
+     * @param genderFilter - The filter of gender being applied.
+     * @return - A response entity of the clothingDTO.
+     */
     @GetMapping(value = "/card", produces = "application/json")
-    public EntityModel<ClothingDTO> card(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
+    public ResponseEntity<ClothingDTO> card(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
         long startTime = System.currentTimeMillis();
         ClothingDTO response = clothingService.getCard(this.getUserId(principal), typeFilter, genderFilter);
         logger.info("/app/card: After clothingService get card: " + (System.currentTimeMillis() - startTime));
         response.reverseImageList();
         logger.info("/app/card: After clothingService reverseImage: " + (System.currentTimeMillis() - startTime));
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
-        return EntityModel.of(response);
+        return ResponseEntity.ok(response);
     }
 
+    /**
+     * Provides a server status to options request.
+     * @return - Returns server status.
+     */
     @RequestMapping(value = "/card", method = RequestMethod.OPTIONS)
     public ResponseEntity<?> optionsRequest() {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     *
+     * @param principal - User requesting.
+     * @param request - Request information.
+     * @param typeFilter - Clothing type filter applied to query.
+     * @param genderFilter - Gender filter applied to query.
+     * @return - A response entity representing the cardList:
+     *  {
+     *      "clothingList":[clothingDTO],
+     *      "totalPageCount":-1
+     *  }
+     */
     @GetMapping(value = "/cardList", produces = "application/json")
-    public CollectionModel<EntityModel<?>> getCardList(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
+    public ResponseEntity<?> getCardList(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
         long startTime = System.currentTimeMillis();
-
         List<ClothingDTO> items = clothingService.recommendClothingList(this.getUserId(principal), typeFilter, genderFilter, false);
-        List<EntityModel<?>> entityModelList = new ArrayList<>();
-        try {
-            for (ClothingDTO item : items) {
-                entityModelList.add(EntityModel.of(item));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-        }
+        ClothingListResponse response = new ClothingListResponse(items, (long) -1);
 
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
-        return CollectionModel.of(entityModelList);
+        return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/previews")
+    public ResponseEntity<?> previewList(HttpServletRequest request) {
+        long startTime = System.currentTimeMillis();
+        List<ClothingDTO> items = clothingService.getPreviewClothing();
+        ClothingListResponse response = new ClothingListResponse(items, (long) -1);
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok(response);
+    }
+
+    @Deprecated
     @GetMapping(value = "/totalPages", produces="application/json")
     public ResponseEntity<?> getTotalPages(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value="queryType", required = true) String queryType) {
         long startTime = System.currentTimeMillis();
@@ -118,18 +142,22 @@ public class AppController {
 
     //Liked list for user based on sessionId
     @GetMapping(value = "/likes", produces = "application/json")
-    public CollectionModel<EntityModel<ClothingDTO>> likes(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value = "page", required = false) Integer pageNumber) {
+    public ResponseEntity<?> likes(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value = "page", required = false) Integer pageNumber) {
         long startTime = System.currentTimeMillis();
-        CollectionModel<EntityModel<ClothingDTO>> likesList = getClothingList(this.getUserId(principal), ClothingListType.LIKE, typeFilter, genderFilter, pageNumber);
+        List<ClothingDTO> likesList = getClothingListAsList(this.getUserId(principal), ClothingListType.LIKE, typeFilter, genderFilter, pageNumber);
+        long totalPages = likeService.getPageCount(this.getUserId(principal), ClothingListType.LIKE, typeFilter, genderFilter);
+
+        ClothingListResponse responseObject = new ClothingListResponse(likesList, totalPages);
+
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
-        return likesList;
+        return ResponseEntity.ok(responseObject);
     }
 
     //Collection for user based on sessionId
     @GetMapping(value = "/collection", produces = "application/json")
     public CollectionModel<EntityModel<ClothingDTO>> collection(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value = "page", required = false) int pageNumber) {
         long startTime = System.currentTimeMillis();
-        CollectionModel<EntityModel<ClothingDTO>> collectionList = getClothingList(this.getUserId(principal), ClothingListType.BOUGHT, typeFilter, genderFilter, pageNumber);
+        CollectionModel<EntityModel<ClothingDTO>> collectionList = getClothingListAsCollectionModel(this.getUserId(principal), ClothingListType.BOUGHT, typeFilter, genderFilter, pageNumber);
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return collectionList;
     }
@@ -374,7 +402,26 @@ public class AppController {
         return ResponseEntity.ok().build();
     }
 
-    private CollectionModel<EntityModel<ClothingDTO>> getClothingList(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
+    /**
+     * @param userId: A long representing the user's id.
+     * @param listType: A ClothingListType that represents which like is being queried.
+     * @param typeFilter: A string representing the typeFilter applied to the query.
+     * @param genderFilter: A string representing the genderFilter applied to the query.
+     * @param pageNumber: An integer representing the pageNumber being queried.
+     * @return: A list of ClothingDTO representing the clothing of listType queried.
+     */
+    private List<ClothingDTO> getClothingListAsList(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
+        List<LikeDTO> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter, pageNumber);
+        List<Long> ids = new ArrayList<>();
+        for (LikeDTO like : likes)
+            ids.add(like.getClothing().getId());
+
+        List<ClothingDTO> items = clothingService.getByIds(ids);
+
+        return items;
+    }
+
+    private CollectionModel<EntityModel<ClothingDTO>> getClothingListAsCollectionModel(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
         List<LikeDTO> likes = likeService.getAllByUserId(userId, listType, typeFilter, genderFilter, pageNumber);
         List<Long> ids = new ArrayList<>();
         for (LikeDTO like : likes)

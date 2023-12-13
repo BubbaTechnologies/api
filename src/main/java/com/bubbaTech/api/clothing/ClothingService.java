@@ -56,7 +56,6 @@ public class ClothingService {
     @Value("${system.recommendation_system_addr}")
     public String recommendationSystemAddr;
 
-
     public ClothingDTO getById(long clothingId) throws ClothingNotFoundException {
         Optional<Clothing> item = repository.findById(clothingId);
         if (item.isEmpty())
@@ -96,6 +95,42 @@ public class ClothingService {
         return clothingDTOList;
     }
 
+    public List<ClothingDTO> getPreviewClothing() {
+        try {
+            StringBuilder urlString = new StringBuilder("http://" + recommendationSystemAddr + "/previewList");
+            URL url = new URL(urlString.toString());
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 200) {
+                String errorMessage = "Unable to connect to recommendation system.";
+                logger.error(errorMessage);
+                throw new Exception(errorMessage);
+            }
+
+            JSONObject jsonResponse = getConnectionResponse(connection);
+            JSONArray clothingIdArray = (JSONArray) jsonResponse.get("clothingIds");
+            List<Long> idList = new ArrayList<>();
+            for (Object id : clothingIdArray) {
+                idList.add((Long) id);
+            }
+
+            List<Optional<Clothing>> items = repository.getListByIds(idList);
+
+            //Converts List<Clothing> to List<ClothingDTO>
+            List<ClothingDTO> itemsDTO = new ArrayList<>();
+            for (Optional<Clothing> item : items) {
+                item.ifPresent(clothing -> itemsDTO.add(mapper.clothingToClothingDTO(clothing)));
+            }
+
+            return itemsDTO;
+        } catch (Exception e) {
+            logger.error(Arrays.toString(e.getStackTrace()));
+        }
+        return null;
+    }
 
     public List<ClothingDTO> recommendClothingList(long userId, String typeFilter, String genderFilter, Boolean singleItem){
         Gender gender = genderStringToEnum(userId, genderFilter);
@@ -145,7 +180,7 @@ public class ClothingService {
 
             return itemsDTO;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(Arrays.toString(e.getStackTrace()));
         }
         return null;
     }
