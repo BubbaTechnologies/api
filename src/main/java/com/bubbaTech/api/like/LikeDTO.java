@@ -29,12 +29,12 @@ public class LikeDTO implements DTO<LikeDTO> {
     private boolean liked;
     private boolean bought;
     @JsonIgnore
-    private double imageTapsRatio;
+    private int imageTaps;
 
     public LikeDTO() {}
 
-    public LikeDTO(ClothingDTO clothing, double imageTapsRatio) {
+    public LikeDTO(ClothingDTO clothing, int imageTaps) {
         this.clothing = clothing;
-        this.imageTapsRatio = imageTapsRatio;
+        this.imageTaps = imageTaps;
     }
 }

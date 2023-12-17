@@ -305,7 +305,7 @@ public class ClothingService {
                 genders.add(gender);
                 List<ClothType> typeList = new ArrayList<>();
                 for (ClothType type : ClothType.values()) {
-                    if (repository.countByGenderAndTypes(gender, new ArrayList<>(List.of(type)), TIME_RESTRICTION) > 0) {
+                    if (repository.countByGenderAndTypes(gender, new ArrayList<>(List.of(type)), TIME_RESTRICTION) > 5) {
                         typeList.add(type);
                     }
                 }

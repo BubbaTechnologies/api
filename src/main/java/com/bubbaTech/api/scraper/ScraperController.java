@@ -11,7 +11,6 @@ import com.bubbaTech.api.clothing.ClothingService;
 import com.bubbaTech.api.store.StoreDTO;
 import com.bubbaTech.api.store.StoreService;
 import lombok.AllArgsConstructor;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -89,6 +88,6 @@ public class ScraperController {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        return ResponseEntity.ok().headers(headers).body(EntityModel.of(clothing));
+        return ResponseEntity.ok().headers(headers).body(clothing);
     }
 }

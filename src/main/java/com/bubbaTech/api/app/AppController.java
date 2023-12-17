@@ -106,8 +106,13 @@ public class AppController {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("/previews")
-    public ResponseEntity<?> previewList(HttpServletRequest request) {
+    /**
+     * Provides preview clothing.
+     * @param request - Request information.
+     * @return - ResponseEntity containing the ClothingListResponse.
+     */
+    @GetMapping("/preview")
+    public ResponseEntity<ClothingListResponse> previewList(HttpServletRequest request) {
         long startTime = System.currentTimeMillis();
         List<ClothingDTO> items = clothingService.getPreviewClothing();
         ClothingListResponse response = new ClothingListResponse(items, (long) -1);
@@ -175,7 +180,7 @@ public class AppController {
         logger.info("/app/like: After service user queries: " + (System.currentTimeMillis() - startTime));
 
         //Sets like to like rating + imageTapRatio
-        newLike.setRating(Ratings.LIKE_RATING + min(newLike.getImageTapsRatio() * Ratings.TOTAL_IMAGE_TAP_RATING, Ratings.TOTAL_IMAGE_TAP_RATING));
+        newLike.setRating(Ratings.LIKE_RATING + min(newLike.getImageTaps() * Ratings.TOTAL_IMAGE_TAP_RATING, Ratings.TOTAL_IMAGE_TAP_RATING));
         newLike.setLiked(true);
 
         logger.info("/app/like: After like settings: " + (System.currentTimeMillis() - startTime));

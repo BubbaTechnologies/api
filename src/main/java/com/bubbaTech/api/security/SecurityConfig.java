@@ -60,7 +60,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/create", "/login", "/health", "/logout", "/app/image", "/app/filterOptions", "/verify", "/browsing").permitAll()
+                        .requestMatchers("/", "/create", "/login", "/health", "/logout", "/app/image", "/app/filterOptions", "/verify", "/browsing", "/app/preview").permitAll()
                         .requestMatchers("/ai/**").hasAuthority("AI")
                         .requestMatchers("/app/**").hasAuthority("USER")
                         .requestMatchers("/scraper/**").hasAuthority("SCRAPER")

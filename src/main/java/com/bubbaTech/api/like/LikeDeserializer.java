@@ -20,8 +20,8 @@ public class LikeDeserializer extends JsonDeserializer<LikeDTO> {
     @Override
     public LikeDTO deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
-        double imageTapsRatio = node.get("imageTapRatio").asDouble();
+        int imageTaps = node.get("imageTaps").asInt();
         long clothingId = node.get("clothingId").asInt();
-        return new LikeDTO(new ClothingDTO(clothingId), imageTapsRatio);
+        return new LikeDTO(new ClothingDTO(clothingId), imageTaps);
     }
 }
