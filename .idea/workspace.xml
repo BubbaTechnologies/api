@@ -6,12 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeDeserializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/scraper/ScraperController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/scraper/ScraperController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/statEmailList.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/statEmailList.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -352,6 +348,9 @@
       <workItem from="1702439430685" duration="7013000" />
       <workItem from="1702504484036" duration="1669000" />
       <workItem from="1702535992712" duration="977000" />
+      <workItem from="1702833833533" duration="828000" />
+      <workItem from="1704383711240" duration="1226000" />
+      <workItem from="1704387338161" duration="511000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -619,14 +618,6 @@
       <option name="project" value="LOCAL" />
       <updated>1686703978706</updated>
     </task>
-    <task id="LOCAL-00058" summary="FEATURE: Added average response time tracking for /app routes.">
-      <option name="closed" value="true" />
-      <created>1699127347078</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1699127347078</updated>
-    </task>
     <task id="LOCAL-00059" summary="FEATURE: Feature added daily metrics to email.">
       <option name="closed" value="true" />
       <created>1699146673983</created>
@@ -707,7 +698,15 @@
       <option name="project" value="LOCAL" />
       <updated>1702447797862</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="BUG: Updated minimum count for filter options.">
+      <option name="closed" value="true" />
+      <created>1702833932702</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1702833932702</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -729,7 +728,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Updated app/image and app/images" />
     <MESSAGE value="Moved around request permissions." />
     <MESSAGE value="Updated ClothingService to a transactional service. Allowed lazy loading for tags and image urls." />
     <MESSAGE value="Updated ClothingService to load images faster." />
@@ -754,7 +752,8 @@
     <MESSAGE value="FEATURE: Added store enabled checking for likes." />
     <MESSAGE value="FEATURE: Added /preview" />
     <MESSAGE value="FEATURE: Added /previews, fixed ClothingListResponse" />
-    <option name="LAST_COMMIT_MESSAGE" value="FEATURE: Added /previews, fixed ClothingListResponse" />
+    <MESSAGE value="BUG: Updated minimum count for filter options." />
+    <option name="LAST_COMMIT_MESSAGE" value="BUG: Updated minimum count for filter options." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

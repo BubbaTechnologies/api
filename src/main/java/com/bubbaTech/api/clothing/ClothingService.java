@@ -42,6 +42,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ClothingService {
     private final static int WEEKS_AGO = 3;
+    private final static int MIN_COUNT = 4;
 
     @NonNull
     private final ClothingRepository repository;
@@ -55,6 +56,8 @@ public class ClothingService {
     private final Mapper mapper;
     @Value("${system.recommendation_system_addr}")
     public String recommendationSystemAddr;
+
+
 
     public ClothingDTO getById(long clothingId) throws ClothingNotFoundException {
         Optional<Clothing> item = repository.findById(clothingId);
@@ -298,14 +301,19 @@ public class ClothingService {
         List<Gender> genders = new ArrayList<>();
         List<List<ClothType>> typesPerGender = new ArrayList<>();
 
+        List<Gender> acceptableGenders = new ArrayList<>();
+        acceptableGenders.add(Gender.FEMALE);
+        acceptableGenders.add(Gender.MALE);
+        acceptableGenders.add(Gender.UNISEX);
+
         LocalDate TIME_RESTRICTION = LocalDate.now().minusWeeks(WEEKS_AGO);
 
-        for (Gender gender : Gender.values()) {
-            if (repository.countByGender(gender, TIME_RESTRICTION) > 0) {
+        for (Gender gender : acceptableGenders) {
+            if (repository.countByGender(gender, TIME_RESTRICTION) > MIN_COUNT) {
                 genders.add(gender);
                 List<ClothType> typeList = new ArrayList<>();
                 for (ClothType type : ClothType.values()) {
-                    if (repository.countByGenderAndTypes(gender, new ArrayList<>(List.of(type)), TIME_RESTRICTION) > 5) {
+                    if (repository.countByGenderAndTypes(gender, new ArrayList<>(List.of(type)), TIME_RESTRICTION) > MIN_COUNT) {
                         typeList.add(type);
                     }
                 }
@@ -318,7 +326,7 @@ public class ClothingService {
         for (ClothType type :  ClothType.values()) {
             ArrayList<ClothingTag> tagList = new ArrayList<>();
             for (ClothingTag tag : ClothingTag.values()) {
-                if (repository.countByTypeAndTag(type, tag, TIME_RESTRICTION) > 0) {
+                if (repository.countByTypeAndTag(type, tag, TIME_RESTRICTION) > MIN_COUNT) {
                     tagList.add(tag);
                 }
             }
