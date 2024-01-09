@@ -147,7 +147,7 @@ public class GenericController {
 
     @GetMapping(value="/browsing")
     public ResponseEntity<?> inAppBrowsing(HttpServletRequest request, Principal principal) {
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok().build();
     }
 
     private String generateVerificationCode(String email) {

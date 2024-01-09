@@ -8,6 +8,8 @@ import com.bubbaTech.api.app.AppController;
 import com.bubbaTech.api.clothing.ClothType;
 import com.bubbaTech.api.clothing.Clothing;
 import com.bubbaTech.api.clothing.ClothingListType;
+import com.bubbaTech.api.clothing.ClothingTag;
+import com.bubbaTech.api.filterOptions.FilterOptionsDTO;
 import com.bubbaTech.api.mapping.Mapper;
 import com.bubbaTech.api.user.Gender;
 import com.bubbaTech.api.user.User;
@@ -24,9 +26,7 @@ import org.springframework.stereotype.Service;
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -173,6 +173,27 @@ public class LikeService {
             throw new LikeNotFoundException(String.format("No like found with clothingId %d and userId %d", clothingId, userId));
 
         return mapper.likeToLikeDTO(like.get());
+    }
+
+    /**
+     * Gets custom filter options by the items liked for the userId.
+     * @param userId: A long representing the userId querying likes for.
+     * @return: A filter options DTO with the corresponding types.
+     */
+    public FilterOptionsDTO getFilterOptionsByLikes(long userId) {
+        Pageable pageRequest = Pageable.unpaged();;
+        Map<Gender, Map<ClothType, List<ClothingTag>>> filterInformation = new HashMap<>();
+        List<Gender> genders = repository.getAllUniqueGenders(userId);
+        for (Gender gender: genders) {
+            Map<ClothType, List<ClothingTag>> tagMap = new HashMap<>();
+            List<ClothType> uniqueTypes = repository.getAllUniqueTypesByGender(userId, gender);
+            for (ClothType type : uniqueTypes) {
+                tagMap.put(type, repository.getAllUniqueTagsByTypeAndGender(userId, gender, type));
+            }
+            filterInformation.put(gender, tagMap);
+        }
+
+        return new FilterOptionsDTO(filterInformation);
     }
 
     @Async

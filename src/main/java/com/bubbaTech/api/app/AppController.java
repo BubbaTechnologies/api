@@ -76,7 +76,7 @@ public class AppController {
     }
 
     /**
-     * Provides a server status to options request.
+     * Provides server status to options request.
      * @return - Returns server status.
      */
     @RequestMapping(value = "/card", method = RequestMethod.OPTIONS)
@@ -145,7 +145,34 @@ public class AppController {
         return ResponseEntity.ok(response);
     }
 
-    //Liked list for user based on sessionId
+
+    /**
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param typeFilter: The type filter for the type of likes requested.
+     * @param genderFilter: The gender filter for the type of likes requested.
+     * @param pageNumber: The page number requested.
+     * @return:
+     * {
+     *      "clothingList": [
+     *             {
+     *                 "id":int,
+     *                 "name":str,
+     *                 "imageURL":[str],
+     *                 "productURL":str,
+     *                 "store": {
+     *                     "id":int,
+     *                     "name":str,
+     *                     "url":str
+     *                 },
+     *                 "type":str,
+     *                 "gender":str,
+     *                 "date":str
+     *             }
+     *         ],
+     *      "totalPageCount": Long
+     * }
+     */
     @GetMapping(value = "/likes", produces = "application/json")
     public ResponseEntity<?> likes(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value = "page", required = false) Integer pageNumber) {
         long startTime = System.currentTimeMillis();
@@ -158,7 +185,34 @@ public class AppController {
         return ResponseEntity.ok(responseObject);
     }
 
-    //Collection for user based on sessionId
+    /**
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param typeFilter: The type filter for the type of collection requested.
+     * @param genderFilter: The gender filter for the type of likes requested.
+     * @param pageNumber: The page number requested.
+     * @return:
+     * {
+     *     "_embedded": {
+     *         "clothingDTOList": [
+     *             {
+     *                 "id":int,
+     *                 "name":str,
+     *                 "imageURL": [str],
+     *                 "productURL": str,
+     *                 "store": {
+     *                     "id": int,
+     *                     "name": str,
+     *                     "url": str
+     *                 },
+     *                 "type": str,
+     *                 "gender": str,
+     *                 "date":str
+     *             }
+     *         ]
+     *     }
+     * }
+     */
     @GetMapping(value = "/collection", produces = "application/json")
     public CollectionModel<EntityModel<ClothingDTO>> collection(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value = "page", required = false) int pageNumber) {
         long startTime = System.currentTimeMillis();
@@ -167,61 +221,79 @@ public class AppController {
         return collectionList;
     }
 
-    //Deals with app like
+    /**
+     * @param newLike: A LikeDTO representing new like data. Check LikeDeserializer for communication information.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @return:
+     * {
+     *     "id": int,
+     *     "date": string,
+     *     "liked": bool,
+     *     "bought": bool
+     * }
+     */
     @PostMapping(value = "/like", produces = "application/json")
     public ResponseEntity<?> like(@RequestBody LikeDTO newLike, HttpServletRequest request, Principal principal){
         long startTime = System.currentTimeMillis();
         newLike.setClothing(clothingService.getById(newLike.getClothing().getId()));
 
-        logger.info("/app/like: After service clothing  queries: " + (System.currentTimeMillis() - startTime));
-
         newLike.setUser(getUserDTO(principal));
-
-        logger.info("/app/like: After service user queries: " + (System.currentTimeMillis() - startTime));
 
         //Sets like to like rating + imageTapRatio
         newLike.setRating(Ratings.LIKE_RATING + min(newLike.getImageTaps() * Ratings.TOTAL_IMAGE_TAP_RATING, Ratings.TOTAL_IMAGE_TAP_RATING));
         newLike.setLiked(true);
 
-        logger.info("/app/like: After like settings: " + (System.currentTimeMillis() - startTime));
-
         EntityModel<LikeDTO> like = EntityModel.of(likeService.create(newLike));
-
-        logger.info("/app/like: After like creation: " + (System.currentTimeMillis() - startTime));
-
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok().body(like);
     }
 
+    /**
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param newLike: LikeDTO representing new like data. Check LikeDeserializer for communication information.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @return:
+     * {
+     *     "id": int,
+     *     "date": string,
+     *     "liked": bool,
+     *     "bought": bool
+     * }
+     */
     @PostMapping(value = "/dislike", produces = "application/json")
     public ResponseEntity<?> dislike(HttpServletRequest request, @RequestBody LikeDTO newLike, Principal principal) {
         long startTime = System.currentTimeMillis();
         newLike.setClothing(clothingService.getById(newLike.getClothing().getId()));
         newLike.setUser(getUserDTO(principal));
 
-        logger.info("/app/dislike: After service queries: " + (System.currentTimeMillis() - startTime));
-
         //Sets like to dislike rating
         newLike.setRating(Ratings.DISLIKE_RATING);
         newLike.setLiked(false);
 
-        logger.info("/app/dislike: After like settings: " + (System.currentTimeMillis() - startTime));
-
         EntityModel<LikeDTO> like = EntityModel.of(likeService.create(newLike));
-
-        logger.info("/app/dislike: After creation: " + (System.currentTimeMillis() - startTime));
 
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok().body(like);
     }
 
+    /**
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param newLike: LikeDTO representing new like data. Check LikeDeserializer for communication information.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @return:
+     * {
+     *     "id": int,
+     *     "date": string,
+     *     "liked": bool,
+     *     "bought": bool
+     * }
+     */
     @PostMapping(value = "/removeLike", produces = "application/json")
     public ResponseEntity<?> removeLike(HttpServletRequest request, @RequestBody LikeDTO newLike, Principal principal) {
         long startTime = System.currentTimeMillis();
         newLike.setClothing(clothingService.getById(newLike.getClothing().getId()));
         newLike.setUser(getUserDTO(principal));
-
-        logger.info("/app/removeLike: After service queries: " + (System.currentTimeMillis() - startTime));
 
         //Sets like to remove like rating
         newLike.setRating(Ratings.REMOVE_LIKE_RATING);
@@ -233,16 +305,24 @@ public class AppController {
             newLike.setBought(false);
         }
 
-        logger.info("/app/removeLike: After like settings: " + (System.currentTimeMillis() - startTime));
-
         EntityModel<LikeDTO> like = EntityModel.of(likeService.create(newLike));
-
-        logger.info("/app/removeLike: After creation: " + (System.currentTimeMillis() - startTime));
 
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok().body(like);
     }
 
+    /**
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param newLike: LikeDTO representing new like data. Check LikeDeserializer for communication information.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @return:
+     * {
+     *     "id": int,
+     *     "date": string,
+     *     "liked": bool,
+     *     "bought": bool
+     * }
+     */
     @PostMapping(value = "/bought", produces = "application/json")
     public ResponseEntity<?> bought(HttpServletRequest request, @RequestBody LikeDTO newLike, Principal principal) {
         long startTime = System.currentTimeMillis();
@@ -264,6 +344,18 @@ public class AppController {
         return ResponseEntity.ok().body(like);
     }
 
+    /**
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param newLike: LikeDTO representing new like data. Check LikeDeserializer for communication information.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @return:
+     * {
+     *     "id": int,
+     *     "date": string,
+     *     "liked": bool,
+     *     "bought": bool
+     * }
+     */
     @PostMapping(value = "/pageClick", produces = "application/json")
     public ResponseEntity<?> pageClick(HttpServletRequest request, @RequestBody LikeDTO newLike, Principal principal) {
         long startTime = System.currentTimeMillis();
@@ -285,6 +377,11 @@ public class AppController {
         return ResponseEntity.ok().body(like);
     }
 
+    /**
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @return: A 200 response if valid token.
+     */
     @GetMapping(value="/checkToken")
     public ResponseEntity<?> checkToken(HttpServletRequest request, Principal principal) {
         long startTime = System.currentTimeMillis();
@@ -294,6 +391,7 @@ public class AppController {
         return ResponseEntity.ok().build();
     }
 
+    @Deprecated
     @GetMapping(value="/image")
     public ResponseEntity<byte[]> redirectToImageProcessing(HttpServletRequest request, @RequestParam(value = "clothingId", required = true) int clothingId, @RequestParam(value = "imageId", required = true) int imageId) {
         long startTime = System.currentTimeMillis();
@@ -313,7 +411,7 @@ public class AppController {
         return returnEntity;
     }
 
-
+    @Deprecated
     @GetMapping(value="/images", produces = "application/json")
     public ResponseEntity<?> beginImageProcessing(HttpServletRequest request, @RequestParam(value="clothingId", required = true) int clothingId) {
         long startTime = System.currentTimeMillis();
@@ -347,6 +445,17 @@ public class AppController {
         return responseEntity;
     }
 
+    /**
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @return:
+     * {
+     *     "genders":[str],
+     *     "types":[[str]],
+     *     "tags": {
+     *         type:[str]
+     *     }
+     * }
+     */
     @GetMapping(value="/filterOptions", produces = "application/json")
     public ResponseEntity<?> filterOptions(HttpServletRequest request) {
         long startTime = System.currentTimeMillis();
@@ -355,6 +464,27 @@ public class AppController {
         return responseEntity;
     }
 
+    /**
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @return:
+     * {
+     *     "genders":[str],
+     *     "types":[[str]],
+     *     "tags": {
+     *         type:[str]
+     *     }
+     * }
+     */
+    @GetMapping(value = "/likesFilterOptions", produces = "application/json")
+    public ResponseEntity<?> likeFilterOptions(HttpServletRequest request, Principal principal) {
+        long startTime = System.currentTimeMillis();
+        long userId = getUserId(principal);
+
+        ResponseEntity<?> responseEntity = ResponseEntity.ok().body(likeService.getFilterOptionsByLikes(userId));
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return responseEntity;
+    }
     @PostMapping(value="/updateLocation")
     public ResponseEntity<?> updateLocation(HttpServletRequest request, Principal principal, @RequestBody Map<String, Double> locationInformation) {
         long startTime = System.currentTimeMillis();
@@ -406,6 +536,8 @@ public class AppController {
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok().build();
     }
+
+
 
     /**
      * @param userId: A long representing the user's id.

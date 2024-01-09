@@ -1,5 +1,5 @@
 # Bubba Technologies Inc. API
-Updated 07/23/2023
+Updated 01/08/2024
 
 ## Environment Variables
 
@@ -223,6 +223,8 @@ Description: Returns 200 if valid user and updates last login.
 Required Headers: ```Authorization: Bearer (JWT)```
 
 ### /app/totalPage
+**DEPRECIATED**
+
 Mapping: GET
 
 Description: Returns all likes for user.
@@ -281,24 +283,22 @@ Response:
 
 ```
 {
-    "_embedded": {
-        "clothingDTOList": [
-            {
+     "clothingList": [
+        {
+            "id":int,
+            "name":str,
+            "imageURL":[str],
+            "productURL":str,
+            "store": {
                 "id":int,
                 "name":str,
-                "imageURL":[str],
-                "productURL":str,
-                "store": {
-                    "id":int,
-                    "name":str,
-                    "url":str
-                },
-                "type":str,
-                "gender":str,
-                "date":str
-            }
-        ]
-    }
+                "url":str
+            },
+            "type":str,
+            "gender":str,
+            "date":str
+        }],
+     "totalPageCount": Long
 }
 ```
 
@@ -360,7 +360,7 @@ Request:
 
 ```
 {
-    "imageTapRatio":double,
+    "imageTap":double,
     "clothingId":int
 }
 ```
@@ -386,7 +386,7 @@ Request:
 
 ```
 {
-    "imageTapRatio":double,
+    "imageTap":double,
     "clothingId":int
 }
 ```
@@ -412,7 +412,7 @@ Request:
 
 ```
 {
-    "imageTapRatio":double,
+    "imageTap":double,
     "clothingId":int
 }
 ```
@@ -438,7 +438,7 @@ Request:
 
 ```
 {
-    "imageTapRatio":double,
+    "imageTap":double,
     "clothingId":int
 }
 ```
@@ -464,7 +464,7 @@ Request:
 
 ```
 {
-    "imageTapRatio":double,
+    "imageTap":double,
     "clothingId":int
 }
 ```

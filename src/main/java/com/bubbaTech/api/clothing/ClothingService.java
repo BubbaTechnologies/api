@@ -57,8 +57,6 @@ public class ClothingService {
     @Value("${system.recommendation_system_addr}")
     public String recommendationSystemAddr;
 
-
-
     public ClothingDTO getById(long clothingId) throws ClothingNotFoundException {
         Optional<Clothing> item = repository.findById(clothingId);
         if (item.isEmpty())
@@ -295,12 +293,12 @@ public class ClothingService {
         return storeStats;
     }
 
+    /**
+     * Gets filter options based on a minimum count within a time restriction.
+     * @return: A FilterOptionsDTO with the filter options information.
+     */
     @Cacheable("filterOptions")
     public FilterOptionsDTO getFilterOptions() {
-        //Calculate genders and types per gender
-        List<Gender> genders = new ArrayList<>();
-        List<List<ClothType>> typesPerGender = new ArrayList<>();
-
         List<Gender> acceptableGenders = new ArrayList<>();
         acceptableGenders.add(Gender.FEMALE);
         acceptableGenders.add(Gender.MALE);
@@ -308,32 +306,32 @@ public class ClothingService {
 
         LocalDate TIME_RESTRICTION = LocalDate.now().minusWeeks(WEEKS_AGO);
 
+
+        Map<Gender, Map<ClothType, List<ClothingTag>>> filterInformation = new HashMap<>();
+
         for (Gender gender : acceptableGenders) {
+            //Checks gender for count
             if (repository.countByGender(gender, TIME_RESTRICTION) > MIN_COUNT) {
-                genders.add(gender);
-                List<ClothType> typeList = new ArrayList<>();
+                Map<ClothType, List<ClothingTag>> tagMap = new HashMap<>();
                 for (ClothType type : ClothType.values()) {
+                    //Checks type for count
                     if (repository.countByGenderAndTypes(gender, new ArrayList<>(List.of(type)), TIME_RESTRICTION) > MIN_COUNT) {
-                        typeList.add(type);
+                        List<ClothingTag> tagList = new ArrayList<>();
+                        //Finds tags by type
+                        for (ClothingTag tag : ClothingTag.values()) {
+                            //Checks tag for count
+                            if (repository.countByTypeAndTag(type, tag, TIME_RESTRICTION) > MIN_COUNT) {
+                                tagList.add(tag);
+                            }
+                        }
+                        tagMap.put(type, tagList);
                     }
                 }
-                typesPerGender.add(typeList);
+                filterInformation.put(gender, tagMap);
             }
         }
 
-        //Calculate tags per type
-        Map<ClothType, List<ClothingTag>> tagsPerType = new HashMap<>();
-        for (ClothType type :  ClothType.values()) {
-            ArrayList<ClothingTag> tagList = new ArrayList<>();
-            for (ClothingTag tag : ClothingTag.values()) {
-                if (repository.countByTypeAndTag(type, tag, TIME_RESTRICTION) > MIN_COUNT) {
-                    tagList.add(tag);
-                }
-            }
-            tagsPerType.put(type, tagList);
-        }
-
-        return new FilterOptionsDTO(genders, typesPerGender, tagsPerType);
+        return new FilterOptionsDTO(filterInformation);
     }
 
     @CacheEvict(value = "filterOptions", allEntries = true)

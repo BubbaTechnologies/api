@@ -5,6 +5,7 @@
 package com.bubbaTech.api.like;
 
 import com.bubbaTech.api.clothing.ClothType;
+import com.bubbaTech.api.clothing.ClothingTag;
 import com.bubbaTech.api.user.Gender;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,4 +42,10 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     Long countAllByUserIdWithTypes(long userId, boolean liked, boolean bought, List<ClothType> type);
     @Query("SELECT count(l) FROM Like l WHERE l.user.id = ?1 AND l.liked = ?2 AND l.bought = ?3 AND l.clothing.gender = ?4 AND l.clothing.store.enabled = true")
     Long countAllByUserIdWithGender(long userId, boolean liked, boolean bought, Gender gender);
+    @Query("SELECT DISTINCT l.clothing.gender FROM Like l WHERE l.liked = true AND l.user.id = ?1")
+    List<Gender> getAllUniqueGenders(long userId);
+    @Query("SELECT DISTINCT l.clothing.clothingType FROM Like l WHERE l.liked = true AND l.user.id = ?1 AND l.clothing.gender = ?2")
+    List<ClothType> getAllUniqueTypesByGender(long userId, Gender gender);
+    @Query("SELECT DISTINCT l.clothing.tags FROM Like l WHERE l.liked = true AND l.user.id = ?1 AND l.clothing.gender = ?2 AND l.clothing.clothingType = ?3")
+    List<ClothingTag> getAllUniqueTagsByTypeAndGender(long userId, Gender gender, ClothType type);
 }
