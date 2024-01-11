@@ -5,15 +5,19 @@
 package com.bubbaTech.api.app;
 
 import com.bubbaTech.api.actuator.RouteResponseTimeEndpoint;
+import com.bubbaTech.api.app.responseObjects.clothingListResponse.ActivityLikeDTO;
+import com.bubbaTech.api.app.responseObjects.clothingListResponse.ActivityListResponse;
 import com.bubbaTech.api.app.responseObjects.clothingListResponse.ClothingListResponse;
 import com.bubbaTech.api.clothing.ClothingDTO;
 import com.bubbaTech.api.clothing.ClothingListType;
 import com.bubbaTech.api.clothing.ClothingService;
+import com.bubbaTech.api.filterOptions.FilterOptionsDTO;
 import com.bubbaTech.api.info.ServiceLogger;
 import com.bubbaTech.api.like.LikeDTO;
 import com.bubbaTech.api.like.LikeNotFoundException;
 import com.bubbaTech.api.like.LikeService;
 import com.bubbaTech.api.like.Ratings;
+import com.bubbaTech.api.user.ProfileDTO;
 import com.bubbaTech.api.user.UserDTO;
 import com.bubbaTech.api.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +36,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.Math.min;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -527,6 +532,7 @@ public class AppController {
 
     @PostMapping(value = "/activate")
     public ResponseEntity<?> activate(HttpServletRequest request, Principal principal) {
+        //How can a user that is not active, activate their account with this type of request?
         long startTime = System.currentTimeMillis();
 
         UserDTO userDTO = getUserDTO(principal);
@@ -537,7 +543,307 @@ public class AppController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Returns current user account information.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @return:
+     * {
+     *     "username": str,
+     *     "email": str,
+     *     "birthdate": str,
+     *     "gender": str,
+     *     "privateAccount": bool
+     * }
+     */
+    @GetMapping("/userInfo")
+    public ResponseEntity<?> userInfo(HttpServletRequest request, Principal principal) {
+        long startTime = System.currentTimeMillis();
+        UserDTO userDTO = getUserDTO(principal);
 
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().body(userDTO);
+    }
+
+    /**
+     * Updates user information.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param userInfo: New user information to be updated with.
+     * @return: 200 if successful.
+     */
+    @PostMapping("/updateUserInfo")
+    public ResponseEntity<?> updateUserInfo(HttpServletRequest request, Principal principal, @RequestBody UserDTO userInfo) {
+        long startTime = System.currentTimeMillis();
+        UserDTO userDTO = getUserDTO(principal);
+
+        userDTO.setUsername(userInfo.getUsername());
+        userDTO.setEmail(userInfo.getEmail());
+        userDTO.setBirthDate(userInfo.getBirthDate());
+        userDTO.setGender(userInfo.getGender());
+        userDTO.setPrivateAccount(userInfo.getPrivateAccount());
+
+        userService.update(userDTO);
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Updates user's password.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param info:
+     * {
+     *      "password": str
+     * }
+     * @return: 200 if successful.
+     */
+    @PostMapping("/updatePassword")
+    public ResponseEntity<?> updatePassword(HttpServletRequest request, Principal principal, Map<String, String> info) {
+        long startTime = System.currentTimeMillis();
+        UserDTO userDTO = getUserDTO(principal);
+
+        userDTO.setPassword(userService.encodePassword(info.get("password")));
+        userService.update(userDTO);
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().build();
+    }
+
+
+    /**
+     * Returns activity feed for user in pages.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param typeFilter: The type of clothing being filtered in the feed.
+     * @param genderFilter: The type of gender being filtered in the feed.
+     * @param pageNumber: The page number of feed being requested.
+     * @return:
+     * {
+     *     "pageCount": Long.
+     *     "clothingList": [{
+     *       "id":int,
+     *       "name":str,
+     *        "imageURL":[str],
+     *        "productURL":str,
+     *        "store":
+     *              {
+     *              "id":int,
+     *              "name":str,
+     *              "url":str
+     *              },
+     *        "type":str,
+     *        "gender":str,
+     *        "date":str
+     *     }]
+     * }
+     */
+    @GetMapping("/activity")
+    public ResponseEntity<?> activity(HttpServletRequest request, Principal principal, @RequestParam(value = "type", required = false) String typeFilter,
+                                      @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value = "page", required = false) Integer pageNumber) {
+        long startTime = System.currentTimeMillis();
+        Long userId = getUserId(principal);
+
+        //Gets users followed by requester.
+        List<UserDTO> following = userService.getFollowing(userId);
+//        //Creates a map of id -> UserDTO
+//        Map<Long, UserDTO> followingMap = new HashMap<>();
+//        for (UserDTO userDTO : following) {
+//            followingMap.put(userDTO.getId(), userDTO);
+//        }
+
+        Long pageCount = likeService.getActivityPageCount(following.stream()
+                .map(UserDTO::getId)
+                .collect(Collectors.toList()), typeFilter, genderFilter);
+        List<LikeDTO> activity = likeService.getActivity(following.stream()
+                .map(UserDTO::getId)
+                .collect(Collectors.toList()), typeFilter, genderFilter, pageNumber);
+        List<ActivityLikeDTO> activityLikeDTOList = new ArrayList<>();
+
+        for (LikeDTO likeDTO : activity) {
+            activityLikeDTOList.add(new ActivityLikeDTO(new ProfileDTO(likeDTO.getUser()), likeDTO.getClothing()));
+        }
+
+        return ResponseEntity.ok(new ActivityListResponse(activityLikeDTOList, pageCount));
+    }
+
+    /**
+     * Gets filter options for activity feed.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @return:
+     * {
+     *     "genders":[str],
+     *     "types":[[str]],
+     *     "tags": {
+     *         type:[str]
+     *     }
+     * }
+     */
+    @GetMapping("/activityFilterOptions")
+    public ResponseEntity<?> activityFilterOptions(HttpServletRequest request, Principal principal) {
+        long startTime = System.currentTimeMillis();
+        Long userId = getUserId(principal);
+
+        //Gets users that are followed.
+        List<UserDTO> following = userService.getFollowing(userId);
+        FilterOptionsDTO filterOptionsDTO = likeService.getFilterOptionsByUserIds(following.stream()
+                .map(UserDTO::getId)
+                .collect(Collectors.toList()));
+
+
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().body(filterOptionsDTO);
+    }
+
+    /**
+     * Returns the user requested profiles information.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param userId: A Long the represents the userId of the user being requested.
+     * @return:
+     * {
+     *     "id":int,
+     *     "username":str,
+     *     "privateAccount": bool
+     * }
+     */
+    @GetMapping("/profileInfo")
+    public ResponseEntity<ProfileDTO> profile(HttpServletRequest request, Principal principal, @RequestParam(value = "userId") Long userId) {
+        long startTime = System.currentTimeMillis();
+        UserDTO userDTO = userService.getById(userId);
+
+        ProfileDTO profileDTO = new ProfileDTO(userDTO.getId(), userDTO.getUsername(), userDTO.getPrivateAccount());
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok(profileDTO);
+    }
+
+    /**
+     * Gets profile activity section.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param userId: The user id being requested.
+     * @param typeFilter: The type of clothing being filtered.
+     * @param genderFilter: The gender of clothing being filtered.
+     * @param pageNumber: The page number being requested.
+     * @return: 403 if prinicpal cannot access information else:
+     * {
+     *     "pageCount": Long.
+     *     "clothingList": [{
+     *       "id":int,
+     *       "name":str,
+     *        "imageURL":[str],
+     *        "productURL":str,
+     *        "store":
+     *              {
+     *              "id":int,
+     *              "name":str,
+     *              "url":str
+     *              },
+     *        "type":str,
+     *        "gender":str,
+     *        "date":str
+     *     }]
+     * }
+     */
+    @GetMapping("/profileActivity")
+    public ResponseEntity<?> profileActivity(HttpServletRequest request, Principal principal, @RequestParam(value = "userId") Long userId, @RequestParam(value = "type", required = false) String typeFilter,
+                                             @RequestParam(value = "gender", required = false) String genderFilter, @RequestParam(value = "page", required = false) Integer pageNumber) {
+        long startTime = System.currentTimeMillis();
+
+        //Check if user has permission to get userId activity.
+        UserDTO userDTO = getUserDTO(principal);
+        UserDTO requestedUserDTO = userService.getById(userId);
+        if (!userService.checkFollow(userDTO.getId(), userId) && requestedUserDTO.getPrivateAccount()) {
+            return ResponseEntity.status(401).build();
+        }
+
+        long totalPages = likeService.getPageCount(userId, ClothingListType.LIKE, typeFilter, genderFilter);
+        List<ClothingDTO> likesList = getClothingListAsList(userId, ClothingListType.LIKE, typeFilter, genderFilter, pageNumber);
+        ClothingListResponse responseObject = new ClothingListResponse(likesList, totalPages);
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok(responseObject);
+    }
+
+    /**
+     * The requesting user follows the requested user. If requested is private, will request.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param followInformation: A map containing information about the requested user.
+     * @return: 200 if successful.
+     */
+    @PostMapping("/follow")
+    public ResponseEntity<?> follow(HttpServletRequest request, Principal principal, @RequestBody Map<String, Long> followInformation) {
+        long startTime = System.currentTimeMillis();
+
+        if (!followInformation.containsKey("userId")) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        userService.followUser(getUserId(principal), followInformation.get("userId"));
+
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Unfollows the requester from the requested. If requested, unrequests.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param followInformation: A map containing information about the requested user.
+     * @return: 200 if successful.
+     */
+    @PostMapping("/unfollow")
+    public ResponseEntity<?> unfollow(HttpServletRequest request, Principal principal, @RequestBody Map<String, Long> followInformation) {
+        long startTime = System.currentTimeMillis();
+
+        if (!followInformation.containsKey("userId")) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        userService.unfollowUser(getUserId(principal), followInformation.get("userId"));
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Updates the follow request status.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param followInformation: A map containing information about the requested user and the new status.
+     * @return: 200 if successful.
+     */
+    @PostMapping("/followRequestAction")
+    public ResponseEntity<?> updateFollow(HttpServletRequest request, Principal principal, @RequestBody Map<String, ?> followInformation) {
+        long startTime = System.currentTimeMillis();
+        if (!followInformation.containsKey("userId") && !followInformation.containsKey("approve")) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Boolean approve = (Boolean) followInformation.get("approve");
+        if (!userService.requestAction(getUserId(principal), ((Integer) followInformation.get("userId")).longValue(), approve)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Checks if username is available.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param username: Username being queried.
+     * @return: 200 if successful.
+     */
+    @GetMapping("/checkUsername")
+    public ResponseEntity<?> checkUsername(HttpServletRequest request, @RequestParam("username") String username) {
+        long startTime = System.currentTimeMillis();
+
+        userService.checkUsername(username);
+
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().build();
+    }
 
     /**
      * @param userId: A long representing the user's id.

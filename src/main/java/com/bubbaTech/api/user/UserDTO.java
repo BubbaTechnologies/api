@@ -17,20 +17,22 @@ import java.util.Collection;
 @Data
 @AllArgsConstructor
 @JsonDeserialize(using = UserDeserializer.class)
-public class UserDTO implements DTO<UserDTO> {
+public class UserDTO implements DTO<User> {
     private Long id;
     private String username;
     @JsonIgnore
     private String password;
+    private String email;
     private Gender gender;
     private Boolean enabled;
+    private Boolean privateAccount;
     private LocalDate accountCreated;
     private LocalDate lastLogin;
     @JsonIgnore
     private Collection<Authorities> grantedAuthorities;
     private LocalDate birthDate;
-    private double latitude;
-    private double longitude;
+    private Double latitude;
+    private Double longitude;
     private String deviceId;
 
     public UserDTO() {}

@@ -21,6 +21,11 @@ import java.time.LocalDate;
 
 public class Mapper {
 
+    /**
+     * Converts User class to UserDTO class.
+     * @param user: The User to be mapped to a UserDTO.
+     * @return: The mapped UserDTO.
+     */
     public UserDTO userToUserDTO(User user) {
         UserDTO userDTO = new UserDTO();
 
@@ -33,13 +38,15 @@ public class Mapper {
         userDTO.setLastLogin(user.getLastLogin());
         userDTO.setGrantedAuthorities(user.getGrantedAuthorities());
         userDTO.setDeviceId(user.getDeviceId());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPrivateAccount(user.getPrivateAccount());
 
         if (user.getLatitude() != null && user.getLongitude() != null) {
             userDTO.setLatitude(user.getLatitude());
             userDTO.setLongitude(user.getLongitude());
         } else {
-            userDTO.setLatitude(0);
-            userDTO.setLongitude(0);
+            userDTO.setLatitude(0.0);
+            userDTO.setLongitude(0.0);
         }
 
         if (user.getBirthDate() == null) {
@@ -57,7 +64,11 @@ public class Mapper {
         return userDTO;
     }
 
-
+    /**
+     * Converts UserDTO class to User class.
+     * @param userDTO: The UserDTO to be mapped.
+     * @return: The UserDTO as a User.
+     */
     public User userDTOToUser(UserDTO userDTO) {
         User user = new User();
 
@@ -72,6 +83,8 @@ public class Mapper {
         user.setDeviceId(userDTO.getDeviceId());
         user.setLatitude(userDTO.getLatitude());
         user.setLongitude(userDTO.getLongitude());
+        user.setEmail(userDTO.getEmail());
+        user.setPrivateAccount(user.getPrivateAccount());
 
         return user;
     }

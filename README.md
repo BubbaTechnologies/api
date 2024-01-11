@@ -507,6 +507,8 @@ Mapping: POST
 
 Description: Updates a users location.
 
+Required Header: ```Authorization: Bearer (JWT)```
+
 Request:
 ```
 {
@@ -518,9 +520,12 @@ Request:
 Response: If requests succeed 200.
 
 ### /app/activate
+
 Mapping: POST
 
-Description: Updates a users location.
+Description: Enables the requesters account.
+
+Required Header: ```Authorization: Bearer (JWT)```
 
 Request:
 ```
@@ -538,6 +543,8 @@ Mapping: POST
 
 Description: Updates a users location.
 
+Required Header: ```Authorization: Bearer (JWT)```
+
 Request:
 ```
 {
@@ -546,6 +553,130 @@ Request:
 ```
 
 Response: If requests succeed 200.
+
+### /app/userInfo
+Mapping: GET
+
+Description: Returns current user account information.
+
+Required Header: ```Authorization: Bearer (JWT)```
+
+Response:
+```
+{
+    "username": str,
+    "email": str,
+    "birthdate": str,
+    "gender": str,
+    "privateAccount": bool
+}
+```
+
+### /app/profileInfo
+Mapping: GET
+
+Description: Returns the user requested profiles information.
+
+Required Header: ```Authorization: Bearer (JWT)```
+
+Request Parameters:
+    
+    userId: A long representing the user's ID of the requested information.
+
+Response:
+```
+{
+    "id": int,
+    "username": str,
+    "privateAccount: bool
+}
+```
+
+### /app/profileActivity
+Mapping: GET
+
+Description: Returns the user requested profiles information.
+
+Required Header: ```Authorization: Bearer (JWT)```
+
+Request Parameters: userId ,type *(OPTIONAL)*, gender *(OPTIONAL)*, and page *(OPTIONAL)*.
+
+Response: 401 if unauthorized or
+```
+{
+     "clothingList": [
+        {
+            "id":int,
+            "name":str,
+            "imageURL":[str],
+            "productURL":str,
+            "store": {
+                "id":int,
+                "name":str,
+                "url":str
+            },
+            "type":str,
+            "gender":str,
+            "date":str
+        }],
+     "totalPageCount": Long
+}
+``` 
+
+### /app/follow
+Mapping: POST
+
+Description: The requesting user follows the requested user. If requested is private, will request.
+
+Request Body: 
+```
+{
+    "userId": Long
+}
+```
+
+Response: 200 if successful.
+
+### /app/unfollow
+Mapping: POST
+
+Description: Unfollows the requester from the requested. If requested, unrequests.
+
+Request Body:
+```
+{
+    "userId": Long
+}
+```
+
+Response: 200 if successful.
+
+### /app/followRequestAction
+Mapping: POST
+
+Description: Changes follow requests to approved or rejected.
+
+Request Body:
+```
+{
+    "userId": Long,
+    "approved": Boolean
+}
+```
+
+Response: 200 if successful.
+
+### /app/checkUsername
+**Vulnerable to DOS attacks.**
+
+Mapping: GET
+
+Description: Check username availability.
+
+Request Param: username
+
+Response: 200 if available.
+
 
 ## Scraper Controller
 

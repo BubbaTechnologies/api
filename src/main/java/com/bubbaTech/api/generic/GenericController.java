@@ -55,7 +55,7 @@ public class GenericController {
 
     @GetMapping("/")
     public ResponseEntity<?> home(HttpServletResponse httpServletResponse) {
-        httpServletResponse.setHeader("Location", "https://www.peachsconemarket.com");
+        httpServletResponse.setHeader("Location", "https://www.clothingcarou.com");
         httpServletResponse.setStatus(302);
         return ResponseEntity.status(302).build();
     }

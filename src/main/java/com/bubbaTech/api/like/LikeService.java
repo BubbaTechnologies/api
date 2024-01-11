@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -74,20 +75,10 @@ public class LikeService {
 
     public Long getPageCount(long userId, ClothingListType listType, String typeFilter, String genderFilter) {
         //Convert genderFilter to gender
-        Gender gender = null;
-        if (genderFilter != null) {
-            gender = Gender.stringToGender(genderFilter);
-        }
+        Gender gender = getGender(genderFilter);
 
         //Convert typeFilter to list of types
-        List<ClothType> typeFilters = null;
-        if (typeFilter != null) {
-            typeFilters = new ArrayList<>();
-            String[] filters = typeFilter.split(",");
-            for (String str : filters) {
-                typeFilters.add(ClothType.stringToClothType(str));
-            }
-        }
+        List<ClothType> typeFilters = getClothTypes(typeFilter);
 
         boolean liked = false;
         boolean bought = false;
@@ -110,26 +101,16 @@ public class LikeService {
             pageAmount = repository.countAllByUserId(userId, liked, bought);
         }
 
-        return Long.valueOf((long) Math.ceil((double) pageAmount / (double) AppController.PAGE_SIZE));
+        return (long) Math.ceil((double) pageAmount / (double) AppController.PAGE_SIZE);
     }
 
     public List<LikeDTO> getAllByUserId(long userId, ClothingListType listType, String typeFilter, String genderFilter, Integer pageNumber) {
 
         //Convert genderFilter to gender
-        Gender gender = null;
-        if (genderFilter != null) {
-            gender = Gender.stringToGender(genderFilter);
-        }
+        Gender gender = getGender(genderFilter);
 
         //Convert typeFilter to list of types
-        List<ClothType> typeFilters = null;
-        if (typeFilter != null) {
-            typeFilters = new ArrayList<>();
-            String[] filters = typeFilter.split(",");
-            for (String str : filters) {
-                typeFilters.add(ClothType.stringToClothType(str));
-            }
-        }
+        List<ClothType> typeFilters = getClothTypes(typeFilter);
 
         boolean liked = false;
         boolean bought = false;
@@ -167,6 +148,7 @@ public class LikeService {
         return likeDTOList;
     }
 
+
     public LikeDTO findByClothingAndUser(long clothingId, long userId) throws LikeNotFoundException  {
         Optional<Like> like = repository.findByClothingAndUser(clothingId, userId);
         if (like.isEmpty())
@@ -176,12 +158,102 @@ public class LikeService {
     }
 
     /**
+     * Gets page count for activity page.
+     * @param userIds: User IDs for the users being queried.
+     * @param typeFilter: Type filter.
+     * @param genderFilter: Gender filter.
+     * @return: A long representing the page count.
+     */
+    public Long getActivityPageCount(List<Long> userIds, String typeFilter, String genderFilter) {
+        //Convert genderFilter to gender
+        Gender gender = getGender(genderFilter);
+
+        //Convert typeFilter to list of types
+        List<ClothType> typeFilters = getClothTypes(typeFilter);
+
+        Long pageAmount;
+        LocalDateTime activityDelay = LocalDateTime.now().minusMinutes(30);
+        if (genderFilter != null && typeFilter != null) {
+            pageAmount = repository.countAllByUserIdsWithGenderAndTypes(userIds, gender, typeFilters, activityDelay);
+        } else if (genderFilter != null) {
+            pageAmount = repository.countAllByUserIdsWithGender(userIds, gender, activityDelay);
+        } else if (typeFilter != null) {
+            pageAmount = repository.countAllByUserIdsWithTypes(userIds, typeFilters, activityDelay);
+        } else {
+            pageAmount = repository.countAllByUserIds(userIds, activityDelay);
+        }
+
+        return (long) Math.ceil((double) pageAmount / (double) AppController.PAGE_SIZE);
+    }
+
+    /**
+     * Get filter options for activity feed.
+     * @param userIds: User IDs for filter options.
+     * @return: A filter options DTO with the corresponding types.
+     */
+    public FilterOptionsDTO getFilterOptionsByUserIds(List<Long> userIds) {
+        Map<Gender, Map<ClothType, List<ClothingTag>>> filterInformation = new HashMap<>();
+        List<Gender> genders = repository.getAllUniqueGendersForUserIds(userIds);
+        for (Gender gender: genders) {
+            Map<ClothType, List<ClothingTag>> tagMap = new HashMap<>();
+            List<ClothType> uniqueTypes = repository.getAllUniqueTypesForUserIdsByGender(userIds, gender);
+            for (ClothType type : uniqueTypes) {
+                tagMap.put(type, repository.getAllUniqueTagsForUserIdsByTypeAndGender(userIds, gender, type));
+            }
+            filterInformation.put(gender, tagMap);
+        }
+
+        return new FilterOptionsDTO(filterInformation);
+    }
+
+    /**
+     * Get activity feed for userId.
+     * @param userIds: User IDs for the users being queried.
+     * @param typeFilter: Type filter.
+     * @param genderFilter: Gender filter.
+     * @param pageNumber: Page number of activity feed.
+     * @return: A list of activity like DTO that includes user information and clothing information.
+     */
+    public List<LikeDTO> getActivity(List<Long> userIds, String typeFilter, String genderFilter, Integer pageNumber) {
+        //Convert genderFilter to gender
+        Gender gender = getGender(genderFilter);
+
+        //Convert typeFilter to list of types
+        List<ClothType> typeFilters = getClothTypes(typeFilter);
+
+        Pageable pageRequest;
+        if (pageNumber == null) {
+            pageRequest = Pageable.unpaged();
+        } else {
+            pageRequest = PageRequest.of(pageNumber, AppController.PAGE_SIZE, Sort.by("id").descending());
+        }
+
+        Page<Like> likePage;
+        LocalDateTime activityDelay = LocalDateTime.now().minusMinutes(30);
+        if (genderFilter != null && typeFilter != null) {
+            likePage = repository.getActivityByTypeAndGender(userIds, gender, typeFilters, activityDelay, pageRequest);
+        } else if (genderFilter != null) {
+            likePage = repository.getActivityByGender(userIds, gender, activityDelay, pageRequest);
+        } else if (typeFilter != null) {
+            likePage = repository.getActivityByType(userIds, typeFilters, activityDelay, pageRequest);
+        } else {
+            likePage = repository.getActivity(userIds, activityDelay, pageRequest);
+        }
+
+        //Converts likes to likeDTO
+        List<LikeDTO> likeDTOList = new ArrayList<>();
+        for (Like like : likePage.getContent()) {
+            likeDTOList.add(mapper.likeToLikeDTO(like));
+        }
+        return likeDTOList;
+    }
+
+    /**
      * Gets custom filter options by the items liked for the userId.
      * @param userId: A long representing the userId querying likes for.
      * @return: A filter options DTO with the corresponding types.
      */
     public FilterOptionsDTO getFilterOptionsByLikes(long userId) {
-        Pageable pageRequest = Pageable.unpaged();;
         Map<Gender, Map<ClothType, List<ClothingTag>>> filterInformation = new HashMap<>();
         List<Gender> genders = repository.getAllUniqueGenders(userId);
         for (Gender gender: genders) {
@@ -219,5 +291,25 @@ public class LikeService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static Gender getGender(String genderFilter) {
+        Gender gender = null;
+        if (genderFilter != null) {
+            gender = Gender.stringToGender(genderFilter);
+        }
+        return gender;
+    }
+
+    private static List<ClothType> getClothTypes(String typeFilter) {
+        List<ClothType> typeFilters = null;
+        if (typeFilter != null) {
+            typeFilters = new ArrayList<>();
+            String[] filters = typeFilter.split(",");
+            for (String str : filters) {
+                typeFilters.add(ClothType.stringToClothType(str));
+            }
+        }
+        return typeFilters;
     }
 }
