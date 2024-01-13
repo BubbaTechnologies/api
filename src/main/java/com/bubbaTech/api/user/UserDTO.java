@@ -37,9 +37,10 @@ public class UserDTO implements DTO<User> {
 
     public UserDTO() {}
 
-    public UserDTO(String username, String password, Gender gender, LocalDate birthdate) {
+    public UserDTO(String username, String email, String password, Gender gender, LocalDate birthdate) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.gender = gender;
         this.enabled = true;
         this.birthDate = birthdate;

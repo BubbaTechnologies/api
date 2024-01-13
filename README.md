@@ -21,7 +21,7 @@ Updated 01/08/2024
 
 Mapping: GET
 
-Description: Returns to homepage (*https://www.peachsconemarket.com*)
+Description: Returns to homepage (*https://www.clothingcarou.com*)
 
 ### /error
 
@@ -95,6 +95,7 @@ Request Body:
     "username":str, 
     "password":str, 
     "gender":str, 
+    "email": str,
     "name":str,
     "birthdate":str
 }

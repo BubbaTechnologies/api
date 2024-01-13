@@ -25,6 +25,7 @@ public class UserDeserializer extends StdDeserializer<UserDTO> {
     public UserDTO deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         JsonNode node = jp.getCodec().readTree(jp);
         String username = node.get("username").textValue();
+        String email = node.get("email").textValue();
         String password = node.get("password").textValue();
         String gender = node.get("gender").textValue();
         Gender genderType = switch (gender.toLowerCase()) {
@@ -44,6 +45,6 @@ public class UserDeserializer extends StdDeserializer<UserDTO> {
             birthdate = LocalDate.of(Integer.parseInt(splitBirthdate[0]), Integer.parseInt(splitBirthdate[1]), Integer.parseInt(splitBirthdate[2]));
         }
 
-        return new UserDTO(username, password, genderType, birthdate);
+        return new UserDTO(username, email, password, genderType, birthdate);
     }
 }
