@@ -56,10 +56,10 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
             "AND l.liked = true AND l.clothing.store.enabled = true")
     Page<Like> getActivityByGender(List<Long> userIds, Gender gender, LocalDateTime date, Pageable pageable);
 
-    @Query("SELECT l FROM Like l WHERE l.user.id IN :userIds AND l.clothing.type IN :types AND l.date <= :date " +
+    @Query("SELECT l FROM Like l WHERE l.user.id IN :userIds AND l.clothing.clothingType IN :types AND l.date <= :date " +
             "AND l.liked = true AND l.clothing.store.enabled = true")
     Page<Like> getActivityByType(List<Long> userIds, List<ClothType> types, LocalDateTime date, Pageable pageable);
-    @Query("SELECT l  FROM Like l WHERE l.user.id IN :userIds AND l.clothing.gender = :gender AND l.clothing.clothingType IN :types AND l.date <= :date" +
+    @Query("SELECT l  FROM Like l WHERE l.user.id IN :userIds AND l.clothing.gender = :gender AND l.clothing.clothingType IN :types AND l.date <= :date " +
             "AND l.liked = true AND l.clothing.store.enabled = true")
     Page<Like> getActivityByTypeAndGender(List<Long> userIds, Gender gender, List<ClothType> types, LocalDateTime date, Pageable pageable);
 
@@ -70,12 +70,12 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     @Query("SELECT DISTINCT l.clothing.tags FROM Like l WHERE l.liked = true AND l.user.id IN ?1 AND l.clothing.gender = ?2 AND l.clothing.clothingType = ?3 AND l.clothing.store.enabled = true")
     List<ClothingTag> getAllUniqueTagsForUserIdsByTypeAndGender(List<Long> userIds, Gender gender, ClothType type);
     @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id IN ?1 AND l.liked = true AND l.clothing.gender = ?2 AND l.clothing.clothingType" +
-            " IN ?3 AND l.clothing.store.enabled = true AND l.date <= :date")
+            " IN ?3 AND l.clothing.store.enabled = true AND l.date <= ?4")
     Long countAllByUserIdsWithGenderAndTypes(List<Long> userIds, Gender gender, List<ClothType> type, LocalDateTime date);
-    @Query("SELECT count(l) FROM Like l WHERE l.user.id IN ?1 AND l.liked = true AND l.clothing.store.enabled = true AND l.date <= :date")
+    @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id IN ?1 AND l.liked = true AND l.clothing.store.enabled = true AND l.date <= ?2")
     Long countAllByUserIds(List<Long> userIds, LocalDateTime date);
-    @Query("SELECT count(l) FROM Like l WHERE l.user.id IN ?1 AND l.liked = true AND l.clothing.clothingType IN ?2 AND l.clothing.store.enabled = true AND l.date <= :date")
+    @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id IN ?1 AND l.liked = true AND l.clothing.clothingType IN ?2 AND l.clothing.store.enabled = true AND l.date <= ?3")
     Long countAllByUserIdsWithTypes(List<Long> userIds, List<ClothType> type, LocalDateTime date);
-    @Query("SELECT count(l) FROM Like l WHERE l.user.id IN ?1 AND l.liked = true AND l.clothing.gender = ?2 AND l.clothing.store.enabled = true AND l.date <= :date")
+    @Query("SELECT COUNT(l) FROM Like l WHERE l.user.id IN ?1 AND l.liked = true AND l.clothing.gender = ?2 AND l.clothing.store.enabled = true AND l.date <= ?3")
     Long countAllByUserIdsWithGender(List<Long> userIds, Gender gender, LocalDateTime date);
 }

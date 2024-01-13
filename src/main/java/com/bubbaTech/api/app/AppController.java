@@ -620,22 +620,29 @@ public class AppController {
      * @param pageNumber: The page number of feed being requested.
      * @return:
      * {
-     *     "pageCount": Long.
-     *     "clothingList": [{
-     *       "id":int,
-     *       "name":str,
-     *        "imageURL":[str],
-     *        "productURL":str,
-     *        "store":
-     *              {
-     *              "id":int,
-     *              "name":str,
-     *              "url":str
-     *              },
-     *        "type":str,
-     *        "gender":str,
-     *        "date":str
-     *     }]
+     *     "activityList": [
+     *          "userProfile": {
+     *              "id": Long,
+     *              "username":str,
+     *              "privateAccount":bool
+     *          },
+     *          "clothingDTO": {
+     *              "id": long,
+     *              "name": str,
+     *              "imageURL": [str],
+     *              "productURL": str,
+     *              "store":{
+     *                  "id": long,
+     *                  "name": str,
+     *                  "enabled": bool,
+     *                  "url": str
+     *              }
+     *              "type": str,
+     *              "gender": str,
+     *              "date": str
+     *          }
+     *     ]
+     *     "totalPages": Long
      * }
      */
     @GetMapping("/activity")
@@ -646,11 +653,6 @@ public class AppController {
 
         //Gets users followed by requester.
         List<UserDTO> following = userService.getFollowing(userId);
-//        //Creates a map of id -> UserDTO
-//        Map<Long, UserDTO> followingMap = new HashMap<>();
-//        for (UserDTO userDTO : following) {
-//            followingMap.put(userDTO.getId(), userDTO);
-//        }
 
         Long pageCount = likeService.getActivityPageCount(following.stream()
                 .map(UserDTO::getId)
@@ -663,7 +665,7 @@ public class AppController {
         for (LikeDTO likeDTO : activity) {
             activityLikeDTOList.add(new ActivityLikeDTO(new ProfileDTO(likeDTO.getUser()), likeDTO.getClothing()));
         }
-
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok(new ActivityListResponse(activityLikeDTOList, pageCount));
     }
 

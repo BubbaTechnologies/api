@@ -628,6 +628,8 @@ Mapping: POST
 
 Description: The requesting user follows the requested user. If requested is private, will request.
 
+Required Header: ```Authorization: Bearer (JWT)```
+
 Request Body: 
 ```
 {
@@ -642,6 +644,8 @@ Mapping: POST
 
 Description: Unfollows the requester from the requested. If requested, unrequests.
 
+Required Header: ```Authorization: Bearer (JWT)```
+
 Request Body:
 ```
 {
@@ -655,6 +659,8 @@ Response: 200 if successful.
 Mapping: POST
 
 Description: Changes follow requests to approved or rejected.
+
+Required Header: ```Authorization: Bearer (JWT)```
 
 Request Body:
 ```
@@ -677,6 +683,19 @@ Request Param: username
 
 Response: 200 if available.
 
+### /app/activityFilterOptions
+Mapping: GET
+
+Description: Gets filter options for activity feed.
+
+Required Header: ```Authorization: Bearer (JWT)```
+
+### /activity
+Mapping: GET
+
+Description: Returns activity feed for user in pages.
+
+Required Header: ```Authorization: Bearer (JWT)```
 
 ## Scraper Controller
 
