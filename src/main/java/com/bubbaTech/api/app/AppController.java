@@ -452,6 +452,8 @@ public class AppController {
 
     /**
      * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param filterType: The purpose of the filters (e.g. like page, activity page, etc.)
      * @return:
      * {
      *     "genders":[str],
@@ -462,34 +464,35 @@ public class AppController {
      * }
      */
     @GetMapping(value="/filterOptions", produces = "application/json")
-    public ResponseEntity<?> filterOptions(HttpServletRequest request) {
+    public ResponseEntity<?> filterOptions(HttpServletRequest request, Principal principal, @RequestParam(value="type") String filterType) {
         long startTime = System.currentTimeMillis();
-        ResponseEntity<?> responseEntity = ResponseEntity.ok().body(clothingService.getFilterOptions());
-        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        ResponseEntity<?> responseEntity = null;
+        Long userId = getUserId(principal);
+
+        switch (filterType.toLowerCase()) {
+            case "likes":
+                responseEntity = ResponseEntity.ok().body(likeService.getFilterOptionsByLikes(userId));
+                routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+                break;
+            case "activity":
+                //Gets users that are followed.
+                List<UserDTO> following = userService.getFollowing(userId);
+                FilterOptionsDTO filterOptionsDTO = likeService.getFilterOptionsByUserIds(following.stream()
+                        .map(UserDTO::getId)
+                        .collect(Collectors.toList()));
+
+                responseEntity = ResponseEntity.ok().body(filterOptionsDTO);
+                routeResponseTimeEndpoint.addResponseTime(request.getRequestURI() + "/activity", System.currentTimeMillis() - startTime);
+                break;
+            default:
+                responseEntity = ResponseEntity.ok().body(clothingService.getFilterOptions());
+                routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+                break;
+        }
+
         return responseEntity;
     }
 
-    /**
-     * @param request: Information about the request. Check HttpServletRequest for references.
-     * @param principal: Gives information about the requester. Check Principal type for references.
-     * @return:
-     * {
-     *     "genders":[str],
-     *     "types":[[str]],
-     *     "tags": {
-     *         type:[str]
-     *     }
-     * }
-     */
-    @GetMapping(value = "/likesFilterOptions", produces = "application/json")
-    public ResponseEntity<?> likeFilterOptions(HttpServletRequest request, Principal principal) {
-        long startTime = System.currentTimeMillis();
-        long userId = getUserId(principal);
-
-        ResponseEntity<?> responseEntity = ResponseEntity.ok().body(likeService.getFilterOptionsByLikes(userId));
-        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
-        return responseEntity;
-    }
     @PostMapping(value="/updateLocation")
     public ResponseEntity<?> updateLocation(HttpServletRequest request, Principal principal, @RequestBody Map<String, Double> locationInformation) {
         long startTime = System.currentTimeMillis();

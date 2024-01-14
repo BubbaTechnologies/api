@@ -684,13 +684,6 @@ Request Param: username
 
 Response: 200 if available.
 
-### /app/activityFilterOptions
-Mapping: GET
-
-Description: Gets filter options for activity feed.
-
-Required Header: ```Authorization: Bearer (JWT)```
-
 ### /activity
 Mapping: GET
 
