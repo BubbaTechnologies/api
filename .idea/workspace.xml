@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="BUG: Updated UserDTO deserializer.">
+    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="FEATURE: Updated /filterOptions.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -645,14 +644,6 @@
       <option name="project" value="LOCAL" />
       <updated>1686703978706</updated>
     </task>
-    <task id="LOCAL-00063" summary="FEATURE: Added verification code feature.">
-      <option name="closed" value="true" />
-      <created>1699673123459</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1699673123459</updated>
-    </task>
     <task id="LOCAL-00064" summary="FEATURE: Added deviceId to user.">
       <option name="closed" value="true" />
       <created>1699743297092</created>
@@ -733,7 +724,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705181369282</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="FEATURE: Updated /filterOptions.">
+      <option name="closed" value="true" />
+      <created>1705191055826</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1705191055826</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -755,7 +754,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="Updated logic for getIfExists query." />
     <MESSAGE value="Added descriptor filtering for names that match &quot; in .+&quot;" />
     <MESSAGE value="Fixed type conversion bug in ClothingService recommend single item." />
     <MESSAGE value="BUG: Updated error reporting in getCard within ClothingService.java. Removed getRandom function in ClothingService.java." />
@@ -780,7 +778,8 @@
     <MESSAGE value="FEATURE: Added social features API points except activity related." />
     <MESSAGE value="FEATURE: Added social features API." />
     <MESSAGE value="BUG: Updated UserDTO deserializer." />
-    <option name="LAST_COMMIT_MESSAGE" value="BUG: Updated UserDTO deserializer." />
+    <MESSAGE value="FEATURE: Updated /filterOptions." />
+    <option name="LAST_COMMIT_MESSAGE" value="FEATURE: Updated /filterOptions." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

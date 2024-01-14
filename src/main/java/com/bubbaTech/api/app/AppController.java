@@ -464,15 +464,19 @@ public class AppController {
      * }
      */
     @GetMapping(value="/filterOptions", produces = "application/json")
-    public ResponseEntity<?> filterOptions(HttpServletRequest request, Principal principal, @RequestParam(value="type") String filterType) {
+    public ResponseEntity<?> filterOptions(HttpServletRequest request, Principal principal, @RequestParam(value="type", required = false) String filterType) {
         long startTime = System.currentTimeMillis();
+        if (filterType == null) {
+            filterType = "";
+        }
+
         ResponseEntity<?> responseEntity = null;
         Long userId = getUserId(principal);
 
         switch (filterType.toLowerCase()) {
             case "likes":
                 responseEntity = ResponseEntity.ok().body(likeService.getFilterOptionsByLikes(userId));
-                routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+                routeResponseTimeEndpoint.addResponseTime(request.getRequestURI() + "/likes", System.currentTimeMillis() - startTime);
                 break;
             case "activity":
                 //Gets users that are followed.

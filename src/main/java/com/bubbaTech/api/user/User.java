@@ -73,7 +73,6 @@ public class User implements UserDetails {
     private LocalDate lastLogin;
     @Nullable
     private LocalDate birthDate;
-    @Column(columnDefinition = "boolean default false")
     private Boolean privateAccount;
 
     //Device location
