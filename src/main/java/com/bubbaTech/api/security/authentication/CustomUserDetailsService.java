@@ -26,11 +26,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Transactional
     @Override
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return mapper.userDTOToUser(userService.getByUsername(username));
+    public User loadUserByUsername(String email) throws UsernameNotFoundException {
+        return mapper.userDTOToUser(userService.getByEmail(email));
     }
 
-    public UserDTO loadUserByUsernameToDTO(String username) throws UsernameNotFoundException {
-        return userService.getByUsername(username);
+    public UserDTO loadUserByEmailToDTO(String email) throws UsernameNotFoundException {
+        return userService.getByEmail(email);
     }
 }

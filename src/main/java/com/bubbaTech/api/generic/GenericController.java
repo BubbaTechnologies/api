@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,20 +63,20 @@ public class GenericController {
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequest request)  {
         try {
-            auth.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+            auth.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         } catch (Exception e){
             e.printStackTrace();
             logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        final UserDTO userDetails = userDetailsService.loadUserByUsernameToDTO(request.getUsername());
+        final UserDTO userDetails = userDetailsService.loadUserByEmailToDTO(request.getEmail());
         userService.updateLastLogin(userDetails.getId());
-        return ResponseEntity.ok(new AuthenticationResponse(jwt.generateToken(userDetails), userDetails.getUsername()));
+        return ResponseEntity.ok(new AuthenticationResponse(jwt.generateToken(userDetails), userDetails.getEmail()));
     }
 
     @PostMapping(value = "/create", produces = "application/json")
     public ResponseEntity<?> create(@RequestBody UserDTO newUser, @RequestParam(value="code") String verificationCode) {
-        if (!generateVerificationCode(newUser.getUsername()).equals(verificationCode)) {
+        if (!generateVerificationCode(newUser.getEmail()).equals(verificationCode)) {
             return ResponseEntity.unprocessableEntity().build();
         }
 
@@ -118,19 +118,23 @@ public class GenericController {
     }
 
     @PutMapping(value = "/update", produces = "application/json")
-    public EntityModel<UserDTO> update(@RequestBody UserDTO userRequest, Principal principal) {
-        UserDTO loggedUser = userDetailsService.loadUserByUsernameToDTO(principal.getName());
-        UserDTO update = userRequest;
-        update.setId(loggedUser.getId());
-        update.setEnabled(loggedUser.getEnabled());
-        update.setGrantedAuthorities(loggedUser.getGrantedAuthorities());
-        userRequest = userService.update(update);
-        return EntityModel.of(userRequest);
+    public ResponseEntity<?> update(@RequestBody UserDTO userRequest, Principal principal) {
+        UserDTO loggedUser = userDetailsService.loadUserByEmailToDTO(principal.getName());
+        loggedUser.setUsername(userRequest.getUsername());
+        if (!Objects.equals(userRequest.getPassword(), "")) {
+            loggedUser.setPassword(userRequest.getPassword());
+        }
+        loggedUser.setGender(userRequest.getGender());
+        loggedUser.setBirthDate(userRequest.getBirthDate());
+        loggedUser.setEmail(userRequest.getEmail());
+
+        userRequest = userService.update(loggedUser);
+        return ResponseEntity.ok(new AuthenticationResponse(jwt.generateToken(userRequest), userRequest.getEmail()));
     }
 
     @DeleteMapping(value = "/delete")
     ResponseEntity<?> delete(Principal principal) {
-        UserDTO user = userDetailsService.loadUserByUsernameToDTO(principal.getName());
+        UserDTO user = userDetailsService.loadUserByEmailToDTO(principal.getName());
         user.setEnabled(false);
         userService.update(user);
         return ResponseEntity.ok().build();
@@ -138,7 +142,7 @@ public class GenericController {
 
     @PostMapping(value = "/activate")
     public ResponseEntity<?> activate(HttpServletRequest request, Principal principal) {
-        UserDTO userDTO = userDetailsService.loadUserByUsernameToDTO(principal.getName());
+        UserDTO userDTO = userDetailsService.loadUserByEmailToDTO(principal.getName());
         userDTO.setEnabled(true);
         userService.update(userDTO);
 

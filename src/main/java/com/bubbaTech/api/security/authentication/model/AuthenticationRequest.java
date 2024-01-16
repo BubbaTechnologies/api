@@ -12,6 +12,6 @@ import lombok.Data;
 @Data
 @JsonDeserialize(using = AuthenticationRequestDeserializer.class)
 public class AuthenticationRequest {
-    private String username;
+    private String email;
     private String password;
 }

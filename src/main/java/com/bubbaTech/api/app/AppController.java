@@ -568,8 +568,16 @@ public class AppController {
         long startTime = System.currentTimeMillis();
         UserDTO userDTO = getUserDTO(principal);
 
+        //Maps the important fields
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("username", userDTO.getUsername());
+        responseMap.put("email", userDTO.getEmail());
+        responseMap.put("birthdate", userDTO.getBirthDate().toString());
+        responseMap.put("gender", userDTO.getGender().getStringValue());
+        responseMap.put("privateAccount", userDTO.getPrivateAccount());
+
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
-        return ResponseEntity.ok().body(userDTO);
+        return ResponseEntity.ok().body(responseMap);
     }
 
     /**

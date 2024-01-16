@@ -43,8 +43,8 @@ public class UserService {
         return user.getGender();
     }
 
-    public void authUser(String username, String password) throws AuthenticationServiceException {
-        UserDTO user = getByUsername(username);
+    public void authUser(String email, String password) throws AuthenticationServiceException {
+        UserDTO user = getByEmail(email);
         if (!passwordEncoder.matches(password, user.getPassword()))
             throw new AuthenticationServiceException("Could not authenticate.");
     }
@@ -70,6 +70,11 @@ public class UserService {
     public UserDTO getByUsername(String username) {
         return mapper.userToUserDTO(repository.findByUsername(username).orElseThrow(() -> new UserNotFoundException(username)));
     }
+
+    public UserDTO getByEmail(String email) {
+        return mapper.userToUserDTO(repository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email)));
+    }
+
 
     public Boolean checkUsername(String username) {
         return repository.countByUsername(username) > 0;
@@ -202,6 +207,7 @@ public class UserService {
         } else {
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
         }
+
         user.setUsername(userRequest.getUsername());
         user.setGender(userRequest.getGender());
         user.setEnabled(userRequest.getEnabled());
@@ -210,6 +216,8 @@ public class UserService {
         user.setLatitude(userRequest.getLatitude());
         user.setBirthDate(userRequest.getBirthDate());
         user.setDeviceId(userRequest.getDeviceId());
+        user.setPrivateAccount(userRequest.getPrivateAccount());
+        user.setEmail(user.getEmail());
 
         return mapper.userToUserDTO(repository.save(user));
     }

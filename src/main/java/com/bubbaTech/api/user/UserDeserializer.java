@@ -36,12 +36,11 @@ public class UserDeserializer extends StdDeserializer<UserDTO> {
             default -> Gender.UNISEX;
         };
         String birthdateString = node.get("birthdate").textValue();
-        String[] splitBirthdate = birthdateString.split("-");
-
         LocalDate birthdate;
-        if (birthdateString.equals("null")) {
+        if (birthdateString == null) {
             birthdate = LocalDate.of(1,1,1);
         } else {
+            String[] splitBirthdate = birthdateString.split("-");
             birthdate = LocalDate.of(Integer.parseInt(splitBirthdate[0]), Integer.parseInt(splitBirthdate[1]), Integer.parseInt(splitBirthdate[2]));
         }
 

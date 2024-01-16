@@ -23,7 +23,7 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -46,7 +46,7 @@ public class JwtUtil {
 
     public String generateToken(UserDTO userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername());
+        return createToken(claims, userDetails.getEmail());
     }
 
     private String createToken(Map<String, Object> claims, String subject){
@@ -57,7 +57,7 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(String token, User userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        final String username = extractEmail(token);
+        return (username.equals(userDetails.getEmail()) && !isTokenExpired(token));
     }
 }

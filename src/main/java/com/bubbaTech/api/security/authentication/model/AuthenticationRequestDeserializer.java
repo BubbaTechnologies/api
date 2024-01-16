@@ -25,9 +25,9 @@ public class AuthenticationRequestDeserializer extends StdDeserializer<Authentic
     @Override
     public AuthenticationRequest deserialize(JsonParser jp, DeserializationContext deserializationContext) throws IOException, JacksonException {
         JsonNode node = jp.getCodec().readTree(jp);
-        String username = node.get("username").textValue();
+        String email = node.get("email").textValue();
         String password = node.get("password").textValue();
 
-        return new AuthenticationRequest(username, password);
+        return new AuthenticationRequest(email, password);
     }
 }
