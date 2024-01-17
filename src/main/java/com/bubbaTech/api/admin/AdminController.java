@@ -140,7 +140,7 @@ public class AdminController {
         List<UserDTO> weeklyUser = userService.lastWeekUsers();
         List<String> weeklyUserEmails = new ArrayList<>();
         for (UserDTO user : weeklyUser) {
-            weeklyUserEmails.add(user.getUsername());
+            weeklyUserEmails.add(user.getEmail());
         }
         object.put("Weekly Active Users Count", weeklyUserEmails.size());
         object.put("Past Week Active Users",  weeklyUserEmails);
