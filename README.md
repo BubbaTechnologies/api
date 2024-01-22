@@ -684,12 +684,41 @@ Request Param: username
 
 Response: 200 if available.
 
-### /activity
+### /app/activity
 Mapping: GET
 
 Description: Returns activity feed for user in pages.
 
 Required Header: ```Authorization: Bearer (JWT)```
+
+Response: 
+```
+{
+    "activityList": [
+        "userProfile": {
+            "id": Long,
+            "username":str,
+            "privateAccount":bool
+        },
+        "clothingDTO": {
+            "id": long,
+            "name": str,
+            "imageURL": [str],
+            "productURL": str,
+            "store":{
+                "id": long,
+                "name": str,
+                "enabled": bool,
+                "url": str
+            }
+            "type": str,
+            "gender": str,
+            "date": str
+        }
+    ]
+    "totalPages": Long
+}
+  ```
 
 ## Scraper Controller
 

@@ -685,35 +685,6 @@ public class AppController {
     }
 
     /**
-     * Gets filter options for activity feed.
-     * @param request: Information about the request. Check HttpServletRequest for references.
-     * @param principal: Gives information about the requester. Check Principal type for references.
-     * @return:
-     * {
-     *     "genders":[str],
-     *     "types":[[str]],
-     *     "tags": {
-     *         type:[str]
-     *     }
-     * }
-     */
-    @GetMapping("/activityFilterOptions")
-    public ResponseEntity<?> activityFilterOptions(HttpServletRequest request, Principal principal) {
-        long startTime = System.currentTimeMillis();
-        Long userId = getUserId(principal);
-
-        //Gets users that are followed.
-        List<UserDTO> following = userService.getFollowing(userId);
-        FilterOptionsDTO filterOptionsDTO = likeService.getFilterOptionsByUserIds(following.stream()
-                .map(UserDTO::getId)
-                .collect(Collectors.toList()));
-
-
-        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
-        return ResponseEntity.ok().body(filterOptionsDTO);
-    }
-
-    /**
      * Returns the user requested profiles information.
      * @param request: Information about the request. Check HttpServletRequest for references.
      * @param principal: Gives information about the requester. Check Principal type for references.
