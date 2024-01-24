@@ -88,7 +88,7 @@ public class GenericController {
             logger.error(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-        AuthenticationRequest request = new AuthenticationRequest(user.getUsername(), newUser.getPassword());
+        AuthenticationRequest request = new AuthenticationRequest(user.getEmail(), newUser.getPassword());
         return this.login(request);
     }
 

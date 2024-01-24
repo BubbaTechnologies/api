@@ -28,22 +28,29 @@ public class UserDeserializer extends StdDeserializer<UserDTO> {
         String email = node.get("email").textValue();
         String password = node.get("password").textValue();
         String gender = node.get("gender").textValue();
-        Gender genderType = switch (gender.toLowerCase()) {
+        Gender genderType = UserDeserializer.getGender(gender.toLowerCase());
+        String birthdateString = node.get("birthdate").textValue();
+        LocalDate birthdate = UserDeserializer.getBirthdate(birthdateString);
+
+        return new UserDTO(username, email, password, genderType, birthdate);
+    }
+
+    public static Gender getGender(String gender) {
+        return switch (gender.toLowerCase()) {
             case "male" -> Gender.MALE;
             case "female" -> Gender.FEMALE;
             case "boy" -> Gender.BOY;
             case "girl" -> Gender.GIRL;
             default -> Gender.UNISEX;
         };
-        String birthdateString = node.get("birthdate").textValue();
-        LocalDate birthdate;
+    }
+
+    public static LocalDate getBirthdate(String birthdateString) {
         if (birthdateString == null) {
-            birthdate = LocalDate.of(1,1,1);
+            return LocalDate.of(1,1,1);
         } else {
             String[] splitBirthdate = birthdateString.split("-");
-            birthdate = LocalDate.of(Integer.parseInt(splitBirthdate[0]), Integer.parseInt(splitBirthdate[1]), Integer.parseInt(splitBirthdate[2]));
+            return LocalDate.of(Integer.parseInt(splitBirthdate[0]), Integer.parseInt(splitBirthdate[1]), Integer.parseInt(splitBirthdate[2]));
         }
-
-        return new UserDTO(username, email, password, genderType, birthdate);
     }
 }

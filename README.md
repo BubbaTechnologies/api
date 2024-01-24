@@ -684,10 +684,31 @@ Request Param: username
 
 Response: 200 if available.
 
+### /app/updateUserInfo
+Mapping: POST
+
+Description: Updates user information.
+
+Request Body: 
+```
+{
+    "username": Str,
+    "email": Str,
+    "birthdate": Str,
+    "gender": Str,
+    "privateAccount": Bool,
+    "password": String (OPTIONAL)
+}
+```
+
+
 ### /app/activity
 Mapping: GET
 
 Description: Returns activity feed for user in pages.
+
+Request Parameter: 
+    - ```query```: String
 
 Required Header: ```Authorization: Bearer (JWT)```
 
@@ -719,6 +740,41 @@ Response:
     "totalPages": Long
 }
   ```
+
+### /app/followRequests
+Description: Returns a list of profiles of the user request to follow the principal.
+
+Required Header: ```Authorization: Bearer (JWT)```
+
+Response:
+```
+{
+    "profiles": [{
+        "id":int,
+        "username":str,
+        "privateAccount": bool
+        "followingStatus": Int
+    }]
+}
+```
+
+
+### /app/searchProfiles
+Description: Finds similar users to the searchQuery.
+
+Required Header: ```Authorization: Bearer (JWT)```
+
+Response:
+```
+{
+    "profiles": [{
+        "id":int,
+        "username":str,
+        "privateAccount": bool
+        "followingStatus": Int
+    }]
+}
+```
 
 ## Scraper Controller
 

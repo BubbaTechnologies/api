@@ -4,10 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="BUG: Updated stats emails from usernames to emails">
+    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="BUG: Updated README.md">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/FollowingStatus.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/generic/GenericController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/generic/GenericController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/ProfileDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/ProfileDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDeserializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,8 +28,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Enum" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -381,7 +387,12 @@
       <workItem from="1705379163617" duration="5949000" />
       <workItem from="1705454415332" duration="742000" />
       <workItem from="1705455348903" duration="1876000" />
-      <workItem from="1705903707557" duration="134000" />
+      <workItem from="1705903707557" duration="456000" />
+      <workItem from="1705970275811" duration="1306000" />
+      <workItem from="1705972046586" duration="2598000" />
+      <workItem from="1705981317533" duration="1068000" />
+      <workItem from="1706026694144" duration="963000" />
+      <workItem from="1706027665013" duration="12421000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -649,14 +660,6 @@
       <option name="project" value="LOCAL" />
       <updated>1686703978706</updated>
     </task>
-    <task id="LOCAL-00067" summary="FEATURE: Added store enabled checking for likes.">
-      <option name="closed" value="true" />
-      <created>1701101374403</created>
-      <option name="number" value="00067" />
-      <option name="presentableId" value="LOCAL-00067" />
-      <option name="project" value="LOCAL" />
-      <updated>1701101374404</updated>
-    </task>
     <task id="LOCAL-00068" summary="FEATURE: Added /previews, fixed ClothingListResponse">
       <option name="closed" value="true" />
       <created>1702447797861</created>
@@ -737,7 +740,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705454960400</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="BUG: Updated README.md">
+      <option name="closed" value="true" />
+      <created>1705904147312</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1705904147312</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -759,7 +770,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="BUG: Updated getCardList and likes to query a list from DB." />
     <MESSAGE value="DOC: Added documentation for design patterns." />
     <MESSAGE value="BUG: Optimized /likes response time. Added custom mapping between entities and their respective DTOs." />
     <MESSAGE value="FEATURE: Added average response time tracking for /app routes." />
@@ -784,7 +794,8 @@
     <MESSAGE value="BUG: Added optional parameter to /filterOptions." />
     <MESSAGE value="BUG: Fixed /login and /update." />
     <MESSAGE value="BUG: Updated stats emails from usernames to emails" />
-    <option name="LAST_COMMIT_MESSAGE" value="BUG: Updated stats emails from usernames to emails" />
+    <MESSAGE value="BUG: Updated README.md" />
+    <option name="LAST_COMMIT_MESSAGE" value="BUG: Updated README.md" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

@@ -13,10 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -24,6 +21,8 @@ public class UserService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final Mapper mapper;
+
+    private final Double searchConfidence = 0.8;
     public UserService(@Lazy UserRepository repository, @Lazy PasswordEncoder passwordEncoder, Mapper mapper) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
@@ -217,7 +216,7 @@ public class UserService {
         user.setBirthDate(userRequest.getBirthDate());
         user.setDeviceId(userRequest.getDeviceId());
         user.setPrivateAccount(userRequest.getPrivateAccount());
-        user.setEmail(user.getEmail());
+        user.setEmail(userRequest.getEmail());
 
         return mapper.userToUserDTO(repository.save(user));
     }
@@ -261,5 +260,108 @@ public class UserService {
 
     public String encodePassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+    /**
+     * Determines the following relation between two users.
+     * @param requesterId: The user id of the requester.
+     * @param requestedId: The user id of the user being requested.
+     * @return: The following status between the two.
+     */
+    public FollowingStatus getFollowingRelation(Long requesterId, Long requestedId) {
+        User requested = repository.getReferenceById(requestedId);
+
+        if (requested.getFollowers().stream().map(User::getId).toList().contains(requesterId)) {
+            return FollowingStatus.FOLLOWING;
+        } else if (requested.getFollowRequests().stream().map(User::getId).toList().contains(requesterId)) {
+            return FollowingStatus.REQUESTED;
+        } else {
+            return FollowingStatus.NONE;
+        }
+    }
+
+    /**
+     * Returns a list of profiles of the user request to follow the principal.
+     * @param userId: UserID of user being queried.
+     * @return:
+     */
+    public List<ProfileDTO> getRequested(Long userId) {
+        User requested = repository.getReferenceById(userId);
+
+        List<User> requestedUsers = requested.getFollowRequests();
+        List<ProfileDTO> profiles = new ArrayList<>();
+        for (User user : requestedUsers) {
+            profiles.add(new ProfileDTO(mapper.userToUserDTO(user), FollowingStatus.REQUESTED));
+        }
+
+        return profiles;
+    }
+
+    /**
+     * Finds users with similiar username to query.
+     * @param query: A string representing the query.
+     * @return: Users with similiar users names to query with a certain threshold of confidence.
+     */
+    public List<ProfileDTO> searchUsers(String query, Long userId) {
+        //Filter special characters and cut query to 60 characters
+        if (query.length() > 20) {
+            query = query.substring(0, 20);
+        }
+
+        List<User> users = repository.findAll();
+
+        //Similarity ranking (smith-waterman)
+        List<User> rankedUsers = new ArrayList<>();
+        List<Integer> rankUserScores = new ArrayList<>();
+        for (User user: users) {
+            Integer score = smith_waterman(user.getUsername(), query);
+            rankedUsers.add(user);
+            rankUserScores.add(score);
+        }
+
+        //Sorts two lists
+        List<User> finalRankedUsers = rankedUsers;
+        rankedUsers.sort(Comparator.comparingInt(user -> rankUserScores.get(finalRankedUsers.indexOf(user))));
+
+        //Return similar users with searchConfidence confidence
+        if (rankedUsers.size() > 10) {
+            rankedUsers = rankedUsers.subList(0, 10);
+        }
+
+        List<ProfileDTO> profileDTOS = new ArrayList<>();
+        for (User user : rankedUsers) {
+            profileDTOS.add(new ProfileDTO(mapper.userToUserDTO(user), getFollowingRelation(userId, user.getId())));
+        }
+
+
+        return profileDTOS;
+    }
+
+    /**
+     * Determines highest sequence rating between two sequences.
+     * @param seq1: String representing first sequence.
+     * @param seq2: String representing second sequence.
+     * @return: An int representing the sequence alignment score.
+     */
+    private int smith_waterman(String seq1, String seq2) {
+        int matchScore = 1;
+        int mismatchPenalty = -1;
+        int gapPenalty = -1;
+
+        int maxScore = -1;
+        int[][] dp = new int[seq1.length() + 1][seq2.length() + 1];
+
+        for (int i = 1; i <= seq1.length(); i++) {
+            for (int j = 1; j < seq2.length(); j++) {
+                if (seq1.charAt(i - 1) == seq2.charAt(j - 1)) {
+                    dp[i][j] = Math.max(0, dp[i - 1][j - 1] + matchScore);
+                } else {
+                    dp[i][j] = Math.max(0, Math.max(dp[i - 1][j] - gapPenalty, dp[i][j - 1] - gapPenalty) - mismatchPenalty);
+                }
+                maxScore = Math.max(maxScore, dp[i][j]);
+            }
+        }
+
+        return maxScore;
     }
 }

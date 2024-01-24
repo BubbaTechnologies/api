@@ -17,9 +17,9 @@ import com.bubbaTech.api.like.LikeDTO;
 import com.bubbaTech.api.like.LikeNotFoundException;
 import com.bubbaTech.api.like.LikeService;
 import com.bubbaTech.api.like.Ratings;
-import com.bubbaTech.api.user.ProfileDTO;
-import com.bubbaTech.api.user.UserDTO;
-import com.bubbaTech.api.user.UserService;
+import com.bubbaTech.api.security.authentication.JwtUtil;
+import com.bubbaTech.api.security.authentication.model.AuthenticationResponse;
+import com.bubbaTech.api.user.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RequiredArgsConstructor
 @RequestMapping("/app")
 public class AppController {
-
+    @NonNull
+    private JwtUtil jwt;
     @NonNull
     UserService userService;
     @NonNull
@@ -585,23 +586,33 @@ public class AppController {
      * @param request: Information about the request. Check HttpServletRequest for references.
      * @param principal: Gives information about the requester. Check Principal type for references.
      * @param userInfo: New user information to be updated with.
-     * @return: 200 if successful.
+     * @return: {
+     *     "email":String,
+     *     "jwt" String
+     * }.
      */
     @PostMapping("/updateUserInfo")
-    public ResponseEntity<?> updateUserInfo(HttpServletRequest request, Principal principal, @RequestBody UserDTO userInfo) {
+    public ResponseEntity<?> updateUserInfo(HttpServletRequest request, Principal principal, @RequestBody Map<String, ?> userInfo) {
         long startTime = System.currentTimeMillis();
         UserDTO userDTO = getUserDTO(principal);
 
-        userDTO.setUsername(userInfo.getUsername());
-        userDTO.setEmail(userInfo.getEmail());
-        userDTO.setBirthDate(userInfo.getBirthDate());
-        userDTO.setGender(userInfo.getGender());
-        userDTO.setPrivateAccount(userInfo.getPrivateAccount());
+        userDTO.setUsername(userInfo.get("username").toString());
+        userDTO.setEmail(userInfo.get("email").toString());
 
-        userService.update(userDTO);
+        //Checks if null and lets string be null
+        String birthdate = (userInfo.get("birthdate") == null) ? null : userInfo.get("birthdate").toString();
+        userDTO.setBirthDate(UserDeserializer.getBirthdate(birthdate));
+        userDTO.setGender(UserDeserializer.getGender(userInfo.get("gender").toString()));
+        userDTO.setPrivateAccount(Boolean.valueOf(userInfo.get("privateAccount").toString()));
+
+        if (userInfo.containsKey("password")) {
+            userDTO.setPassword(userInfo.get("password").toString());
+        }
+
+        userDTO = userService.update(userDTO);
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new AuthenticationResponse(jwt.generateToken(userDTO), userDTO.getEmail()));
     }
 
     /**
@@ -639,7 +650,8 @@ public class AppController {
      *          "userProfile": {
      *              "id": Long,
      *              "username":str,
-     *              "privateAccount":bool
+     *              "privateAccount":bool,
+     *              "followingStatus": Int
      *          },
      *          "clothingDTO": {
      *              "id": long,
@@ -678,7 +690,7 @@ public class AppController {
         List<ActivityLikeDTO> activityLikeDTOList = new ArrayList<>();
 
         for (LikeDTO likeDTO : activity) {
-            activityLikeDTOList.add(new ActivityLikeDTO(new ProfileDTO(likeDTO.getUser()), likeDTO.getClothing()));
+            activityLikeDTOList.add(new ActivityLikeDTO(new ProfileDTO(likeDTO.getUser(), FollowingStatus.FOLLOWING), likeDTO.getClothing()));
         }
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok(new ActivityListResponse(activityLikeDTOList, pageCount));
@@ -694,14 +706,17 @@ public class AppController {
      *     "id":int,
      *     "username":str,
      *     "privateAccount": bool
+     *     "followingStatus": Int
      * }
      */
     @GetMapping("/profileInfo")
     public ResponseEntity<ProfileDTO> profile(HttpServletRequest request, Principal principal, @RequestParam(value = "userId") Long userId) {
         long startTime = System.currentTimeMillis();
-        UserDTO userDTO = userService.getById(userId);
 
-        ProfileDTO profileDTO = new ProfileDTO(userDTO.getId(), userDTO.getUsername(), userDTO.getPrivateAccount());
+        UserDTO userDTO = userService.getById(userId);
+        FollowingStatus followingStatus = userService.getFollowingRelation(getUserId(principal), userDTO.getId());
+
+        ProfileDTO profileDTO = new ProfileDTO(userDTO.getId(), userDTO.getUsername(), userDTO.getPrivateAccount(), followingStatus);
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok(profileDTO);
     }
@@ -751,6 +766,55 @@ public class AppController {
         ClothingListResponse responseObject = new ClothingListResponse(likesList, totalPages);
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok(responseObject);
+    }
+
+    /**
+     * Returns a list of profiles of the user request to follow the principal.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @return:
+     * {
+     *      "profiles": [{
+     *     "id":int,
+     *     "username":str,
+     *     "privateAccount": bool
+     *     "followingStatus": Int
+     *     }]
+     * }
+     */
+    @GetMapping("/followRequests")
+    public ResponseEntity<?> getFollowReqeusts(HttpServletRequest request, Principal principal) {
+        Long userId = getUserId(principal);
+        List<ProfileDTO> profileDTOS = userService.getRequested(userId);
+        return ResponseEntity.ok(profileDTOS);
+    }
+
+    /**
+     * Finds similar users to the searchQuery.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param searchQuery: A string representing the search.
+     * @return:
+     * {
+     *      "profiles": [{
+     *     "id":int,
+     *     "username":str,
+     *     "privateAccount": bool
+     *     "followingStatus": Int
+     *     }]
+     * }
+     */
+    @GetMapping("/searchProfiles")
+    public ResponseEntity<?> searchProfiles(HttpServletRequest request,Principal principal, @RequestParam(value = "query") String searchQuery) {
+        long startTime = System.currentTimeMillis();
+
+        List<ProfileDTO> profiles = userService.searchUsers(searchQuery, getUserId(principal));
+
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        Map<String, List<ProfileDTO>> responseEntity = new HashMap<>();
+        responseEntity.put("profiles", profiles);
+
+        return ResponseEntity.ok(responseEntity);
     }
 
     /**

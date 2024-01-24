@@ -66,4 +66,5 @@
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/cache/CachingConfig.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/security/rateLimiting/RateLimitInterceptor.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/clothing/ClothingListType.java
+/Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/user/FollowingStatus.java
 /Users/mattgroholski/Documents/My Documents/BubbaTech.nosync/api/src/main/java/com/bubbaTech/api/cache/CacheCustomizer.java
