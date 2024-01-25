@@ -22,7 +22,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final Mapper mapper;
 
-    private final Double searchConfidence = 0.8;
+    private final int topMatches = 10;
     public UserService(@Lazy UserRepository repository, @Lazy PasswordEncoder passwordEncoder, Mapper mapper) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
@@ -153,6 +153,7 @@ public class UserService {
         }
 
         requests.remove(requesterUser);
+        requestedUser.setFollowRequests(requests);
 
         if (approved) {
             addFollowing(requesterUser, requestedUser);
@@ -314,9 +315,11 @@ public class UserService {
         List<User> rankedUsers = new ArrayList<>();
         List<Integer> rankUserScores = new ArrayList<>();
         for (User user: users) {
-            Integer score = smith_waterman(user.getUsername(), query);
-            rankedUsers.add(user);
-            rankUserScores.add(score);
+            if (user.getId() > 3 && user.getId() != userId) {
+                Integer score = smith_waterman(user.getUsername(), query);
+                rankedUsers.add(user);
+                rankUserScores.add(score);
+            }
         }
 
         //Sorts two lists
@@ -324,7 +327,7 @@ public class UserService {
         rankedUsers.sort(Comparator.comparingInt(user -> rankUserScores.get(finalRankedUsers.indexOf(user))));
 
         //Return similar users with searchConfidence confidence
-        if (rankedUsers.size() > 10) {
+        if (rankedUsers.size() > topMatches) {
             rankedUsers = rankedUsers.subList(0, 10);
         }
 

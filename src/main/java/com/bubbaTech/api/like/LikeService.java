@@ -35,6 +35,8 @@ public class LikeService {
     private final LikeRepository repository;
     private final Mapper mapper;
 
+    private final int activityDelayMinutes = 1;
+
     @Value("${system.recommendation_system_addr}")
     public String recommendationSystemAddr;
     public LikeService(LikeRepository repository, Mapper mapper) {
@@ -172,7 +174,7 @@ public class LikeService {
         List<ClothType> typeFilters = getClothTypes(typeFilter);
 
         Long pageAmount;
-        LocalDateTime activityDelay = LocalDateTime.now().minusMinutes(30);
+        LocalDateTime activityDelay = LocalDateTime.now().minusMinutes(activityDelayMinutes);
         if (genderFilter != null && typeFilter != null) {
             pageAmount = repository.countAllByUserIdsWithGenderAndTypes(userIds, gender, typeFilters, activityDelay);
         } else if (genderFilter != null) {
@@ -229,7 +231,7 @@ public class LikeService {
         }
 
         Page<Like> likePage;
-        LocalDateTime activityDelay = LocalDateTime.now().minusMinutes(30);
+        LocalDateTime activityDelay = LocalDateTime.now().minusMinutes(activityDelayMinutes);
         if (genderFilter != null && typeFilter != null) {
             likePage = repository.getActivityByTypeAndGender(userIds, gender, typeFilters, activityDelay, pageRequest);
         } else if (genderFilter != null) {

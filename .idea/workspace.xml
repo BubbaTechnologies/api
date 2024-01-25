@@ -4,16 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="BUG: Updated README.md">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/FollowingStatus.java" afterDir="false" />
+    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="FEATURE: Added /searchProfiles and /followRequests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/generic/GenericController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/generic/GenericController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/ProfileDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/ProfileDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserDeserializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/FollowingStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/FollowingStatus.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/api-0.1.6.0.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/api-0.1.6.0.jar.original" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.bubbaTech.api.ApiApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.bubbaTech.api.ApiApplicationTests.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.bubbaTech.api.ApiApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.bubbaTech.api.ApiApplicationTests.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -392,7 +391,12 @@
       <workItem from="1705972046586" duration="2598000" />
       <workItem from="1705981317533" duration="1068000" />
       <workItem from="1706026694144" duration="963000" />
-      <workItem from="1706027665013" duration="12421000" />
+      <workItem from="1706027665013" duration="12859000" />
+      <workItem from="1706071122986" duration="2461000" />
+      <workItem from="1706118148724" duration="1691000" />
+      <workItem from="1706120172563" duration="1729000" />
+      <workItem from="1706136726983" duration="263000" />
+      <workItem from="1706144176794" duration="462000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -660,22 +664,6 @@
       <option name="project" value="LOCAL" />
       <updated>1686703978706</updated>
     </task>
-    <task id="LOCAL-00068" summary="FEATURE: Added /previews, fixed ClothingListResponse">
-      <option name="closed" value="true" />
-      <created>1702447797861</created>
-      <option name="number" value="00068" />
-      <option name="presentableId" value="LOCAL-00068" />
-      <option name="project" value="LOCAL" />
-      <updated>1702447797862</updated>
-    </task>
-    <task id="LOCAL-00069" summary="BUG: Updated minimum count for filter options.">
-      <option name="closed" value="true" />
-      <created>1702833932702</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1702833932702</updated>
-    </task>
     <task id="LOCAL-00070" summary="FEATURE: Updated filter options genders.">
       <option name="closed" value="true" />
       <created>1704387859565</created>
@@ -748,7 +736,23 @@
       <option name="project" value="LOCAL" />
       <updated>1705904147312</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="FEATURE: Added /searchProfiles">
+      <option name="closed" value="true" />
+      <created>1706068282971</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1706068282971</updated>
+    </task>
+    <task id="LOCAL-00080" summary="FEATURE: Added /searchProfiles and /followRequests">
+      <option name="closed" value="true" />
+      <created>1706068305059</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1706068305059</updated>
+    </task>
+    <option name="localTasksCounter" value="81" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -770,8 +774,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="DOC: Added documentation for design patterns." />
-    <MESSAGE value="BUG: Optimized /likes response time. Added custom mapping between entities and their respective DTOs." />
     <MESSAGE value="FEATURE: Added average response time tracking for /app routes." />
     <MESSAGE value="FEATURE: Feature added daily metrics to email." />
     <MESSAGE value="FEATURE: Added /scraper/store (GET)." />
@@ -795,7 +797,9 @@
     <MESSAGE value="BUG: Fixed /login and /update." />
     <MESSAGE value="BUG: Updated stats emails from usernames to emails" />
     <MESSAGE value="BUG: Updated README.md" />
-    <option name="LAST_COMMIT_MESSAGE" value="BUG: Updated README.md" />
+    <MESSAGE value="FEATURE: Added /searchProfiles" />
+    <MESSAGE value="FEATURE: Added /searchProfiles and /followRequests" />
+    <option name="LAST_COMMIT_MESSAGE" value="FEATURE: Added /searchProfiles and /followRequests" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

@@ -784,9 +784,15 @@ public class AppController {
      */
     @GetMapping("/followRequests")
     public ResponseEntity<?> getFollowReqeusts(HttpServletRequest request, Principal principal) {
+        long startTime = System.currentTimeMillis();
+
         Long userId = getUserId(principal);
         List<ProfileDTO> profileDTOS = userService.getRequested(userId);
-        return ResponseEntity.ok(profileDTOS);
+        Map<String, List<ProfileDTO>> responseEntity = new HashMap<>();
+        responseEntity.put("profiles", profileDTOS);
+
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok(responseEntity);
     }
 
     /**
@@ -809,10 +815,10 @@ public class AppController {
         long startTime = System.currentTimeMillis();
 
         List<ProfileDTO> profiles = userService.searchUsers(searchQuery, getUserId(principal));
-
-        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         Map<String, List<ProfileDTO>> responseEntity = new HashMap<>();
         responseEntity.put("profiles", profiles);
+
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
 
         return ResponseEntity.ok(responseEntity);
     }
