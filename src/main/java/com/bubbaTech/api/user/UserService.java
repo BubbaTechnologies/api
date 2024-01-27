@@ -292,7 +292,7 @@ public class UserService {
         List<User> requestedUsers = requested.getFollowRequests();
         List<ProfileDTO> profiles = new ArrayList<>();
         for (User user : requestedUsers) {
-            profiles.add(new ProfileDTO(mapper.userToUserDTO(user), FollowingStatus.REQUESTED));
+            profiles.add(new ProfileDTO(mapper.userToUserDTO(user), getFollowingRelation(userId, user.getId())));
         }
 
         return profiles;
