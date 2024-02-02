@@ -74,9 +74,7 @@ public class AppController {
     public ResponseEntity<ClothingDTO> card(Principal principal, HttpServletRequest request, @RequestParam(value = "type", required = false) String typeFilter, @RequestParam(value = "gender", required = false) String genderFilter) {
         long startTime = System.currentTimeMillis();
         ClothingDTO response = clothingService.getCard(this.getUserId(principal), typeFilter, genderFilter);
-        logger.info("/app/card: After clothingService get card: " + (System.currentTimeMillis() - startTime));
         response.reverseImageList();
-        logger.info("/app/card: After clothingService reverseImage: " + (System.currentTimeMillis() - startTime));
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok(response);
     }
@@ -627,6 +625,8 @@ public class AppController {
      */
     @PostMapping("/updatePassword")
     public ResponseEntity<?> updatePassword(HttpServletRequest request, Principal principal, Map<String, String> info) {
+        
+
         long startTime = System.currentTimeMillis();
         UserDTO userDTO = getUserDTO(principal);
 
@@ -711,6 +711,7 @@ public class AppController {
      */
     @GetMapping("/profileInfo")
     public ResponseEntity<ProfileDTO> profile(HttpServletRequest request, Principal principal, @RequestParam(value = "userId") Long userId) {
+        System.out.println(userService.encodePassword("testPassword-1218"));
         long startTime = System.currentTimeMillis();
 
         UserDTO userDTO = userService.getById(userId);

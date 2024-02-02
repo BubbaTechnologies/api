@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="BUG: Fixed follow request. Removes user when action is accepted.">
+    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="BUG: Updated follow relation in getRequested in User Service.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/api-0.1.6.0.jar.original" beforeDir="false" afterPath="$PROJECT_DIR$/target/api-0.1.6.0.jar.original" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.bubbaTech.api.ApiApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.bubbaTech.api.ApiApplicationTests.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.bubbaTech.api.ApiApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.bubbaTech.api.ApiApplicationTests.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -391,7 +395,10 @@
       <workItem from="1706120172563" duration="1729000" />
       <workItem from="1706136726983" duration="263000" />
       <workItem from="1706144176794" duration="2814000" />
-      <workItem from="1706390016469" duration="36000" />
+      <workItem from="1706390016469" duration="2167000" />
+      <workItem from="1706485981698" duration="737000" />
+      <workItem from="1706539469450" duration="762000" />
+      <workItem from="1706849199828" duration="7000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -659,14 +666,6 @@
       <option name="project" value="LOCAL" />
       <updated>1686703978706</updated>
     </task>
-    <task id="LOCAL-00071" summary="FEATURE: Added like filter options that determines what filters have likes.">
-      <option name="closed" value="true" />
-      <created>1704774039887</created>
-      <option name="number" value="00071" />
-      <option name="presentableId" value="LOCAL-00071" />
-      <option name="project" value="LOCAL" />
-      <updated>1704774039887</updated>
-    </task>
     <task id="LOCAL-00072" summary="FEATURE: Added social features API.">
       <option name="closed" value="true" />
       <created>1705015931472</created>
@@ -747,7 +746,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706144743516</updated>
     </task>
-    <option name="localTasksCounter" value="82" />
+    <task id="LOCAL-00082" summary="BUG: Updated follow relation in getRequested in User Service.">
+      <option name="closed" value="true" />
+      <created>1706390075400</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1706390075401</updated>
+    </task>
+    <option name="localTasksCounter" value="83" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -769,7 +776,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="FEATURE: Feature added daily metrics to email." />
     <MESSAGE value="FEATURE: Added /scraper/store (GET)." />
     <MESSAGE value="FEATURE: Added /app/updateLocation and added birthdate to user." />
     <MESSAGE value="BUG: Updated null error in mapper." />
@@ -794,7 +800,8 @@
     <MESSAGE value="FEATURE: Added /searchProfiles" />
     <MESSAGE value="FEATURE: Added /searchProfiles and /followRequests" />
     <MESSAGE value="BUG: Fixed follow request. Removes user when action is accepted." />
-    <option name="LAST_COMMIT_MESSAGE" value="BUG: Fixed follow request. Removes user when action is accepted." />
+    <MESSAGE value="BUG: Updated follow relation in getRequested in User Service." />
+    <option name="LAST_COMMIT_MESSAGE" value="BUG: Updated follow relation in getRequested in User Service." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

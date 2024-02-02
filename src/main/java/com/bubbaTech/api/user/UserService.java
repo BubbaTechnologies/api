@@ -316,7 +316,7 @@ public class UserService {
         List<Integer> rankUserScores = new ArrayList<>();
         for (User user: users) {
             if (user.getId() > 3 && user.getId() != userId) {
-                Integer score = smith_waterman(user.getUsername(), query);
+                Integer score = smith_waterman(user.getUsername().toLowerCase(), query.toLowerCase());
                 rankedUsers.add(user);
                 rankUserScores.add(score);
             }
@@ -324,7 +324,7 @@ public class UserService {
 
         //Sorts two lists
         List<User> finalRankedUsers = rankedUsers;
-        rankedUsers.sort(Comparator.comparingInt(user -> rankUserScores.get(finalRankedUsers.indexOf(user))));
+        rankedUsers.sort(Comparator.comparingInt(user -> rankUserScores.get(finalRankedUsers.indexOf(user))).reversed());
 
         //Return similar users with searchConfidence confidence
         if (rankedUsers.size() > topMatches) {
@@ -347,9 +347,9 @@ public class UserService {
      * @return: An int representing the sequence alignment score.
      */
     private int smith_waterman(String seq1, String seq2) {
-        int matchScore = 1;
-        int mismatchPenalty = -1;
-        int gapPenalty = -1;
+        int matchScore = 4;
+        int mismatchPenalty = 6;
+        int gapPenalty = 6;
 
         int maxScore = -1;
         int[][] dp = new int[seq1.length() + 1][seq2.length() + 1];
