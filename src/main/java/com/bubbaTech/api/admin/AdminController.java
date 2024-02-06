@@ -104,20 +104,20 @@ public class AdminController {
             sendExecutiveEmail(emails);
 
             //Gets and sends business emails
-            JSONArray businessEmails = (JSONArray) obj.get("business");
-            emails = new ArrayList<>();
-            for (Object executiveEmail : executiveEmails) {
-                emails.add((String) executiveEmail);
-            }
-            sendBusinessEmail(emails);
+//            JSONArray businessEmails = (JSONArray) obj.get("business");
+//            emails = new ArrayList<>();
+//            for (Object businessEmail : businessEmails) {
+//                emails.add((String) businessEmail);
+//            }
+//            sendBusinessEmail(emails);
 
             //Gets and sends developer emails
-            JSONArray developerEmails = (JSONArray) obj.get("developer");
-            emails = new ArrayList<>();
-            for (Object executiveEmail : executiveEmails) {
-                emails.add((String) executiveEmail);
-            }
-            sendDeveloperEmail(emails);
+//            JSONArray developerEmails = (JSONArray) obj.get("developer");
+//            emails = new ArrayList<>();
+//            for (Object developerEmail : developerEmails) {
+//                emails.add((String) developerEmail);
+//            }
+//            sendDeveloperEmail(emails);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -130,7 +130,7 @@ public class AdminController {
         List<UserDTO> newSignUps = userService.lastDaySignUps();
         List<String> newSignUpEmails = new ArrayList<>();
         for (UserDTO user : newSignUps) {
-            newSignUpEmails.add(user.getUsername());
+            newSignUpEmails.add(user.getEmail());
         }
 
         object.put("New Sign Ups Count", newSignUpEmails.size());
@@ -158,11 +158,43 @@ public class AdminController {
     }
 
     private void sendDeveloperEmail(List<String> emails) {
-        //TODO
+        JSONObject object = new JSONObject();
+        clothingService.getClothingPerStoreData();
+        JSONArray storeArray = new JSONArray();
+        List<storeStatDTO> storeStatDTOS = clothingService.getClothingPerStoreData();
+        for (storeStatDTO storeStatDTO : storeStatDTOS) {
+            storeArray.add(storeStatDTO.toString());
+        }
+        object.put("Store Statistics", storeArray);
+        for (String email : emails) {
+            sendEmail(email, object);
+        }
     }
 
     private void sendBusinessEmail(List<String> emails) {
-        //TODO
+        JSONObject object = new JSONObject();
+
+        //New Sign Ups
+        List<UserDTO> newSignUps = userService.lastDaySignUps();
+        List<String> newSignUpEmails = new ArrayList<>();
+        for (UserDTO user : newSignUps) {
+            newSignUpEmails.add(user.getEmail());
+        }
+
+        object.put("New Sign Ups Count", newSignUpEmails.size());
+        object.put("New Sign Ups", newSignUpEmails);
+
+        //Weekly Active User
+        List<UserDTO> weeklyUser = userService.lastWeekUsers();
+        List<String> weeklyUserEmails = new ArrayList<>();
+        for (UserDTO user : weeklyUser) {
+            weeklyUserEmails.add(user.getEmail());
+        }
+        object.put("Weekly Active Users Count", weeklyUserEmails.size());
+        object.put("Past Week Active Users",  weeklyUserEmails);
+        for (String email : emails) {
+            sendEmail(email, object);
+        }
     }
 
     private void sendEmail(String email, JSONObject data) {

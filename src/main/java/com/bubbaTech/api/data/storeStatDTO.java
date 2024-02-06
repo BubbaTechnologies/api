@@ -30,7 +30,7 @@ public class storeStatDTO {
     @Override
     public String toString() {
         return String.format("""
-                {"name":%s,"maleCount":%d,"femaleCount":%d,"boyCount":%d,"girlCount":%d,"kidCount":%d,"unisexCount":%d,"otherCount":%d,"totalCount":%d}<br>""", name, this.maleCount, this.femaleCount, this.boyCount, this.girlCount,
+                {"name":"%s","maleCount":%d,"femaleCount":%d,"boyCount":%d,"girlCount":%d,"kidCount":%d,"unisexCount":%d,"otherCount":%d,"totalCount":%d}""", name, this.maleCount, this.femaleCount, this.boyCount, this.girlCount,
                 this.kidCount, this.unisexCount, this.otherCount, this.totalCount);
     }
 }
