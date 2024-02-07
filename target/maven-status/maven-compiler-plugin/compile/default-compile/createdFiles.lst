@@ -53,11 +53,13 @@ com/bubbaTech/api/user/UserDeserializer.class
 com/bubbaTech/api/store/Store.class
 com/bubbaTech/api/info/ServiceLogger.class
 com/bubbaTech/api/async/AsyncConfiguration.class
+com/bubbaTech/api/user/metricStructs/SessionDataDTO.class
 com/bubbaTech/api/security/authentication/JwtUtil.class
 com/bubbaTech/api/aws/LambdaService.class
 com/bubbaTech/api/store/StoreRepository.class
 com/bubbaTech/api/like/LikeService.class
 com/bubbaTech/api/filterOptions/FilterOptionsDTO.class
+com/bubbaTech/api/user/metricStructs/SessionData.class
 com/bubbaTech/api/like/LikeRepository.class
 com/bubbaTech/api/user/UserNotFoundException.class
 com/bubbaTech/api/app/responseObjects/clothingListResponse/ClothingListResponse.class

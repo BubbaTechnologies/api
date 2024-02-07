@@ -454,6 +454,24 @@ Response:
 }
 ```
 
+### /app/sessionData (POST)
+Mapping: POST
+
+Required Headers: ```Authorization: Bearer (JWT)```
+
+Description: Adds session info to database.
+
+Request:
+
+```
+{
+    "sessionLength" : "HH:mm:ss"
+}
+```
+
+Response:
+200 if successful.
+
 ### /app/pageClick (POST)
 Mapping: POST
 

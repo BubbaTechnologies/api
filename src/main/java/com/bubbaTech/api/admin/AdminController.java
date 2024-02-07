@@ -90,7 +90,7 @@ public class AdminController {
         return ResponseEntity.ok().headers(headers).body(store);
     }
 
-    @Scheduled(cron = "0 59 21 * * *")
+    @Scheduled(cron = "0 0 14 * * *")
     public void sendMetricsEmails() {
         try {
             InputStream resource = new ClassPathResource("static/statEmailList.json").getInputStream();
