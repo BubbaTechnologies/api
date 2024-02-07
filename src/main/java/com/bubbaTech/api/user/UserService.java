@@ -6,6 +6,8 @@ package com.bubbaTech.api.user;
 
 import com.bubbaTech.api.mapping.Mapper;
 import com.bubbaTech.api.security.authorities.Authorities;
+import com.bubbaTech.api.user.metricStructs.SessionData;
+import com.bubbaTech.api.user.metricStructs.SessionDataDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -232,6 +234,23 @@ public class UserService {
 
         user.setLastLogin(LocalDate.now());
         repository.save(user);
+    }
+
+    /**
+     * Adds the session data to the database.
+     * @param sessionDataDTO: The data being saved to the database.
+     */
+    public void saveSession(SessionDataDTO sessionDataDTO) {
+        Long userId = sessionDataDTO.getUser().getId();
+
+        User user = repository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        SessionData sessionData = new SessionData();
+        sessionData.setSessionLength(sessionDataDTO.getSessionLength());
+        sessionData.setDateTimeCreated(sessionDataDTO.getDateTimeCreated());
+        sessionData.setUser(user);
+
+        List<SessionData> sessions = user.getSessionData();
+        sessions.add(sessionData);
     }
 
 

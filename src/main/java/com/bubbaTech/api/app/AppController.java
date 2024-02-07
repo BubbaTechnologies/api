@@ -21,6 +21,7 @@ import com.bubbaTech.api.like.Ratings;
 import com.bubbaTech.api.security.authentication.JwtUtil;
 import com.bubbaTech.api.security.authentication.model.AuthenticationResponse;
 import com.bubbaTech.api.user.*;
+import com.bubbaTech.api.user.metricStructs.SessionDataDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,8 @@ import org.springframework.web.client.RestTemplate;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.Principal;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -409,10 +412,20 @@ public class AppController {
     public ResponseEntity<?> closeApp(HttpServletRequest request, Principal principal, @RequestBody Map<String, ?> sessionData) {
         long startTime = System.currentTimeMillis();
 
-        //TODO: Check sessionData for correct data.
-        //TODO: Record user average session length.
-        //TODO: Generalize data to average session length.
+        String[] expectedKeys = {"sessionLength"};
+        for (String key : expectedKeys) {
+            if (!sessionData.containsKey(key)) {
+                return ResponseEntity.unprocessableEntity().build();
+            }
+        }
 
+        //Clean data from sessionLength
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalTime time = LocalTime.parse((String) sessionData.get("sessionLength"), formatter);
+
+        SessionDataDTO sessionDataDTO = new SessionDataDTO(time.format(formatter), getUserDTO(principal));
+
+        userService.saveSession(sessionDataDTO);
 
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok().build();

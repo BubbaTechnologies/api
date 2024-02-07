@@ -6,6 +6,7 @@ package com.bubbaTech.api.user;
 
 import com.bubbaTech.api.like.Like;
 import com.bubbaTech.api.security.authorities.Authorities;
+import com.bubbaTech.api.user.metricStructs.SessionData;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -46,6 +47,7 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "following_id")
     )
     private List<User> following;
+
     @ManyToMany(mappedBy = "following")
     private List<User> followers;
 
@@ -74,6 +76,9 @@ public class User implements UserDetails {
     @Nullable
     private LocalDate birthDate;
     private Boolean privateAccount;
+
+    @OneToMany(mappedBy = "user", cascade={PERSIST, DETACH})
+    private List<SessionData> sessionData;
 
     //Device location
     @Nullable
