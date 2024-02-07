@@ -3,6 +3,9 @@ package com.bubbaTech.api.data;
 
 import lombok.Data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Data
 public class storeStatDTO {
     private String name;
@@ -14,8 +17,9 @@ public class storeStatDTO {
     private Long unisexCount;
     private Long otherCount;
     private Long totalCount;
+    private Boolean enabled;
 
-    public storeStatDTO(String name, Long maleCount, Long femaleCount, Long boyCount, Long girlCount, Long kidCount, Long unisexCount, Long otherCount) {
+    public storeStatDTO(String name, Long maleCount, Long femaleCount, Long boyCount, Long girlCount, Long kidCount, Long unisexCount, Long otherCount, Boolean enabled) {
         this.name = name;
         this.maleCount = maleCount;
         this.femaleCount = femaleCount;
@@ -25,6 +29,23 @@ public class storeStatDTO {
         this.unisexCount = unisexCount;
         this.totalCount = maleCount + femaleCount + boyCount + girlCount + kidCount + unisexCount;
         this.otherCount = otherCount;
+        this.enabled = enabled;
+    }
+
+    public Map<String, ?> toMap() {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("name", this.name);
+        map.put("maleCount", this.maleCount);
+        map.put("femaleCount", this.femaleCount);
+        map.put("boyCount", this.boyCount);
+        map.put("girlCount", this.girlCount);
+        map.put("kidCount", this.kidCount);
+        map.put("unisexCount", this.unisexCount);
+        map.put("totalCount", this.totalCount);
+        map.put("enabled", enabled);
+
+        return map;
     }
 
     @Override

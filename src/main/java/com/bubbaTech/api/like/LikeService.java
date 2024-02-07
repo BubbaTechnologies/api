@@ -69,8 +69,10 @@ public class LikeService {
             User likedUser = mapper.userDTOToUser(likeRequest.getUser());
             Like like = new Like(likeRequest, likedUser, likedClothing);
             LikeDTO likeDTO = mapper.likeToLikeDTO(repository.save(like));
+
             // Sends like to recommender service
             sendLike(likeDTO);
+
             return likeDTO;
         }
     }

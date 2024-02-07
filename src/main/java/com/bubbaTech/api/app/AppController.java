@@ -4,6 +4,7 @@
 
 package com.bubbaTech.api.app;
 
+import com.bubbaTech.api.actuator.LikeDataEndpoint;
 import com.bubbaTech.api.actuator.RouteResponseTimeEndpoint;
 import com.bubbaTech.api.app.responseObjects.clothingListResponse.ActivityLikeDTO;
 import com.bubbaTech.api.app.responseObjects.clothingListResponse.ActivityListResponse;
@@ -60,6 +61,10 @@ public class AppController {
     @Value("${system.image_processing_addr}")
     private String imageProcessingAddr;
 
+    @NonNull
+    private final LikeDataEndpoint likeDataEndpoint;
+
+    @NonNull
     private final RouteResponseTimeEndpoint routeResponseTimeEndpoint;
 
 
@@ -244,6 +249,9 @@ public class AppController {
 
         newLike.setUser(getUserDTO(principal));
 
+        //Adds to like metrics
+        likeDataEndpoint.addLikeAndRecommend();
+
         //Sets like to like rating + imageTapRatio
         newLike.setRating(Ratings.LIKE_RATING + min(newLike.getImageTaps() * Ratings.TOTAL_IMAGE_TAP_RATING, Ratings.TOTAL_IMAGE_TAP_RATING));
         newLike.setLiked(true);
@@ -270,6 +278,9 @@ public class AppController {
         long startTime = System.currentTimeMillis();
         newLike.setClothing(clothingService.getById(newLike.getClothing().getId()));
         newLike.setUser(getUserDTO(principal));
+
+        //Adds to like metrics
+        likeDataEndpoint.addRecommend();
 
         //Sets like to dislike rating
         newLike.setRating(Ratings.DISLIKE_RATING);
@@ -349,8 +360,8 @@ public class AppController {
     }
 
     /**
-     * @param request: Information about the request. Check HttpServletRequest for references.
      * @param newLike: LikeDTO representing new like data. Check LikeDeserializer for communication information.
+     * @param request: Information about the request. Check HttpServletRequest for references.
      * @param principal: Gives information about the requester. Check Principal type for references.
      * @return:
      * {
@@ -366,6 +377,9 @@ public class AppController {
         newLike.setClothing(clothingService.getById(newLike.getClothing().getId()));
         newLike.setUser(getUserDTO(principal));
 
+        //Adds like data metrics
+        likeDataEndpoint.addPageClick(newLike.getClothing().getStore().getName());
+
         newLike.setRating(Ratings.PAGE_CLICK_RATING);
         try {
             LikeDTO findLike = likeService.findByClothingAndUser(newLike.getClothing().getId(),newLike.getUser().getId());
@@ -379,6 +393,29 @@ public class AppController {
         EntityModel<LikeDTO> like = EntityModel.of(likeService.create(newLike));
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok().body(like);
+    }
+
+    /**
+     * Adds metrics to the system when the application is closed.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param sessionData: Data formatted as follows:
+     *                   {
+     *                   "sessionLength": str (formatted as HH:MM:SS)
+     *                   }
+     * @return: 200 if successful.
+     */
+    @PostMapping(value = "/sessionData")
+    public ResponseEntity<?> closeApp(HttpServletRequest request, Principal principal, @RequestBody Map<String, ?> sessionData) {
+        long startTime = System.currentTimeMillis();
+
+        //TODO: Check sessionData for correct data.
+        //TODO: Record user average session length.
+        //TODO: Generalize data to average session length.
+
+
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().build();
     }
 
     /**

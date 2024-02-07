@@ -5,6 +5,7 @@
 package com.bubbaTech.api.admin;
 
 
+import com.bubbaTech.api.actuator.LikeDataEndpoint;
 import com.bubbaTech.api.actuator.RouteResponseTimeEndpoint;
 import com.bubbaTech.api.aws.LambdaService;
 import com.bubbaTech.api.clothing.ClothingService;
@@ -50,6 +51,8 @@ public class AdminController {
     @NonNull
     private RouteResponseTimeEndpoint routeResponseTimeEndpoint;
     @NonNull
+    private LikeDataEndpoint likeDataEndpoint;
+    @NonNull
     private LambdaService lambdaService;
 
 
@@ -87,7 +90,7 @@ public class AdminController {
         return ResponseEntity.ok().headers(headers).body(store);
     }
 
-    @Scheduled(cron = "0 0 14 * * *")
+    @Scheduled(cron = "0 59 21 * * *")
     public void sendMetricsEmails() {
         try {
             InputStream resource = new ClassPathResource("static/statEmailList.json").getInputStream();
@@ -104,20 +107,20 @@ public class AdminController {
             sendExecutiveEmail(emails);
 
             //Gets and sends business emails
-//            JSONArray businessEmails = (JSONArray) obj.get("business");
-//            emails = new ArrayList<>();
-//            for (Object businessEmail : businessEmails) {
-//                emails.add((String) businessEmail);
-//            }
-//            sendBusinessEmail(emails);
+            JSONArray businessEmails = (JSONArray) obj.get("business");
+            emails = new ArrayList<>();
+            for (Object businessEmail : businessEmails) {
+                emails.add((String) businessEmail);
+            }
+            sendBusinessEmail(emails);
 
             //Gets and sends developer emails
-//            JSONArray developerEmails = (JSONArray) obj.get("developer");
-//            emails = new ArrayList<>();
-//            for (Object developerEmail : developerEmails) {
-//                emails.add((String) developerEmail);
-//            }
-//            sendDeveloperEmail(emails);
+            JSONArray developerEmails = (JSONArray) obj.get("developer");
+            emails = new ArrayList<>();
+            for (Object developerEmail : developerEmails) {
+                emails.add((String) developerEmail);
+            }
+            sendDeveloperEmail(emails);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -144,12 +147,14 @@ public class AdminController {
         }
         object.put("Weekly Active Users Count", weeklyUserEmails.size());
         object.put("Past Week Active Users",  weeklyUserEmails);
-        object.put("Average Response Times", routeResponseTimeEndpoint.getAverageResponseTimes().toString());
+        object.put("Recommend to Like Metrics", likeDataEndpoint.getLikeMetrics());
+        object.put("Page Click Metrics",  likeDataEndpoint.getPageClickMetrics());
+        object.put("Average Response Times", routeResponseTimeEndpoint.getAverageResponseTimes());
         clothingService.getClothingPerStoreData();
         JSONArray storeArray = new JSONArray();
         List<storeStatDTO> storeStatDTOS = clothingService.getClothingPerStoreData();
         for (storeStatDTO storeStatDTO : storeStatDTOS) {
-            storeArray.add(storeStatDTO.toString());
+            storeArray.add(storeStatDTO.toMap());
         }
         object.put("Store Statistics", storeArray);
         for (String email : emails) {
@@ -163,8 +168,9 @@ public class AdminController {
         JSONArray storeArray = new JSONArray();
         List<storeStatDTO> storeStatDTOS = clothingService.getClothingPerStoreData();
         for (storeStatDTO storeStatDTO : storeStatDTOS) {
-            storeArray.add(storeStatDTO.toString());
+            storeArray.add(storeStatDTO);
         }
+        object.put("Recommend to Like Statistics", likeDataEndpoint.getLikeMetrics());
         object.put("Store Statistics", storeArray);
         for (String email : emails) {
             sendEmail(email, object);
@@ -200,7 +206,7 @@ public class AdminController {
     private void sendEmail(String email, JSONObject data) {
         JSONObject requestBody = new JSONObject();
         requestBody.put("recipient", email);
-        requestBody.put("subject", "App Metrics - " + LocalDate.now().toString());
+        requestBody.put("subject", "App Metrics - " + LocalDate.now());
         requestBody.put("data", data);
 
         Boolean sent = lambdaService.useLambda("genericEmailFunction", requestBody);

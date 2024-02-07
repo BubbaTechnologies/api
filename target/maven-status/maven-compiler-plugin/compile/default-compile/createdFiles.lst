@@ -65,6 +65,7 @@ com/bubbaTech/api/security/rateLimiting/IpRateLimitingService.class
 com/bubbaTech/api/clothing/ClothingService.class
 com/bubbaTech/api/like/Ratings.class
 com/bubbaTech/api/clothing/Clothing.class
+com/bubbaTech/api/actuator/LikeDataEndpoint.class
 com/bubbaTech/api/security/SecurityConfig.class
 com/bubbaTech/api/clothing/ClothingDTO.class
 com/bubbaTech/api/security/authentication/model/AuthenticationRequest.class

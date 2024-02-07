@@ -24,6 +24,8 @@ public class RouteResponseTimeEndpoint {
      */
     private final ConcurrentHashMap<String, List<Long>> routeResponseTime = new ConcurrentHashMap<>();
 
+    static int MAX_AMOUNT = 100;
+
     /**
      * @param route: String value of the route.
      * @param responseTime: Amount of time taken to process route.
@@ -40,8 +42,7 @@ public class RouteResponseTimeEndpoint {
 
 
         //Amount of values to include within the average.
-        int MAX_AMOUNT = 100;
-        if (longList.size() + 1 > MAX_AMOUNT) {
+        if (longList.size() + 1 > RouteResponseTimeEndpoint.MAX_AMOUNT) {
             longList.remove(0);
         }
 

@@ -4,12 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="BUG: Updated email metric for sign ups.">
+    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="FEATURE: Updated email functions.">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/actuator/LikeDataEndpoint.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/actuator/RouteResponseTimeEndpoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/actuator/RouteResponseTimeEndpoint.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/admin/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/admin/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/app/AppController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/application/ApplicationConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/application/ApplicationConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/data/storeStatDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/data/storeStatDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/statEmailList.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/statEmailList.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/like/LikeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/statEmailList.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/statEmailList.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-com.bubbaTech.api.ApiApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-com.bubbaTech.api.ApiApplicationTests.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/com.bubbaTech.api.ApiApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/com.bubbaTech.api.ApiApplicationTests.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,8 +33,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -407,7 +416,9 @@
       <workItem from="1706932530762" duration="3608000" />
       <workItem from="1706999607843" duration="661000" />
       <workItem from="1707183721314" duration="1119000" />
-      <workItem from="1707185170925" duration="6089000" />
+      <workItem from="1707185170925" duration="14267000" />
+      <workItem from="1707271195431" duration="745000" />
+      <workItem from="1707279207714" duration="3216000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -675,14 +686,6 @@
       <option name="project" value="LOCAL" />
       <updated>1686703978706</updated>
     </task>
-    <task id="LOCAL-00074" summary="FEATURE: Updated /filterOptions.">
-      <option name="closed" value="true" />
-      <created>1705191055826</created>
-      <option name="number" value="00074" />
-      <option name="presentableId" value="LOCAL-00074" />
-      <option name="project" value="LOCAL" />
-      <updated>1705191055826</updated>
-    </task>
     <task id="LOCAL-00075" summary="BUG: Added optional parameter to /filterOptions.">
       <option name="closed" value="true" />
       <created>1705192967912</created>
@@ -763,7 +766,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706897756848</updated>
     </task>
-    <option name="localTasksCounter" value="85" />
+    <task id="LOCAL-00085" summary="FEATURE: Updated email functions.">
+      <option name="closed" value="true" />
+      <created>1707191683306</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1707191683306</updated>
+    </task>
+    <option name="localTasksCounter" value="86" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -785,7 +796,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="BUG: Updated null error in mapper." />
     <MESSAGE value="FEATURE: Added verification code feature." />
     <MESSAGE value="FEATURE: Added deviceId to user." />
     <MESSAGE value="BUG: Fixed bug in update." />
@@ -810,7 +820,8 @@
     <MESSAGE value="BUG: Updated follow relation in getRequested in User Service." />
     <MESSAGE value="BUG: Updated logging for /app/card." />
     <MESSAGE value="BUG: Updated email metric for sign ups." />
-    <option name="LAST_COMMIT_MESSAGE" value="BUG: Updated email metric for sign ups." />
+    <MESSAGE value="FEATURE: Updated email functions." />
+    <option name="LAST_COMMIT_MESSAGE" value="FEATURE: Updated email functions." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

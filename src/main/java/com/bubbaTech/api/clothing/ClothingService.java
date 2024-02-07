@@ -288,7 +288,7 @@ public class ClothingService {
             Long kidCount = repository.countByStoreAndGender(store, Gender.KID);
             Long unisexCount = repository.countByStoreAndGender(store, Gender.UNISEX);
             Long otherCount = repository.countByStoreAndType(store, ClothType.OTHER);
-            storeStats.add(new storeStatDTO(store.getName(),maleCount, femaleCount, boyCount, girlCount, kidCount, unisexCount, otherCount));
+            storeStats.add(new storeStatDTO(store.getName(),maleCount, femaleCount, boyCount, girlCount, kidCount, unisexCount, otherCount, store.isEnabled()));
         }
         return storeStats;
     }
