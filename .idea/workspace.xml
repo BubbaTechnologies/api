@@ -5,7 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="FEATURE: Added notification and new Authorities.">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/logback.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -413,7 +413,7 @@
       <workItem from="1707423253186" duration="361000" />
       <workItem from="1707424499886" duration="3101000" />
       <workItem from="1707428208304" duration="4667000" />
-      <workItem from="1707433098614" duration="3205000" />
+      <workItem from="1707433098614" duration="3417000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -681,14 +681,6 @@
       <option name="project" value="LOCAL" />
       <updated>1686703978706</updated>
     </task>
-    <task id="LOCAL-00080" summary="FEATURE: Added /searchProfiles and /followRequests">
-      <option name="closed" value="true" />
-      <created>1706068305059</created>
-      <option name="number" value="00080" />
-      <option name="presentableId" value="LOCAL-00080" />
-      <option name="project" value="LOCAL" />
-      <updated>1706068305059</updated>
-    </task>
     <task id="LOCAL-00081" summary="BUG: Fixed follow request. Removes user when action is accepted.">
       <option name="closed" value="true" />
       <created>1706144743515</created>
@@ -769,7 +761,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707436221831</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="FEATURE: Added notification and new Authorities.">
+      <option name="closed" value="true" />
+      <created>1707436369012</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1707436369012</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -1,6 +1,6 @@
 <configuration>
 
-    <property name="notificationLogPath" value="${NOTIFICATION_FILE_PATH:/var/log/notifications.log}" />
+    <property name="notificationLogPath" value="${NOTIFICATION_FILE_PATH:-/var/log/notifications.log}" />
 
     <!-- Console appender -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
