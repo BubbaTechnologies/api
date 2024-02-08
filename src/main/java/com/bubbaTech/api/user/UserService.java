@@ -76,6 +76,22 @@ public class UserService {
         return mapper.userToUserDTO(repository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email)));
     }
 
+    /**
+     * Gets all device ids.
+     * @return: Returns a list of deviceIds.
+     */
+    public List<String> getAllDeviceIds() {
+        List<User> users = repository.findAll();
+        List<String> deviceIds = new ArrayList<>();
+        for (User user : users) {
+            if (user.isEnabled() && user.getDeviceId() != null) {
+                deviceIds.add(user.getDeviceId());
+            }
+        }
+
+        return deviceIds;
+    }
+
 
     public Boolean checkUsername(String username) {
         return repository.countByUsername(username) > 0;

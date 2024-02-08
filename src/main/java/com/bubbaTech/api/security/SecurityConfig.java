@@ -66,6 +66,7 @@ public class SecurityConfig {
                         .requestMatchers("/scraper/**").hasAuthority("SCRAPER")
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/actuator/**").hasAuthority("ADMIN")
+                        .requestMatchers("/admin/sendNotification").hasAuthority("MARKETING")
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

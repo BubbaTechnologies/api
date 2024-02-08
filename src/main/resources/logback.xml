@@ -1,0 +1,30 @@
+<configuration>
+
+    <property name="notificationLogPath" value="${NOTIFICATION_FILE_PATH:/var/log/notifications.log}" />
+
+    <!-- Console appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File appender for com.bubbaTech.api.admin package -->
+    <appender name="NOTIFICATION_LOG" class="ch.qos.logback.core.FileAppender">
+        <file>${notificationLogPath}</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Logger for com.bubbaTech.api.admin package -->
+    <logger name="com.bubbaTech.api.admin" level="INFO" additivity="false">
+        <appender-ref ref="NOTIFICATION_LOG"/>
+    </logger>
+
+    <!-- Root logger -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>

@@ -117,6 +117,10 @@ public class User implements UserDetails {
 
     @PrePersist
     public void prePersist() {
+        if (this.enabled == null) {
+            this.enabled = true;
+        }
+
         this.accountCreated = LocalDate.now();
         this.lastLogin = LocalDate.now();
     }

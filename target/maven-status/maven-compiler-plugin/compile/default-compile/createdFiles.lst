@@ -17,6 +17,7 @@ com/bubbaTech/api/generic/GenericController.class
 com/bubbaTech/api/admin/AdminController.class
 com/bubbaTech/api/cache/CachingConfig.class
 com/bubbaTech/api/store/StoreNotFoundException.class
+com/bubbaTech/api/errorLogging/clothingError/ClothingError.class
 com/bubbaTech/api/like/Like.class
 com/bubbaTech/api/like/LikeDeserializer.class
 com/bubbaTech/api/user/User.class
@@ -48,6 +49,7 @@ com/bubbaTech/api/app/responseObjects/clothingListResponse/ClothingListResponseS
 com/bubbaTech/api/user/FollowingStatus.class
 com/bubbaTech/api/app/responseObjects/clothingListResponse/ActivityLikeDTO.class
 com/bubbaTech/api/clothing/ClothingDeserializer.class
+com/bubbaTech/api/errorLogging/clothingError/ClothingErrorDTO.class
 com/bubbaTech/api/security/authentication/model/AuthenticationRequestDeserializer.class
 com/bubbaTech/api/user/UserDeserializer.class
 com/bubbaTech/api/store/Store.class

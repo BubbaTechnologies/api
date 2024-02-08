@@ -16,25 +16,41 @@ import com.bubbaTech.api.store.StoreDTO;
 import com.bubbaTech.api.store.StoreService;
 import com.bubbaTech.api.user.UserDTO;
 import com.bubbaTech.api.user.UserService;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSSigner;
+import com.nimbusds.jose.crypto.ECDSASigner;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.security.KeyFactory;
+import java.security.Principal;
+import java.security.PrivateKey;
+import java.security.interfaces.ECPrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,6 +70,16 @@ public class AdminController {
     private LikeDataEndpoint likeDataEndpoint;
     @NonNull
     private LambdaService lambdaService;
+
+    @Value("${apn.key_id}")
+    public String key_id;
+
+    @Value("${apn.team_id}")
+    public String team_id;
+    @Value("${apn.private_key}")
+    public String private_key;
+
+    private static final Logger notificationLogger = LoggerFactory.getLogger(AdminController.class);
 
 
     @RequestMapping(value = "/permissions", method = RequestMethod.POST)
@@ -79,6 +105,38 @@ public class AdminController {
         return ResponseEntity.ok().body(clothingService.getClothingPerStoreData());
     }
 
+    /**
+     * Sends notification to all users.
+     * @param principal: User sending request
+     * @param notificationData: Data that will represent the notification.
+     * @return: 200 if successful.
+     */
+    @PostMapping(value = "/sendNotification")
+    public ResponseEntity<?> sendNotificationRoute(Principal principal, @RequestBody Map<String, ?> notificationData) {
+        if (!notificationData.containsKey("priority") || !notificationData.containsKey("title") ||  !notificationData.containsKey("body")) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+        UserDTO requestingUser = userService.getByUsername(principal.getName());
+        Integer priority = (Integer) notificationData.get("priority");
+        String title = (String) notificationData.get("title");
+        String body = (String) notificationData.get("body");
+
+        notificationLogger.info("Notification sent by " + requestingUser.getId() + "\nTitle: "
+                + title + "\nBody: " + body);
+
+        Map<String, String> payload = new HashMap<>();
+        payload.put("title", title);
+        payload.put("body", body);
+
+        List<String> deviceIds = userService.getAllDeviceIds();
+        for (String deviceId : deviceIds) {
+            if (!sendNotification(deviceId, priority, payload)) {
+                notificationLogger.error("Failed to send a notification to device id " + deviceId + ".");
+            }
+        }
+
+        return ResponseEntity.ok().build();
+    }
 
     @PutMapping(value = "/disableStore", params = {"store"})
     public ResponseEntity<?> changePermission(@RequestParam(value = "store") String storeName) {
@@ -213,5 +271,70 @@ public class AdminController {
         if (sent) {
             logger.info("Sent metric email to " + email + ".");
         }
+    }
+
+    private static PrivateKey loadPrivateKey(String privateKeyString) throws Exception {
+        byte[] keyBytes = Base64.getDecoder().decode(privateKeyString.getBytes());
+        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
+        KeyFactory kf = KeyFactory.getInstance("EC");
+        return kf.generatePrivate(spec);
+    }
+
+    public String generateJWT(String privateKey) throws Exception {
+        JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.ES256)
+                .keyID(key_id).build();
+
+        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+                .issuer(team_id)
+                .issueTime(new Date())
+                .build();
+
+        SignedJWT signedJWT = new SignedJWT(header, claimsSet);
+        JWSSigner signer = new ECDSASigner((ECPrivateKey) AdminController.loadPrivateKey(private_key));
+        signedJWT.sign(signer);
+
+        return signedJWT.serialize();
+    }
+
+    @Async
+    public boolean sendNotification(String deivceId, Integer priority, Map<String, String> payload) {
+        try {
+            StringBuilder urlString = new StringBuilder("https://api.push.apple.com:443/3/device/" + deivceId);
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                    .uri(new URI(urlString.toString()))
+                    .POST(HttpRequest.BodyPublishers.ofString(buildRequestBody(payload)))
+                    .header("Content-Type","application/json")
+                    .header("apns-priority", priority.toString())
+                    .header("apns-expiration", "0")
+                    .header("apns-push-type", "alert")
+                    .header("apns-topic", "Bubba-Technologies-Inc.Carou")
+                    .header("authorization", "bearer " + generateJWT(private_key));
+
+           HttpRequest request = requestBuilder.build();
+           HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            int statusCode = response.statusCode();
+            if (statusCode != 200) {
+                logger.error("Response Body: " + response.body());
+                throw new Exception("Did not successfully send APN request.");
+            }
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private String buildRequestBody(Map<String, String> payload) {
+        JSONObject jsonObjectAlert = new JSONObject();
+        jsonObjectAlert.put("alert", payload);
+        JSONObject jsonObjectAps = new JSONObject();
+        jsonObjectAps.put("aps", jsonObjectAlert);
+
+        return jsonObjectAps.toJSONString();
     }
 }

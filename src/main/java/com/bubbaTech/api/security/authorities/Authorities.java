@@ -14,7 +14,7 @@ public class Authorities implements GrantedAuthority {
     public Authorities() {}
 
     private enum authoritiesType {
-        USER("USER"), AI("AI"), SCRAPER("SCRAPER"), ADMIN("ADMIN");
+        USER("USER"), AI("AI"), SCRAPER("SCRAPER"), ADMIN("ADMIN"), MARKETING("MARKETING");
 
         private final String value;
 
