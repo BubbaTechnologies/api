@@ -949,9 +949,30 @@ Response:
 ```
 
 ## Admin Controller
+
+### /admin/sendNotification
+Mapping: Post
+
+Description: Sends notification to all users.
+
+Required Header: ```Authorization: Bearer (JWT)```
+
+Required Authority: ```Marketing```
+
+Request Body:
+```
+{
+"priority": Int,
+"title": String,
+"body": String
+}
+```
+
 ### /admin/routeResponseTime
 Mapping: GET
+
 Required Header: ```Authorization: Bearer (JWT)```
+
 Description: Returns JSON response containing average response times for /app routes.
 
 
