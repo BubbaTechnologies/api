@@ -92,6 +92,14 @@ public class GenericController {
         return this.login(request);
     }
 
+    /**
+     * Sends verification code to users email.
+     * @param map:
+     * {
+     *     "email":str
+     * }
+     * @return: 200 if successful.
+     */
     @PostMapping(value = "/verify")
     public ResponseEntity<?> verifyEmail(@RequestBody Map<String, String> map) {
         if (!map.containsKey("email")) {
@@ -105,6 +113,7 @@ public class GenericController {
 
         String verificationCode = generateVerificationCode(userEmail);
 
+        System.out.println(verificationCode);
         JSONObject requestBody = new JSONObject();
         requestBody.put("recipient", userEmail);
         requestBody.put("verificationCode", verificationCode);

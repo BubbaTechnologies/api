@@ -31,6 +31,7 @@ public class ClothingDTO implements DTO<ClothingDTO> {
     private LocalDate date;
     @JsonManagedReference
     private List<ClothingTag> tags;
+    private Boolean enabled;
 
     public ClothingDTO() {}
     public ClothingDTO(Long id) {
@@ -45,6 +46,7 @@ public class ClothingDTO implements DTO<ClothingDTO> {
         this.type = type;
         this.gender = gender;
         this.tags = tags;
+        this.enabled = true;
     }
 
     public ClothingDTO(String name, List<String> imageURL, String productURL, StoreDTO store, ClothType type, Gender gender, LocalDate date, List<ClothingTag> tags) {
@@ -56,6 +58,7 @@ public class ClothingDTO implements DTO<ClothingDTO> {
         this.gender = gender;
         this.date = date;
         this.tags = tags;
+        this.enabled = true;
     }
 
     public void reverseImageList() {

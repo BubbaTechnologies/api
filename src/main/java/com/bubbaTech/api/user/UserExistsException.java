@@ -5,7 +5,7 @@
 package com.bubbaTech.api.user;
 
 public class UserExistsException extends RuntimeException {
-    public UserExistsException(String username) {
-        super("User with username exists already: " + username);
+    public UserExistsException(String str) {
+        super("User exists with username/email: " + str);
     }
 }

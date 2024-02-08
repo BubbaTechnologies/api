@@ -70,7 +70,6 @@ Request Body:
 }
 ```
 
-
 Response: 200 if sent.
 
 ### /browsing
@@ -303,6 +302,19 @@ Response:
 }
 ```
 
+### /app/imageError
+Mapping: POST
+
+Description: Returns all loved items for user.
+
+Required Headers: ```Authorization: Bearer (JWT)```
+
+Request Body:
+```
+{
+    "clothingId": Long
+}
+```
 
 ### /app/collection
 Mapping: GET

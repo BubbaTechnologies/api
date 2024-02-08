@@ -177,8 +177,10 @@ public class UserService {
     }
 
     public UserDTO create(UserDTO userRequest) {
-        if (this.checkUsername(userRequest.getUsername()) || this.checkEmail(userRequest.getEmail()))
+        if (this.checkUsername(userRequest.getUsername()))
             throw new UserExistsException(userRequest.getUsername());
+        if (this.checkEmail(userRequest.getEmail()))
+            throw new UserExistsException(userRequest.getEmail());
         User user = new User();
         user.setUsername(userRequest.getUsername());
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));

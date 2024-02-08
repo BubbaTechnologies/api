@@ -49,6 +49,32 @@ public class ClothingSerializer extends StdSerializer<ClothingDTO> {
 
         //Removes color descriptors
         string = string.replaceAll(" [Ii]n .+", "");
-        return string;
+        return capitalizeTitle(string);
+    }
+
+    private String capitalizeTitle(String str) {
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+
+        StringBuilder result = new StringBuilder();
+        boolean capitalizeNext = true; // Flag to indicate whether the next character should be capitalized
+
+        for (char c : str.toCharArray()) {
+            if (Character.isWhitespace(c) || c == '-') {
+                // If the character is whitespace or hyphen, set the flag to true
+                capitalizeNext = true;
+                result.append(c);
+            } else if (capitalizeNext) {
+                // If the flag is true, capitalize the character and reset the flag
+                result.append(Character.toUpperCase(c));
+                capitalizeNext = false;
+            } else {
+                // If the flag is false, keep the character as it is
+                result.append(Character.toLowerCase(c));
+            }
+        }
+
+        return result.toString();
     }
 }

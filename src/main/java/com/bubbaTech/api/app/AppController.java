@@ -12,6 +12,7 @@ import com.bubbaTech.api.app.responseObjects.clothingListResponse.ClothingListRe
 import com.bubbaTech.api.clothing.ClothingDTO;
 import com.bubbaTech.api.clothing.ClothingListType;
 import com.bubbaTech.api.clothing.ClothingService;
+import com.bubbaTech.api.errorLogging.clothingError.ClothingErrorDTO;
 import com.bubbaTech.api.filterOptions.FilterOptionsDTO;
 import com.bubbaTech.api.info.ServiceLogger;
 import com.bubbaTech.api.like.LikeDTO;
@@ -653,7 +654,7 @@ public class AppController {
         userDTO.setGender(UserDeserializer.getGender(userInfo.get("gender").toString()));
         userDTO.setPrivateAccount(Boolean.valueOf(userInfo.get("privateAccount").toString()));
 
-        if (userInfo.containsKey("password")) {
+        if (userInfo.containsKey("password") && !userInfo.get("password").toString().isEmpty()) {
             userDTO.setPassword(userInfo.get("password").toString());
         }
 
@@ -674,14 +675,37 @@ public class AppController {
      * @return: 200 if successful.
      */
     @PostMapping("/updatePassword")
-    public ResponseEntity<?> updatePassword(HttpServletRequest request, Principal principal, Map<String, String> info) {
-        
-
+    public ResponseEntity<?> updatePassword(HttpServletRequest request, Principal principal, @RequestBody Map<String, String> info) {
         long startTime = System.currentTimeMillis();
         UserDTO userDTO = getUserDTO(principal);
 
         userDTO.setPassword(userService.encodePassword(info.get("password")));
         userService.update(userDTO);
+        routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Updates user's password.
+     * @param request: Information about the request. Check HttpServletRequest for references.
+     * @param principal: Gives information about the requester. Check Principal type for references.
+     * @param info:
+     * {
+     *      "clothingId":
+     * }
+     * @return: 200 if successful.
+     */
+    @PostMapping("/imageError")
+    public ResponseEntity<?> imageError(HttpServletRequest request, Principal principal, @RequestBody Map<String, Long> info) {
+        long startTime = System.currentTimeMillis();
+
+        if (!info.containsKey("clothingId")) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+
+        UserDTO userDTO = getUserDTO(principal);
+        clothingService.saveClothingError(new ClothingErrorDTO(userDTO, clothingService.getById(info.get("clothingId"))));
+        clothingService.disableClothing(info.get("clothingId"));
         routeResponseTimeEndpoint.addResponseTime(request.getRequestURI(), System.currentTimeMillis() - startTime);
         return ResponseEntity.ok().build();
     }

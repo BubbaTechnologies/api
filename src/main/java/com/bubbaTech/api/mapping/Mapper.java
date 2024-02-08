@@ -2,6 +2,8 @@ package com.bubbaTech.api.mapping;
 
 import com.bubbaTech.api.clothing.Clothing;
 import com.bubbaTech.api.clothing.ClothingDTO;
+import com.bubbaTech.api.errorLogging.clothingError.ClothingError;
+import com.bubbaTech.api.errorLogging.clothingError.ClothingErrorDTO;
 import com.bubbaTech.api.like.Like;
 import com.bubbaTech.api.like.LikeDTO;
 import com.bubbaTech.api.store.Store;
@@ -130,6 +132,7 @@ public class Mapper {
         //Forces tags to load
         clothing.getTags().size();
         clothingDTO.setTags(clothing.getTags());
+        clothingDTO.setEnabled(clothing.getEnabled());
 
         return clothingDTO;
     }
@@ -147,10 +150,10 @@ public class Mapper {
         clothing.setGender(clothingDTO.getGender());
         clothing.setDate(clothingDTO.getDate());
         clothing.setTags(clothingDTO.getTags());
+        clothing.setEnabled(clothingDTO.getEnabled());
 
         return clothing;
     }
-
 
     public LikeDTO likeToLikeDTO(Like like) {
         LikeDTO likeDTO = new LikeDTO();
@@ -166,7 +169,6 @@ public class Mapper {
         return likeDTO;
     }
 
-
     public  Like likeDTOToLike(LikeDTO likeDTO) {
         Like like = new Like();
 
@@ -180,4 +182,27 @@ public class Mapper {
 
         return like;
     }
+
+    public ClothingError clothingErrorDTOToClothingError(ClothingErrorDTO clothingErrorDTO) {
+        ClothingError clothingError = new ClothingError();
+        clothingError.setClothing(clothingDTOToClothing(clothingErrorDTO.getClothing()));
+        clothingError.setUser(userDTOToUser(clothingErrorDTO.getUser()));
+        clothingError.setDateTimeCreated(clothingErrorDTO.getDateTimeCreated());
+        clothingError.setId(clothingErrorDTO.getId());
+
+
+        return clothingError;
+    }
+
+    public ClothingErrorDTO clothingErrorToClothingErrorDTO(ClothingError clothingError) {
+        ClothingErrorDTO clothingErrorDTO = new ClothingErrorDTO();
+        clothingErrorDTO.setClothing(clothingToClothingDTO(clothingError.getClothing()));
+        clothingErrorDTO.setUser(userToUserDTO(clothingError.getUser()));
+        clothingErrorDTO.setDateTimeCreated(clothingError.getDateTimeCreated());
+        clothingErrorDTO.setId(clothingError.getId());
+
+
+        return clothingErrorDTO;
+    }
+
 }

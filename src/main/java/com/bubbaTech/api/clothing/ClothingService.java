@@ -5,6 +5,8 @@
 package com.bubbaTech.api.clothing;
 
 import com.bubbaTech.api.data.storeStatDTO;
+import com.bubbaTech.api.errorLogging.clothingError.ClothingError;
+import com.bubbaTech.api.errorLogging.clothingError.ClothingErrorDTO;
 import com.bubbaTech.api.filterOptions.FilterOptionsDTO;
 import com.bubbaTech.api.info.ServiceLogger;
 import com.bubbaTech.api.mapping.Mapper;
@@ -291,6 +293,25 @@ public class ClothingService {
             storeStats.add(new storeStatDTO(store.getName(),maleCount, femaleCount, boyCount, girlCount, kidCount, unisexCount, otherCount, store.isEnabled()));
         }
         return storeStats;
+    }
+
+    /**
+     * Disables clothing.
+     * @param id: The id of the clothing being disabled.
+     */
+    public void disableClothing(Long id) {
+        Clothing clothing = repository.findById(id).orElseThrow(() -> new ClothingNotFoundException(id));
+
+        clothing.setEnabled(false);
+        repository.save(clothing);
+    }
+
+    public void saveClothingError(ClothingErrorDTO clothingErrorDTO) {
+        Long clothingId = clothingErrorDTO.getClothing().getId();
+        Clothing clothing = repository.findById(clothingId).orElseThrow(() -> new ClothingNotFoundException(clothingId));
+
+        List<ClothingError> errors = clothing.getErrors();
+        errors.add(mapper.clothingErrorDTOToClothingError(clothingErrorDTO));
     }
 
     /**

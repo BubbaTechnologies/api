@@ -4,6 +4,7 @@
 
 package com.bubbaTech.api.clothing;
 
+import com.bubbaTech.api.errorLogging.clothingError.ClothingError;
 import com.bubbaTech.api.like.Like;
 import com.bubbaTech.api.store.Store;
 import com.bubbaTech.api.user.Gender;
@@ -16,6 +17,9 @@ import org.hibernate.Hibernate;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+
+import static jakarta.persistence.CascadeType.DETACH;
+import static jakarta.persistence.CascadeType.PERSIST;
 
 @Entity
 @Getter
@@ -44,8 +48,12 @@ public class Clothing {
     @Column(name = "date_created")
     private LocalDate date;
 
-    public Clothing() {
-    }
+    private Boolean enabled;
+
+    @OneToMany(mappedBy = "clothing", cascade={PERSIST, DETACH})
+    private List<ClothingError> errors;
+
+    public Clothing() {}
 
     public Clothing(String name, List<String> imageURL, String productURL, Store store, ClothType type, Gender gender, List<ClothingTag> tags) {
         this.name = name;
@@ -55,11 +63,15 @@ public class Clothing {
         this.clothingType = type;
         this.gender = gender;
         this.tags = tags;
+        this.enabled = true;
     }
 
     //Sets date before saving
     @PrePersist
     public void prePersist() {
+        if (enabled == null) {
+            enabled = true;
+        }
         this.date = LocalDate.now();
     }
 
