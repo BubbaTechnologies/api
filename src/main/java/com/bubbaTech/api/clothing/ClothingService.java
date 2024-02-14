@@ -46,6 +46,8 @@ public class ClothingService {
     private final static int WEEKS_AGO = 3;
     private final static int MIN_COUNT = 4;
 
+    private final static int UNIQUE_USER_DISABLE_COUNT = 3;
+
     @NonNull
     private final ClothingRepository repository;
     @NonNull
@@ -301,9 +303,19 @@ public class ClothingService {
      */
     public void disableClothing(Long id) {
         Clothing clothing = repository.findById(id).orElseThrow(() -> new ClothingNotFoundException(id));
+        List<ClothingError> clothingErrors = clothing.getErrors();
 
-        clothing.setEnabled(false);
-        repository.save(clothing);
+        List<Long> uniqueUserList = new ArrayList<>();
+        for (ClothingError error : clothingErrors) {
+          if (!uniqueUserList.contains(error.getUser().getId())) {
+            uniqueUserList.add(error.getUser().getId());
+          }
+        }
+
+        if (uniqueUserList.size() >= UNIQUE_USER_DISABLE_COUNT) {
+          clothing.setEnabled(false);
+          repository.save(clothing);
+        }
     }
 
     public void saveClothingError(ClothingErrorDTO clothingErrorDTO) {

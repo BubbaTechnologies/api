@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="FEATURE: Added notification and new Authorities.">
-      <change beforePath="$PROJECT_DIR$/src/main/resources/logback.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" afterDir="false" />
+    <list default="true" id="28ab4a81-c3e6-4a66-9c27-52c1d2274307" name="Changes" comment="BUG: Fixed notification file path">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/clothing/ClothingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bubbaTech/api/user/UserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -413,7 +416,9 @@
       <workItem from="1707423253186" duration="361000" />
       <workItem from="1707424499886" duration="3101000" />
       <workItem from="1707428208304" duration="4667000" />
-      <workItem from="1707433098614" duration="3417000" />
+      <workItem from="1707433098614" duration="4056000" />
+      <workItem from="1707786978761" duration="656000" />
+      <workItem from="1707804719400" duration="1616000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <created>1679803095491</created>
@@ -681,14 +686,6 @@
       <option name="project" value="LOCAL" />
       <updated>1686703978706</updated>
     </task>
-    <task id="LOCAL-00081" summary="BUG: Fixed follow request. Removes user when action is accepted.">
-      <option name="closed" value="true" />
-      <created>1706144743515</created>
-      <option name="number" value="00081" />
-      <option name="presentableId" value="LOCAL-00081" />
-      <option name="project" value="LOCAL" />
-      <updated>1706144743516</updated>
-    </task>
     <task id="LOCAL-00082" summary="BUG: Updated follow relation in getRequested in User Service.">
       <option name="closed" value="true" />
       <created>1706390075400</created>
@@ -769,7 +766,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707436369012</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="BUG: Fixed notification file path">
+      <option name="closed" value="true" />
+      <created>1707436538469</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1707436538469</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -791,7 +796,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <MESSAGE value="FEATURE: Added store enabled checking for likes." />
     <MESSAGE value="FEATURE: Added /preview" />
     <MESSAGE value="FEATURE: Added /previews, fixed ClothingListResponse" />
     <MESSAGE value="BUG: Updated minimum count for filter options." />
@@ -816,7 +820,8 @@
     <MESSAGE value="BUG: Updated /app/sessionData in README.md." />
     <MESSAGE value="FEATURE: Added image error tracking." />
     <MESSAGE value="FEATURE: Added notification and new Authorities." />
-    <option name="LAST_COMMIT_MESSAGE" value="FEATURE: Added notification and new Authorities." />
+    <MESSAGE value="BUG: Fixed notification file path" />
+    <option name="LAST_COMMIT_MESSAGE" value="BUG: Fixed notification file path" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">

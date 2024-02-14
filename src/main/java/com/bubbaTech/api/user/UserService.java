@@ -84,7 +84,7 @@ public class UserService {
         List<User> users = repository.findAll();
         List<String> deviceIds = new ArrayList<>();
         for (User user : users) {
-            if (user.isEnabled() && user.getDeviceId() != null) {
+            if (user.isEnabled() && (user.getDeviceId() != null) && (!user.getDeviceId().equals(""))) {
                 deviceIds.add(user.getDeviceId());
             }
         }
